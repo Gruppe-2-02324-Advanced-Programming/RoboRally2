@@ -22,15 +22,21 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -79,23 +85,55 @@ public class SpaceView extends StackPane implements ViewObserver {
         if (player != null) {
             Polygon arrow = new Polygon(0.0, 0.0,
                     10.0, 20.0,
-                    20.0, 0.0 );
+                    20.0, 0.0);
             try {
                 arrow.setFill(Color.valueOf(player.getColor()));
             } catch (Exception e) {
                 arrow.setFill(Color.MEDIUMPURPLE);
             }
 
-            arrow.setRotate((90*player.getHeading().ordinal())%360);
+            arrow.setRotate((90 * player.getHeading().ordinal()) % 360);
             this.getChildren().add(arrow);
         }
     }
 
+
+    /**
+     * Draws the walls posibly other stuff
+     *
+     * @author Christoffer Fink, s205449
+     */
     @Override
     public void updateView(Subject subject) {
-        if (subject == this.space) {
-            updatePlayer();
+        this.getChildren().clear();
+        if (subject == this.space) {  //
+            if (space.getWalls() != null) {
+                for (Heading wall : space.getWalls()) {
+                    Pane pane = getDrawPane();
+                    Line line = new Line(2, SPACE_HEIGHT - 2,
+                            SPACE_WIDTH - 2, SPACE_HEIGHT - 2);
+                    line.setStroke(Color.RED);
+                    line.setStrokeWidth(5);
+
+                    switch (wall) {
+                        case WEST -> pane.setRotate(90);
+                        case NORTH -> pane.setRotate(180);
+                        case EAST -> pane.setRotate(-90);
+                    }
+                    pane.getChildren().add(line);
+
+                    this.getChildren().add(pane);
+                }
+            }
         }
+        updatePlayer();
     }
 
+    private Pane getDrawPane() {
+        Pane pane = new Pane();
+        Rectangle rectangle = new Rectangle(0.0, 0.0, SPACE_WIDTH, SPACE_HEIGHT);
+        rectangle.setFill(Color.TRANSPARENT);
+        pane.getChildren().add(rectangle);
+        return pane;
+    }
 }

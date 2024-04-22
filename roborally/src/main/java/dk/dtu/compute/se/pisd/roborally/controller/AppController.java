@@ -26,9 +26,12 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
+import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
+import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -36,6 +39,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -76,33 +81,56 @@ public class AppController implements Observer {
 
             // XXX the board should eventually be created programmatically or loaded from a file
             //     here we just create an empty board with the required number of players.
-            Board board = new Board(8,8);
-            gameController = new GameController(board);
+
+            gameController = new GameController(initializeBoard());
             int no = result.get();
+            Board board = gameController.board;
+            board.attach(this);
             for (int i = 0; i < no; i++) {
                 Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
                 board.addPlayer(player);
                 player.setSpace(board.getSpace(i % board.width, i));
             }
+            board.setCurrentPlayer(board.getPlayer(0));
 
-            // XXX: V2
-            // board.setCurrentPlayer(board.getPlayer(0));
             gameController.startProgrammingPhase();
 
             roboRally.createBoardView(gameController);
+
         }
     }
 
+    /**
+     *
+     * this method loads the games from the database and asks the user which of the gameID's they wish to load.
+     * The system then finds the game which has the same gameID as the one requested.
+     */
     public void saveGame() {
-        // XXX needs to be implemented eventually
+        //TODO: implement
     }
+
 
     public void loadGame() {
-        // XXX needs to be implemented eventually
-        // for now, we just create a new game
-        if (gameController == null) {
-            newGame();
+
+
+    }
+
+
+    /**
+     * @author Christoffer s205449
+     *
+     * This method checks which boards are available
+     */
+    private Board initializeBoard(){
+        List<String> boards = LoadBoard.getBoards();
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(boards.get(0), boards);
+        dialog.setTitle("Select board");
+        dialog.setHeaderText("Select board");
+        Optional<String> result = dialog.showAndWait();
+        if(result.isPresent()) {
+            return LoadBoard.loadBoard(result.get());
         }
+        return new Board(8,8);
     }
 
     /**
@@ -119,13 +147,13 @@ public class AppController implements Observer {
 
             // here we save the game (without asking the user).
             saveGame();
-
             gameController = null;
             roboRally.createBoardView(null);
             return true;
         }
         return false;
     }
+
 
     public void exit() {
         if (gameController != null) {
@@ -146,14 +174,20 @@ public class AppController implements Observer {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isGameRunning() {
         return gameController != null;
     }
 
-
+    /**
+     *
+     */
     @Override
     public void update(Subject subject) {
-        // XXX do nothing for now
+        //skal nok bruges til at vise at spilleren har vundet
     }
 
 }

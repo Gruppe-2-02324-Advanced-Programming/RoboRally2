@@ -36,7 +36,6 @@ import java.util.List;
 public class Space extends Subject {
 
     private Player player;
-
     private List<Heading> walls = new ArrayList<>();
     private List<FieldAction> actions = new ArrayList<>();
 
@@ -44,6 +43,7 @@ public class Space extends Subject {
 
     public final int x;
     public final int y;
+
 
     public Space(Board board, int x, int y) {
         this.board = board;
@@ -55,7 +55,6 @@ public class Space extends Subject {
     public Player getPlayer() {
         return player;
     }
-
     public void setPlayer(Player player) {
         Player oldPlayer = this.player;
         if (player != oldPlayer &&
@@ -72,12 +71,27 @@ public class Space extends Subject {
         }
     }
 
+    /**
+     * This method adds walls as field action
+     * @author Christoffer Fink s205449
+     * @return
+     */
     public List<Heading> getWalls() {
         return walls;
     }
 
     public List<FieldAction> getActions() {
         return actions;
+    }
+
+    public void addWall(Heading wall) {
+        if(!walls.contains(wall))
+            walls.add(wall);
+    }
+
+    public void addAction(FieldAction action) {
+        if(!actions.contains(action))
+            actions.add(action);
     }
 
     void playerChanged() {
