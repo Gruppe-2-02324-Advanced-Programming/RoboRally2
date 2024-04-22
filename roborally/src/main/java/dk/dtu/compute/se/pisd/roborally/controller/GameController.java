@@ -299,7 +299,7 @@ public class GameController {
     /**
      * ...
      *
-     * @author Oskar Lolk Larsen,  s215717
+     * @author Christoffer,  s205449
      *
      */
 
@@ -323,7 +323,7 @@ public class GameController {
     }
 
     /**
-     * @author Oskar Lolk Larsen,  s215717
+     * @author Christoffer,  s205449
      */
 
     /**
@@ -378,7 +378,7 @@ public class GameController {
 
 
     /**
-     * @author Oskar Lolk Larsen,  s215717
+     * @author Christoffer,  s205449
      * Same function as moveForward, however the method is set two times to get the fastForward function
      */
     public void fastForward(@NotNull Player player) {
@@ -406,7 +406,7 @@ public class GameController {
     /**
      * Turns the player around
      * @param player
-     * @author Peter Møller s215707
+     * @author Christoffer s205449
      */
     public void uTurn(@NotNull Player player) {
         if(player !=null && player.board == board){
@@ -416,7 +416,7 @@ public class GameController {
     /**
      * Moves the player backwards
      * @param player
-     * @author Peter Møller s215707
+     * @author Christoffer s205449
      */
     public void backUp(@NotNull Player player) {
         if(player !=null && player.board == board){
@@ -428,7 +428,7 @@ public class GameController {
     /**
      * Just as in fastForward, but here the moveForward is used one more time to get fasterForward
      * @param player
-     * @author Peter Møller s215707
+     * @author Christoffer s205449
      */
     public void fasterForward(@NotNull Player player) {
         moveForward(player);
