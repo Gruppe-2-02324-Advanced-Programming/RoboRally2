@@ -241,6 +241,9 @@ public class GameController {
             //     (this concerns the way cards are modelled as well as the way they are executed).
 
             switch (command) {
+                case FORWARD_THREE:
+                    this.moveThree(player);
+                    break;
                 case FORWARD:
                     this.moveForward(player);
                     break;
@@ -321,6 +324,15 @@ public class GameController {
             }
         }
     }
+
+    public void moveThree(Player player)
+    {
+        moveForward(player);
+        moveForward(player);
+        moveForward(player);
+    }
+
+
 
     /**
      * @author Christoffer,  s205449
