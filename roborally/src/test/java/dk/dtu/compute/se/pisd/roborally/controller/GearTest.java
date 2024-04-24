@@ -41,7 +41,7 @@ class GearTest {
     void moveForwardLeftGear() {
         Board board = gameController.board;
         Player current = board.getCurrentPlayer();
-        board.getSpace(0,1).addAction(new Gear(Gear.LEFT_TURN));
+        board.getSpace(0,1).addAction(new Gears(Gears.LEFT_TURN));
         gameController.moveForward(current);
         board.getSpace(0,1).getActions().get(0).doAction(gameController, board.getSpace(0,1));
         Assertions.assertEquals(current, board.getSpace(0, 1).getPlayer(), "Player " + current.getName() + " should beSpace (0,1)!");
@@ -58,7 +58,7 @@ class GearTest {
     void moveForwardRightGear() {
         Board board = gameController.board;
         Player current = board.getCurrentPlayer();
-        board.getSpace(0,1).addAction(new Gear(Gear.RIGHT_TURN));
+        board.getSpace(0,1).addAction(new Gears(Gears.RIGHT_TURN));
         gameController.moveForward(current);
         board.getSpace(0,1).getActions().get(0).doAction(gameController, board.getSpace(0,1));
         Assertions.assertEquals(current, board.getSpace(0, 1).getPlayer(), "Player " + current.getName() + " should beSpace (0,1)!");

@@ -22,19 +22,15 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
+import dk.dtu.compute.se.pisd.roborally.controller.Gears;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -82,13 +78,21 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
     /**
-     * Draws the walls posibly other stuff
+     * Draws the walls and gears for the board elements
      *
-     * @author Christoffer Fink, s205449
+     * @author Christoffer Fink, s205449@dtu.dk
+     * @author Setare Izadi, s232629@dtu.dk
+     *
      */
     @Override
     public void updateView(Subject subject) {
         this.getChildren().clear();
+
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof Gears) {
+                Gears gear = (Gears) action;
+            }
+        }
 
         // Draw player
         Player player = space.getPlayer();
@@ -137,6 +141,5 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.getChildren().add(text);
 
         }
-
     }
 }
