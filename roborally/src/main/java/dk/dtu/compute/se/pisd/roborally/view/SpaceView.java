@@ -80,6 +80,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
 
+
     /**
      * Draws the walls posibly other stuff
      *
@@ -123,7 +124,7 @@ public class SpaceView extends StackPane implements ViewObserver {
                     text = new Text(SPACE_WIDTH / 2, SPACE_HEIGHT - 10, "S");
                     break;
                 case WEST:
-                    line = new Line(0, 0, 0, SPACE_HEIGHT);
+                    line = new Line(SPACE_WIDTH, SPACE_WIDTH, 0, SPACE_HEIGHT);
                     text = new Text(10, SPACE_HEIGHT / 2, "W");
                     break;
                 default:
