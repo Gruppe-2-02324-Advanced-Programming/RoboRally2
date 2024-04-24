@@ -23,10 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -36,13 +33,19 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
+import javafx.scene.image.ImageView;
+
+import java.io.File;
 
 /**
  * ...
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Christoffer, s205449
  */
+
+
+
 public class CardFieldView extends GridPane implements ViewObserver {
 
     // This data format helps avoiding transfers of e.g. Strings from other
@@ -142,16 +145,71 @@ public class CardFieldView extends GridPane implements ViewObserver {
 
     @Override
     public void updateView(Subject subject) {
-        if (subject == field && subject != null) {
-            CommandCard card = field.getCard();
-            if (card != null && field.isVisible()) {
-                label.setText(card.getName());
+        if (subject instanceof CommandCardField) {
+            CommandCardField cardField = (CommandCardField) subject;
+            this.field = cardField;  // Update the local reference if needed
+            CommandCard card = cardField.getCard();
+            this.getChildren().clear(); // Clear previous content
+
+            if (card != null && cardField.isVisible()) {
+                Image cardImage = getImageForCommand(card.command);
+                if (cardImage != null) {
+                    BackgroundImage bgImage = new BackgroundImage(cardImage,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundPosition.CENTER,
+                            new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false));
+                    this.setBackground(new Background(bgImage));
+                } else {
+                    label.setText(card.command.displayName); // Show command as text if image fails
+                    this.add(label, 0, 0);
+                }
             } else {
+                this.setBackground(BG_DEFAULT);
                 label.setText("");
+                this.add(label, 0, 0);
             }
         }
     }
 
+
+    private Image getImageForCommand(Command command) {
+        String imagePath;
+        switch (command) {
+            case FORWARD:
+                imagePath = "/assets/FORWARD.png";
+                break;
+            case RIGHT:
+                imagePath = "/assets/RIGHT.png";
+                break;
+            case LEFT:
+                imagePath = "/assets/LEFT.png";
+                break;
+            case FAST_FORWARD:
+                imagePath = "/assets/FAST_FORWARD.png";
+                break;
+            // Add other cases as needed
+            default:
+                return null; // Or return a default image
+        }
+
+        // Using classpath resource loading
+        try {
+            // Ensure the leading slash is used to access the path from the classpath root
+            return new Image(getClass().getResourceAsStream(imagePath));
+        } catch (Exception e) {
+            System.err.println("Error loading image for command: " + command);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
+
+    //todo skal justere on drag handler så viser kort efter det er blevet lagt
     private class OnDragDetectedHandler implements EventHandler<MouseEvent> {
 
         @Override
