@@ -66,9 +66,9 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.setMaxHeight(SPACE_HEIGHT);
 
         if ((space.x + space.y) % 2 == 0) {
-            this.setStyle("-fx-background-color: white;");
+            this.setStyle("-fx-background-color: pink;");
         } else {
-            this.setStyle("-fx-background-color: black;");
+            this.setStyle("-fx-background-color: purple;");
         }
 
         // updatePlayer();
@@ -78,9 +78,19 @@ public class SpaceView extends StackPane implements ViewObserver {
         update(space);
     }
 
-    private void updatePlayer() {
+
+
+
+    /**
+     * Draws the walls posibly other stuff
+     *
+     * @author Christoffer Fink, s205449
+     */
+    @Override
+    public void updateView(Subject subject) {
         this.getChildren().clear();
 
+        // Draw player
         Player player = space.getPlayer();
         if (player != null) {
             Polygon arrow = new Polygon(0.0, 0.0,
@@ -95,45 +105,38 @@ public class SpaceView extends StackPane implements ViewObserver {
             arrow.setRotate((90 * player.getHeading().ordinal()) % 360);
             this.getChildren().add(arrow);
         }
-    }
 
-
-    /**
-     * Draws the walls posibly other stuff
-     *
-     * @author Christoffer Fink, s205449
-     */
-    @Override
-    public void updateView(Subject subject) {
-        this.getChildren().clear();
-        if (subject == this.space) {  //
-            if (space.getWalls() != null) {
-                for (Heading wall : space.getWalls()) {
-                    Pane pane = getDrawPane();
-                    Line line = new Line(2, SPACE_HEIGHT - 2,
-                            SPACE_WIDTH - 2, SPACE_HEIGHT - 2);
-                    line.setStroke(Color.RED);
-                    line.setStrokeWidth(5);
-
-                    switch (wall) {
-                        case WEST -> pane.setRotate(90);
-                        case NORTH -> pane.setRotate(180);
-                        case EAST -> pane.setRotate(-90);
-                    }
-                    pane.getChildren().add(line);
-
-                    this.getChildren().add(pane);
-                }
+        // Draw walls
+        for (Heading wall : space.getWalls()) {
+            Line line;
+            Text text;
+            switch (wall) {
+                case NORTH:
+                    line = new Line(0, 0, SPACE_WIDTH, 0);
+                    text = new Text(SPACE_WIDTH / 2, 10, "N");
+                    break;
+                case EAST:
+                    line = new Line(SPACE_WIDTH, 0, SPACE_WIDTH, SPACE_HEIGHT);
+                    text = new Text(SPACE_WIDTH - 10, SPACE_HEIGHT / 2, "E");
+                    break;
+                case SOUTH:
+                    line = new Line(0, SPACE_HEIGHT, SPACE_WIDTH, SPACE_HEIGHT);
+                    text = new Text(SPACE_WIDTH / 2, SPACE_HEIGHT - 10, "S");
+                    break;
+                case WEST:
+                    line = new Line(SPACE_WIDTH, SPACE_WIDTH, 0, SPACE_HEIGHT);
+                    text = new Text(10, SPACE_HEIGHT / 2, "W");
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + wall);
             }
-        }
-        updatePlayer();
-    }
+            line.setStroke(Color.BLACK);
+            line.setStrokeWidth(3);
+            line.setStrokeLineCap(StrokeLineCap.ROUND);
+            this.getChildren().add(line);
+            this.getChildren().add(text);
 
-    private Pane getDrawPane() {
-        Pane pane = new Pane();
-        Rectangle rectangle = new Rectangle(0.0, 0.0, SPACE_WIDTH, SPACE_HEIGHT);
-        rectangle.setFill(Color.TRANSPARENT);
-        pane.getChildren().add(rectangle);
-        return pane;
+        }
+
     }
 }
