@@ -5,8 +5,8 @@ import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
 /**
- * ...
- *
+ * This class represents the action of a gear field. The action is to turn the
+ * player to the left or to the right.
  * @author Setare Izadi, s232629@dtu.dk
  *
  */

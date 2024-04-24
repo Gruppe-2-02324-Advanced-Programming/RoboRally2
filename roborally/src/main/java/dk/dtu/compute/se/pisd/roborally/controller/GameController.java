@@ -304,9 +304,7 @@ public class GameController {
      *
      * @author Christoffer,  s205449
      *
-     */
 
-    /**
      *  The moveForward has been slightly modified with a catch statement at the bottom, however it has been set to be ignored since it doesn't do anything
      *  Moves a player one space forward in the direction they are currently facing.
      *  If the movement is not possible (e.g., due to a wall), the action is ignored.
