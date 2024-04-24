@@ -54,7 +54,7 @@ public class LoadBoard {
     private static final String DEFAULTBOARD = "defaultboard";
     private static final String[] BOARDS = new String[]{"defaultboard"};
     private static final String JSON_EXT = "json";
-    public static final int BOARD_WIDTH = 8;
+    public static final int BOARD_WIDTH = 10;
     public static final int BOARD_HEIGHT = 8;
 
     public static List<String> getBoards(){

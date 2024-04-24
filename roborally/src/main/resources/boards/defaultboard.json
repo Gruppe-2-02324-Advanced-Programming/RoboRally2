@@ -1,5 +1,5 @@
 {
-  "width": 8,
+  "width": 10,
   "height": 8,
   "spaces": [
     {
@@ -33,19 +33,19 @@
       "y": 0
     },
     {
-      "walls": ["NORTH", "SOUTH", "EAST", "WEST"],
+      "walls": ["SOUTH"],
       "actions": [],
       "x": 5,
       "y": 1
     },
     {
-      "walls": ["EAST", "WEST"],
+      "walls": ["EAST"],
       "actions": [],
       "x": 6,
       "y": 2
     },
     {
-      "walls": ["NORTH", "SOUTH", "WEST"],
+      "walls": ["NORTH"],
       "actions": [],
       "x": 7,
       "y": 4
