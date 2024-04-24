@@ -195,7 +195,7 @@ public class GameController {
 
     /**
      *
-     * @author David Otzen s201386
+     * @author Christoffer, s205449
      */
     public void executeCommandOptionAndContinue(@NotNull Command option){
         Player currentPlayer = board.getCurrentPlayer();
@@ -265,7 +265,7 @@ public class GameController {
     /**
      * ...
      *
-     * @author Oskar Lolk Larsen,  s215717
+     * @author Christoffer, s205449
      *
      */
 
@@ -300,10 +300,7 @@ public class GameController {
      * ...
      *
      * @author Christoffer,  s205449
-     *
-     */
 
-    /**
      * The moveForward has been slightly modified with a catch statement at the bottom, however it has been set to be ignored since it doesn't do anything
      *
      * @param player
@@ -324,9 +321,6 @@ public class GameController {
 
     /**
      * @author Christoffer,  s205449
-     */
-
-    /**
      *
      * The movePlayerToSpace which relocates the pushed player to the next space which the pushing player is heading.
      * If none of the criteria met the moveNotPossibleException will be thrown.
@@ -353,7 +347,7 @@ public class GameController {
             }
         }
         /**
-         * @author Christoffer Fink 205449'
+         * @author Christoffer Fink 205449
          * Does so the player can't wall through the walls
          */
         if(player.getSpace() != null){

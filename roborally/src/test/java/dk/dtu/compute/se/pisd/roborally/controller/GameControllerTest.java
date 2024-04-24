@@ -73,7 +73,7 @@ class GameControllerTest {
                 "Space (0,0) should be empty!");
     }
     /**
-     *@author Oskar Lolk Larsen s215717
+     *@author Christoffer, s205449
      * turnRight test
      *against west, because start pos is SOUTH
      */
