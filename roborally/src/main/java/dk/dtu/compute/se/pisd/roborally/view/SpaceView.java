@@ -22,8 +22,8 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
+import dk.dtu.compute.se.pisd.roborally.controller.Gears;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
@@ -86,14 +86,23 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
     /**
-     * Draws the walls posibly other stuff later
+     * Draws the walls posibly other stuff
      *
-     * @author Christoffer Fink, s205449
+     * @author Christoffer Fink, s205449@dtu.dk
+     * @author Setare Izadi, s232629@dtu.dk
+     *
      */
     @Override
     public void updateView(Subject subject) {
         this.getChildren().clear();
 
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof Gears) {
+                Gears gear = (Gears) action;
+            }
+        }
+
+        // Draw player
         // Load the empty field image and set it as the background of the space
         Image emptyFieldImage = new Image("/assets/empty.png");
         ImageView emptyFieldView = new ImageView(emptyFieldImage);
@@ -169,4 +178,6 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
 
     }
+    }
+}
 

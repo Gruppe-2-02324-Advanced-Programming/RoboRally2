@@ -27,7 +27,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * ...
+ * Controller for managing the game logic of RoboRally. It handles player movements,
+ * command execution, and the transition between different phases of the game.
+ * <p>
+ * The controller is responsible for starting the programming phase, executing programs,
+ * and moving players on the board based on their chosen command cards.
+ * <p>
+ * Usage:
+ * <pre>{@code
+ * Board board = new Board(8, 8);
+ * GameController controller = new GameController(board);
+ * controller.startProgrammingPhase();
+ * // ...
+ * }</pre>
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
@@ -241,6 +253,9 @@ public class GameController {
             //     (this concerns the way cards are modelled as well as the way they are executed).
 
             switch (command) {
+                case FORWARD_THREE:
+                    this.moveThree(player);
+                    break;
                 case FORWARD:
                     this.moveForward(player);
                     break;
@@ -306,12 +321,14 @@ public class GameController {
      * ...
      *
      * @author Christoffer,  s205449
-
-     * The moveForward has been slightly modified with a catch statement at the bottom, however it has been set to be ignored since it doesn't do anything
      *
-     * @param player
-     */
 
+     *  The moveForward has been slightly modified with a catch statement at the bottom, however it has been set to be ignored since it doesn't do anything
+     *  Moves a player one space forward in the direction they are currently facing.
+     *  If the movement is not possible (e.g., due to a wall), the action is ignored.
+     *
+     *  @param player the player to move forward
+     *  */
     public void moveForward(Player player) {
         if (board != null && player != null && player.board == board) {Heading heading = player.getHeading();
             Space space = player.getSpace();
@@ -324,6 +341,23 @@ public class GameController {
             }
         }
     }
+
+
+    /**
+     * Moves a player three spaces forward in the direction they are currently facing.
+     * This is done by calling {@code moveForward} method three times.
+     *
+     * @param player the player to move three spaces forward
+     * @author Setare Izadi, s232629@dtu.dk
+     */
+    public void moveThree(Player player)
+    {
+        moveForward(player);
+        moveForward(player);
+        moveForward(player);
+    }
+
+
 
     /**
      * @author Christoffer,  s205449
@@ -425,6 +459,7 @@ public class GameController {
             uTurn(player);
         }
     }
+
 
 
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
