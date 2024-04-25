@@ -33,7 +33,7 @@ class GearTest {
         gameController = null;
     }
     /**
-     * 1. Test to check if gear turns player
+     * 1. Test to check if left-gear turns player
      * @author Christoffer Fink s205499
      *
      */
@@ -50,7 +50,7 @@ class GearTest {
     }
 
     /**
-     * 2. Test to check if gear turns player
+     * 2. Test to check if right-gear turns player
      * @author Christoffer Fink 205449
      *
      */

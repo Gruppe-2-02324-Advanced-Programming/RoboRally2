@@ -86,7 +86,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
     /**
-     * Draws the walls posibly other stuff
+     * Draws the walls posibly other stuff later
      *
      * @author Christoffer Fink, s205449
      */

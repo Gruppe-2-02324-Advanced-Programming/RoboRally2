@@ -38,7 +38,6 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 
 /**
- * ...
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Christoffer, s205449
@@ -66,9 +65,9 @@ public class CardFieldView extends GridPane implements ViewObserver {
 
     private CommandCardField field;
 
-    private Label label;
+    private final Label label;
 
-    private GameController gameController;
+    private final GameController gameController;
 
     public CardFieldView(@NotNull GameController gameController, @NotNull CommandCardField field) {
         this.gameController = gameController;
@@ -143,13 +142,20 @@ public class CardFieldView extends GridPane implements ViewObserver {
         return null;
     }
 
+
+
+    /**
+    * Draws the card on the field
+     *
+     * @author Christoffer, s205449
+     */
     @Override
     public void updateView(Subject subject) {
         if (subject instanceof CommandCardField) {
             CommandCardField cardField = (CommandCardField) subject;
-            this.field = cardField;  // Update the local reference if needed
+            this.field = cardField;
             CommandCard card = cardField.getCard();
-            this.getChildren().clear(); // Clear previous content
+            this.getChildren().clear();
 
             if (card != null && cardField.isVisible()) {
                 Image cardImage = getImageForCommand(card.command);
@@ -161,18 +167,19 @@ public class CardFieldView extends GridPane implements ViewObserver {
                             new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false));
                     this.setBackground(new Background(bgImage));
                 } else {
-                    label.setText(card.command.displayName); // Show command as text if image fails
+                    label.setText(card.command.displayName); // viser tekst hvis der ikke kan findes noget billede til kortet
                     this.add(label, 0, 0);
                 }
             } else {
-                this.setBackground(BG_DEFAULT);
-                label.setText("");
+                this.setBackground(BG_DEFAULT); //empty baggrund
+                label.setText(" ");
                 this.add(label, 0, 0);
             }
         }
     }
 
 
+    //
     private Image getImageForCommand(Command command) {
         String imagePath;
         switch (command) {
@@ -188,14 +195,13 @@ public class CardFieldView extends GridPane implements ViewObserver {
             case FAST_FORWARD:
                 imagePath = "/assets/FAST_FORWARD.png";
                 break;
-            // Add other cases as needed
+
             default:
-                return null; // Or return a default image
+                return null; // eller return default image
         }
 
-        // Using classpath resource loading
+
         try {
-            // Ensure the leading slash is used to access the path from the classpath root
             return new Image(getClass().getResourceAsStream(imagePath));
         } catch (Exception e) {
             System.err.println("Error loading image for command: " + command);

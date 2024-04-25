@@ -253,6 +253,12 @@ public class GameController {
                 case FAST_FORWARD:
                     this.fastForward(player);
                     break;
+                case UTURN:
+                    this.uTurn(player);
+                    break;
+                case BACKUP:
+                    this.backUp(player);
+                    break;
                 default:
                     // DO NOTHING (for now)
             }
@@ -400,7 +406,7 @@ public class GameController {
     /**
      * Turns the player around
      * @param player
-     * @author Christoffer s205449
+     * @author Marcus, s214962
      */
     public void uTurn(@NotNull Player player) {
         if(player !=null && player.board == board){
@@ -410,7 +416,7 @@ public class GameController {
     /**
      * Moves the player backwards
      * @param player
-     * @author Christoffer s205449
+     * @author Phillip, s224278
      */
     public void backUp(@NotNull Player player) {
         if(player !=null && player.board == board){
@@ -418,16 +424,6 @@ public class GameController {
             moveForward(player);
             uTurn(player);
         }
-    }
-    /**
-     * Just as in fastForward, but here the moveForward is used one more time to get fasterForward
-     * @param player
-     * @author Christoffer s205449
-     */
-    public void fasterForward(@NotNull Player player) {
-        moveForward(player);
-        moveForward(player);
-        moveForward(player);
     }
 
 
