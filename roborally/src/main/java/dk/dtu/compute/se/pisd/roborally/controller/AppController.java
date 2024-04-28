@@ -44,9 +44,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * ...
  *
+ * AppController is the main controller of the application. It is responsible
+ * for starting and stopping games, and for saving and loading games. It also
+ * creates the board view and the player views.
  * @author Ekkart Kindler, ekki@dtu.dk
+ * @author Christoffer s205449
  *
  */
 public class AppController implements Observer {
