@@ -180,12 +180,29 @@ public class AppController implements Observer {
         return gameController != null;
     }
 
+
     /**
-     *
+     * Does so player can win
+     * @author Christoffer Fink s205449
+     * @param subject the subject which changed
      */
     @Override
     public void update(Subject subject) {
-        //skal nok bruges til at vise at spilleren har vundet
+        if(subject.getClass() == Board.class){
+            if(((Board) subject).isWon()){
+                for (Player player: ((Board) subject).getPlayers()) {
+                    if(player.getCheckpoints() == ((Board) subject).getTotalCheckpoints()) {
+                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by, " + player.getName(), ButtonType.OK);
+                        alert.showAndWait();
+                        stopGame();
+                        //Så viser den ikke vores dialogboks mere end en gang
+                        ((Board) subject).setWon(false);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
 }
+

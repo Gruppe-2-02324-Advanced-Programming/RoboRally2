@@ -43,6 +43,7 @@ public class RoboRally extends Application {
 
     private Stage stage;
     private BorderPane boardRoot;
+    private GameController gameController;
 
     @Override
     public void init() throws Exception {

@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.controller.Gears;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
@@ -83,26 +84,16 @@ public class SpaceView extends StackPane implements ViewObserver {
     }
 
 
-
-
     /**
      * Draws the walls posibly other stuff
      *
      * @author Christoffer Fink, s205449@dtu.dk
      * @author Setare Izadi, s232629@dtu.dk
-     *
      */
     @Override
     public void updateView(Subject subject) {
         this.getChildren().clear();
 
-        for (FieldAction action : space.getActions()) {
-            if (action instanceof Gears) {
-                Gears gear = (Gears) action;
-            }
-        }
-
-        // Draw player
         // Load the empty field image and set it as the background of the space
         Image emptyFieldImage = new Image("/assets/empty.png");
         ImageView emptyFieldView = new ImageView(emptyFieldImage);
@@ -111,11 +102,24 @@ public class SpaceView extends StackPane implements ViewObserver {
         emptyFieldView.setPreserveRatio(false);
         this.getChildren().add(emptyFieldView);  // Add the empty field view as the first layer
 
+        // Check if the current space is a checkpoint
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof Checkpoint) {
+                Checkpoint checkpoint = (Checkpoint) action;
+                // Load the checkpoint image
+                Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
+                ImageView checkpointView = new ImageView(checkpointImage);
+                checkpointView.setFitWidth(SPACE_WIDTH);
+                checkpointView.setFitHeight(SPACE_HEIGHT);
+                checkpointView.setPreserveRatio(false);
+                this.getChildren().add(checkpointView);  // Add the checkpoint view as the second layer
+                break;
+            }
+        }
+
         Image wallImage = new Image("/assets/wall.png");
 
-
-
-    // Draw player
+        // Draw player
         Player player = space.getPlayer();
         if (player != null) {
             Polygon arrow = new Polygon(0.0, 0.0,
@@ -136,8 +140,6 @@ public class SpaceView extends StackPane implements ViewObserver {
 
             ImageView wallView = new ImageView(wallImage);
 
-            Line line;
-            Text text;
             switch (wall) {
                 case NORTH:
                     wallView.setFitHeight(SPACE_HEIGHT);  // Set the height for horizontal wall
@@ -169,14 +171,12 @@ public class SpaceView extends StackPane implements ViewObserver {
                     break;
             }
 
-
             wallView.setPreserveRatio(false); // Turn off preserve ratio to allow explicit sizing
             this.getChildren().add(wallView);
         }
-
-
-        }
+    }
 
     }
+
 
 

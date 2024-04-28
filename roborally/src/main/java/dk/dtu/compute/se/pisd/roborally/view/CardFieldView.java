@@ -23,7 +23,10 @@ package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
-import dk.dtu.compute.se.pisd.roborally.model.*;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -33,18 +36,13 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
-import javafx.scene.image.ImageView;
-
-import java.io.File;
 
 /**
+ * ...
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- * @author Christoffer, s205449
+ *
  */
-
-
-
 public class CardFieldView extends GridPane implements ViewObserver {
 
     // This data format helps avoiding transfers of e.g. Strings from other
@@ -65,9 +63,9 @@ public class CardFieldView extends GridPane implements ViewObserver {
 
     private CommandCardField field;
 
-    private final Label label;
+    private Label label;
 
-    private final GameController gameController;
+    private GameController gameController;
 
     public CardFieldView(@NotNull GameController gameController, @NotNull CommandCardField field) {
         this.gameController = gameController;
@@ -142,80 +140,18 @@ public class CardFieldView extends GridPane implements ViewObserver {
         return null;
     }
 
-
-
-    /**
-    * Draws the card on the field
-     *
-     * @author Christoffer, s205449
-     */
     @Override
     public void updateView(Subject subject) {
-        if (subject instanceof CommandCardField) {
-            CommandCardField cardField = (CommandCardField) subject;
-            this.field = cardField;
-            CommandCard card = cardField.getCard();
-            this.getChildren().clear();
-
-            if (card != null && cardField.isVisible()) {
-                Image cardImage = getImageForCommand(card.command);
-                if (cardImage != null) {
-                    BackgroundImage bgImage = new BackgroundImage(cardImage,
-                            BackgroundRepeat.NO_REPEAT,
-                            BackgroundRepeat.NO_REPEAT,
-                            BackgroundPosition.CENTER,
-                            new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false));
-                    this.setBackground(new Background(bgImage));
-                } else {
-                    label.setText(card.command.displayName); // viser tekst hvis der ikke kan findes noget billede til kortet
-                    this.add(label, 0, 0);
-                }
+        if (subject == field && subject != null) {
+            CommandCard card = field.getCard();
+            if (card != null && field.isVisible()) {
+                label.setText(card.getName());
             } else {
-                this.setBackground(BG_DEFAULT); //empty baggrund
-                label.setText(" ");
-                this.add(label, 0, 0);
+                label.setText("");
             }
         }
     }
 
-
-    //
-    private Image getImageForCommand(Command command) {
-        String imagePath;
-        switch (command) {
-            case FORWARD:
-                imagePath = "/assets/FORWARD.png";
-                break;
-            case RIGHT:
-                imagePath = "/assets/RIGHT.png";
-                break;
-            case LEFT:
-                imagePath = "/assets/LEFT.png";
-                break;
-            case FAST_FORWARD:
-                imagePath = "/assets/FAST_FORWARD.png";
-                break;
-
-            default:
-                return null; // eller return default image
-        }
-
-
-        try {
-            return new Image(getClass().getResourceAsStream(imagePath));
-        } catch (Exception e) {
-            System.err.println("Error loading image for command: " + command);
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
-
-
-
-
-    //todo skal justere on drag handler så viser kort efter det er blevet lagt
     private class OnDragDetectedHandler implements EventHandler<MouseEvent> {
 
         @Override
@@ -337,8 +273,8 @@ public class CardFieldView extends GridPane implements ViewObserver {
                                 // CommandCard card = source.getCard();
                                 // if (card != null) {
                                 // if (gameController.moveCards(source, cardField)) {
-                                    // cardField.setCard(card);
-                                    success = true;
+                                // cardField.setCard(card);
+                                success = true;
                                 // }
                             }
                         }

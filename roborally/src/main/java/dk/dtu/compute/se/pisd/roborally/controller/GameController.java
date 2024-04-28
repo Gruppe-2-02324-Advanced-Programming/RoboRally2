@@ -301,9 +301,9 @@ public class GameController {
         /**
          * Here we create the Exception moveIsNotPossible, but for now, nothing happens when thrown
          *
-         * @param player
-         * @param space
-         * @param heading
+         * @param player the player that is trying to move
+         * @param space the space the player is trying to move to
+         * @param heading the direction the player is trying to move
          */
 
         public moveNotPossibleException(Player player, Space space, Heading heading) {

@@ -39,6 +39,7 @@ public class Player extends Subject {
 
     final public Board board;
 
+    private int checkpoints = 0;
     private String name;
     private String color;
 
@@ -47,6 +48,12 @@ public class Player extends Subject {
 
     private CommandCardField[] program;
     private CommandCardField[] cards;
+
+    private String robotImage;
+
+    public String getRobotImage() {
+        return robotImage;
+    }
 
     public Player(@NotNull Board board, String color, @NotNull String name) {
         this.board = board;
@@ -92,6 +99,10 @@ public class Player extends Subject {
         }
     }
 
+
+    public void setRobotImage(String robotImage) {
+        this.robotImage = robotImage;
+    }
     public Space getSpace() {
         return space;
     }
@@ -131,6 +142,14 @@ public class Player extends Subject {
 
     public CommandCardField getCardField(int i) {
         return cards[i];
+    }
+
+    public void setCheckpoints(int checkpoints) {
+        this.checkpoints = checkpoints;
+    }
+
+    public int getCheckpoints() {
+        return checkpoints;
     }
 
 }
