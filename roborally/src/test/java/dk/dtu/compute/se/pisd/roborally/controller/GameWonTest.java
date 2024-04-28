@@ -35,7 +35,7 @@ class GameWonTest {
     }
 
     /**
-     * 1. Test to check if the player can win
+     * Test to check if the player can win
      *
      * @author Christoffer Fink s205499
      */
