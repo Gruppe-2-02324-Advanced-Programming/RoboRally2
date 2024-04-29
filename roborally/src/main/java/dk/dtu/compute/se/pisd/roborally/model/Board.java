@@ -61,6 +61,7 @@ public class Board extends Subject {
 
     private int counter;
     private boolean won = false;
+
     public int getCounter() {
         return counter;
     }
@@ -78,12 +79,13 @@ public class Board extends Subject {
         this.height = height;
         spaces = new Space[width][height];
         for (int x = 0; x < width; x++) {
-            for(int y = 0; y < height; y++) {
+            for (int y = 0; y < height; y++) {
                 Space space = new Space(this, x, y);
                 spaces[x][y] = space;
             }
         }
         this.stepMode = false;
+
     }
 
     public Board(int width, int height) {
@@ -190,9 +192,10 @@ public class Board extends Subject {
      * (no walls or obstacles in either of the involved spaces); otherwise,
      * null will be returned.
      *
-     * @param space the space for which the neighbour should be computed
+     * @param space   the space for which the neighbour should be computed
      * @param heading the heading of the neighbour
-     * @return the space in the given direction; null if there is no (reachable) neighbour
+     * @return the space in the given direction; null if there is no (reachable)
+     *         neighbour
      */
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
         int x = space.x;
@@ -228,6 +231,12 @@ public class Board extends Subject {
     }
 
     public boolean isWon() {
+        for (Player p : players) {
+            System.out.println(p.getCheckpoints() + ":" + totalCheckpoints);
+            if (p.getCheckpoints() == totalCheckpoints) {
+                won = true;
+            }
+        }
         return won;
     }
 
@@ -238,9 +247,8 @@ public class Board extends Subject {
 
     public String getStatusMessage() {
         return "Phase: " + getPhase().name() +
-                ", Player = " + getCurrentPlayer().getName()+
+                ", Player = " + getCurrentPlayer().getName() +
                 ", Counter " + counter;
     }
-
 
 }
