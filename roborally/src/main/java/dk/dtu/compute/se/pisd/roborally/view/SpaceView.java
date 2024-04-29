@@ -128,10 +128,27 @@ public class SpaceView extends StackPane implements ViewObserver {
                 conveyorBeltView.setFitWidth(SPACE_WIDTH);
                 conveyorBeltView.setFitHeight(SPACE_HEIGHT);
                 conveyorBeltView.setPreserveRatio(false);
+                // Rotate the conveyor belt image based on its heading
+                switch (conveyorBelt.getHeading()) {
+                    case NORTH:
+                        conveyorBeltView.setRotate(0);
+                        break;
+                    case EAST:
+                        conveyorBeltView.setRotate(90);
+                        break;
+                    case SOUTH:
+                        conveyorBeltView.setRotate(180);
+                        break;
+                    case WEST:
+                        conveyorBeltView.setRotate(270);
+                        break;
+                }
+
                 this.getChildren().add(conveyorBeltView);  // Add the conveyor belt view as the second layer
                 break;
             }
         }
+
 
         Image wallImage = new Image("/assets/wall.png");
 
