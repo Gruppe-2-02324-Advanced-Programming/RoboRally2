@@ -274,6 +274,9 @@ public class GameController {
                 case BACKUP:
                     this.backUp(player);
                     break;
+                case OPTION_LEFT_RIGHT:
+                    this.leftOrRight(player, command);
+                    break;
                 default:
                     // DO NOTHING (for now)
             }
@@ -478,9 +481,21 @@ public class GameController {
      * A method called when no corresponding controller operation is implemented yet. This
      * should eventually be removed.
      */
-    public void notImplemented() {
-        // XXX just for now to indicate that the actual method is not yet implemented
-        assert false;
+    public void leftOrRight(Player player, Command option) {
+        if (player != null && option != null && player.board.getPhase() == Phase.PLAYER_INTERACTION) {
+            switch (option) {
+                case LEFT:
+                    executeCommandOptionAndContinue(Command.LEFT);
+                    continuePrograms();
+                    break;
+                case RIGHT:
+                    executeCommandOptionAndContinue(Command.RIGHT);
+                    continuePrograms();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
 }
