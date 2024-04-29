@@ -482,6 +482,8 @@ public class GameController {
     /**
      * Repeats the command card in the previous register of the player. If it is the first card it does nothing.
      * @author Jacob, s164958
+     * @param player the player to repeat the command card for
+     * @Return void
      */
     public void again(Player player) {
         if (player != null && player.board == board) {

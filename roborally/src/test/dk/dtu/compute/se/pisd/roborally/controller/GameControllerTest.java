@@ -115,6 +115,20 @@ class GameControllerTest {
 
     }
 
+    /**
+     * Testing again command card
+     * @Author Jacob, s164958
+     * @Param player
+     * @Return void
+     */
+    @Test
+    void testAgain(){
+        Board board = gameController.board;
+        Player player = board.getCurrentPlayer();
+        gameController.again(player);
+        Assertions.assertEquals(player, board.getSpace(0, 0).getPlayer(),
+                "Player " + player.getName() + "space should be (0,0)");
+    }
 }
 
 
