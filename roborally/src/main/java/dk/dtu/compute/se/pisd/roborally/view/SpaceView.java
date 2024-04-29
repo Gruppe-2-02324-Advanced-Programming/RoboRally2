@@ -54,8 +54,8 @@ import java.util.Objects;
  */
 public class SpaceView extends StackPane implements ViewObserver {
 
-    final public static int SPACE_HEIGHT = 70; // 75;
-    final public static int SPACE_WIDTH = 70; // 75;
+    final public static int SPACE_HEIGHT = 50; // 75;
+    final public static int SPACE_WIDTH = 50; // 75;
 
     public final Space space;
 
@@ -87,7 +87,17 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
     /**
-     * Draws the walls and the player on the space. Also ensures gears and checkpoints are displayed.
+     * This method is called to update the view of a space on the board. It clears all the current
+     * children views (such as images of walls, gears, checkpoints, etc.) and then reconstructs them
+     * based on the current state of the space. It will add an image for an empty field, and then overlay
+     * other images such as checkpoints and gears if they are present in this space. If a player is on
+     * this space, it will also draw the player. Finally, it will draw the walls of the space if they exist.
+     * The images are loaded from the {@code /assets/} directory, and their paths are constructed dynamically
+     * based on the properties of the space and its actions (such as checkpoints and gears). If an image is
+     * not found or an error occurs during loading, a null pointer exception will be thrown.
+     * <p>
+     * This method implements the {@link ViewObserver#updateView(Subject)} method and is meant to be called
+     * whenever the observed {@link Space} subject is changed.
      *
      * @author Christoffer Fink, s205449@dtu.dk
      * @author Setare Izadi, s232629@dtu.dk
@@ -97,7 +107,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.getChildren().clear();
 
         // Load the empty field image and set it as the background of the space
-        Image emptyFieldImage = new Image(getClass().getResourceAsStream("/assets/empty.png"));
+        Image emptyFieldImage = new Image("/assets/empty.png");
         ImageView emptyFieldView = new ImageView(emptyFieldImage);
         emptyFieldView.setFitWidth(SPACE_WIDTH);
         emptyFieldView.setFitHeight(SPACE_HEIGHT);
