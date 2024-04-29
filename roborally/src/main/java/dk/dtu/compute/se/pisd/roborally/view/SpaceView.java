@@ -44,6 +44,8 @@ import org.jetbrains.annotations.NotNull;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.Objects;
+
 /**
  * ...
  *
@@ -85,7 +87,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
     /**
-     * Draws the walls posibly other stuff
+     * Draws the walls and the player on the space. Also ensures gears and checkpoints are displayed.
      *
      * @author Christoffer Fink, s205449@dtu.dk
      * @author Setare Izadi, s232629@dtu.dk
@@ -95,7 +97,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.getChildren().clear();
 
         // Load the empty field image and set it as the background of the space
-        Image emptyFieldImage = new Image("/assets/empty.png");
+        Image emptyFieldImage = new Image(getClass().getResourceAsStream("/assets/empty.png"));
         ImageView emptyFieldView = new ImageView(emptyFieldImage);
         emptyFieldView.setFitWidth(SPACE_WIDTH);
         emptyFieldView.setFitHeight(SPACE_HEIGHT);
@@ -104,9 +106,9 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         // Check if the current space is a checkpoint
         for (FieldAction action : space.getActions()) {
-            if (action instanceof Checkpoint) {
-                Checkpoint checkpoint = (Checkpoint) action;
-                // Load the checkpoint image
+            if (action instanceof Checkpoint checkpoint) {
+
+                // Load the checkpoint image and set it as the background of the space
                 Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
                 ImageView checkpointView = new ImageView(checkpointImage);
                 checkpointView.setFitWidth(SPACE_WIDTH);
@@ -117,7 +119,31 @@ public class SpaceView extends StackPane implements ViewObserver {
             }
         }
 
+        // Check if the current space has a gear action and display the corresponding image
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof Gears gears) {
+                ImageView gearImageView;
+                if (gears.rotation == Gears.LEFT_TURN) {
+                    Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearLeft.png")));
+                    gearImageView = new ImageView(gearImage);
+                } else if (gears.rotation == Gears.RIGHT_TURN) {
+                    Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearRight.png")));
+                    gearImageView = new ImageView(gearImage);
+                } else {
+                    continue; // If it's not left or right, we'll skip this action
+                }
+
+                gearImageView.setFitWidth(SPACE_WIDTH);
+                gearImageView.setFitHeight(SPACE_HEIGHT);
+                gearImageView.setPreserveRatio(false);
+                this.getChildren().add(gearImageView); // Added the gear image view as a layer
+                break; // There is only one gear per space, we can break the loop after adding it
+            }
+        }
+
+        // Load and display the wall image
         Image wallImage = new Image("/assets/wall.png");
+        ImageView wallView = new ImageView(wallImage);
 
         // Draw player
         Player player = space.getPlayer();
@@ -137,8 +163,6 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         // Draw walls
         for (Heading wall : space.getWalls()) {
-
-            ImageView wallView = new ImageView(wallImage);
 
             switch (wall) {
                 case NORTH:
@@ -175,8 +199,7 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.getChildren().add(wallView);
         }
     }
-
-    }
+}
 
 
 

@@ -16,7 +16,7 @@ public class Gears extends FieldAction {
     public static final int LEFT_TURN = -90;
     public static final int RIGHT_TURN = 90;
 
-    private final int rotation;
+    public final int rotation;
 
     public Gears(int rotation) {
         this.rotation = rotation;
