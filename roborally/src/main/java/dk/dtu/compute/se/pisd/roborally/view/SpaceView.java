@@ -23,6 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
+import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.controller.Gears;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
@@ -113,6 +114,21 @@ public class SpaceView extends StackPane implements ViewObserver {
                 checkpointView.setFitHeight(SPACE_HEIGHT);
                 checkpointView.setPreserveRatio(false);
                 this.getChildren().add(checkpointView);  // Add the checkpoint view as the second layer
+                break;
+            }
+        }
+
+        // Check if the current space contains a conveyor belt
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof ConveyorBelt) {
+                ConveyorBelt conveyorBelt = (ConveyorBelt) action;
+                // Load the conveyor belt image
+                Image conveyorBeltImage = new Image("/assets/green.png"); // replace with the actual path to your conveyor belt image
+                ImageView conveyorBeltView = new ImageView(conveyorBeltImage);
+                conveyorBeltView.setFitWidth(SPACE_WIDTH);
+                conveyorBeltView.setFitHeight(SPACE_HEIGHT);
+                conveyorBeltView.setPreserveRatio(false);
+                this.getChildren().add(conveyorBeltView);  // Add the conveyor belt view as the second layer
                 break;
             }
         }
