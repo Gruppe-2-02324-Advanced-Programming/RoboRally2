@@ -480,7 +480,8 @@ public class GameController {
     }
 
     /**
-     * Repeats the command card in the previous register of the player. If it is the first card it does nothing.
+     * Repeats the command card in the previous register of the player. If it is the first card it does nothing,
+     * if the previous card is an again card it will repeat the card before that.
      * @author Jacob, s164958
      * @param player the player to repeat the command card for
      * @Return void
@@ -490,15 +491,19 @@ public class GameController {
             int prevStep = board.getStep() - 1;
             if (prevStep >= 0) {
                 CommandCard card = player.getProgramField(prevStep).getCard();
-                if (card != null) {
+                if (card != null && card.command != Command.AGAIN) {
                     Command command = card.command;
                     if (command.isInteractive()) {
                         board.setPhase(Phase.PLAYER_INTERACTION);
                         return;
                     }
                     executeCommand(player, command);
+                if (card.command == Command.AGAIN) {
+                    board.setStep(prevStep);
+                    again(player);
+                    board.setStep(board.getStep() + 1);
                 }
             }
         }
     }
-}
+}}
