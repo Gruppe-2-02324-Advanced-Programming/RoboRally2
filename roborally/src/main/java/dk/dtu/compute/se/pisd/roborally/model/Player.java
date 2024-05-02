@@ -152,4 +152,7 @@ public class Player extends Subject {
         return checkpoints;
     }
 
+
+
+
 }

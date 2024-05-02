@@ -247,6 +247,34 @@
       "x": 6,
       "y": 6,
         "rotation": 90
+    },
+    {
+      "walls": [],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner",
+          "INSTANCE": {
+            "heading": "NORTH",
+            "rotation": 90
+          }
+        }
+      ],
+      "x": 7,
+      "y": 3
+    },
+    {
+      "walls": [],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner",
+          "INSTANCE": {
+            "heading": "EAST",
+            "rotation": -90
+          }
+        }
+      ],
+      "x": 7,
+      "y": 4
     }
   ]
 }
