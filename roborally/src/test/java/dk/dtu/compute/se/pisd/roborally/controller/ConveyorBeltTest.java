@@ -56,6 +56,26 @@ public class ConveyorBeltTest {
         Assertions.assertEquals(current, board.getSpace(0, 2).getPlayer(), "Player " + current.getName() + " should be at Space (0, 2)!");
     }
 
+
+@Test
+void ConveyorBeltCornerRightTest() {
+    Board board = gameController.board;
+    Player current = board.getCurrentPlayer();
+
+    // Set up the conveyor belt corner action on space (0, 1) to turn right and move the player east
+    board.getSpace(0, 1).addAction(new ConveyorBeltCorner(Heading.EAST, Gears.RIGHT_TURN));
+
+    // Move the player to space (0, 1)
+    gameController.moveForward(current); // Assuming this moves to space (0, 1)
+
+    // Execute the conveyor belt corner action
+    board.getSpace(0, 1).getActions().get(0).doAction(gameController, board.getSpace(0, 1));
+
+
+
+    Assertions.assertEquals(Heading.SOUTH, current.getHeading(), "Player should be heading South!");
+    Assertions.assertEquals(current, board.getSpace(1, 1).getPlayer(), "Player should be at Space (1, 1)!");
     }
+}
 
 

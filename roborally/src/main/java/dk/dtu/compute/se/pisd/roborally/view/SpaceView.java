@@ -24,6 +24,7 @@ package dk.dtu.compute.se.pisd.roborally.view;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.controller.Gears;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
@@ -103,6 +104,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         emptyFieldView.setPreserveRatio(false);
         this.getChildren().add(emptyFieldView);  // Add the empty field view as the first layer
 
+
         // Check if the current space is a checkpoint
         for (FieldAction action : space.getActions()) {
             if (action instanceof Checkpoint) {
@@ -117,6 +119,44 @@ public class SpaceView extends StackPane implements ViewObserver {
                 break;
             }
         }
+
+
+        // Check if the current space contains a ConveyorBeltCorner
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof ConveyorBeltCorner) {
+                ConveyorBeltCorner conveyorBeltCorner = (ConveyorBeltCorner) action;
+                // Load the conveyor belt corner image
+                Image conveyorBeltCornerImage;
+                if (conveyorBeltCorner.getRotation() == Gears.LEFT_TURN) {
+                    conveyorBeltCornerImage = new Image("/assets/greenTurnLeft.png");
+                } else {
+                    conveyorBeltCornerImage = new Image("/assets/greenTurnRight.png");
+                }
+                ImageView conveyorBeltCornerView = new ImageView(conveyorBeltCornerImage);
+                conveyorBeltCornerView.setFitWidth(SPACE_WIDTH);
+                conveyorBeltCornerView.setFitHeight(SPACE_HEIGHT);
+                conveyorBeltCornerView.setPreserveRatio(false);
+                // Rotate the conveyor belt corner image based on its heading
+                switch (conveyorBeltCorner.getHeading()) {
+                    case NORTH:
+                        conveyorBeltCornerView.setRotate(0);
+                        break;
+                    case EAST:
+                        conveyorBeltCornerView.setRotate(90);
+                        break;
+                    case SOUTH:
+                        conveyorBeltCornerView.setRotate(180);
+                        break;
+                    case WEST:
+                        conveyorBeltCornerView.setRotate(270);
+                        break;
+                }
+
+                this.getChildren().add(conveyorBeltCornerView);  // Add the conveyor belt corner view as the second layer
+                break;
+            }
+        }
+
 
         // Check if the current space contains a conveyor belt
         for (FieldAction action : space.getActions()) {
