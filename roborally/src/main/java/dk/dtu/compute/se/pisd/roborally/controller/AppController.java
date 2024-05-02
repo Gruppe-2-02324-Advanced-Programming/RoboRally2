@@ -188,6 +188,7 @@ public class AppController implements Observer {
      * Does so player can win
      * @author Christoffer Fink s205449
      * @author Marcus
+     * @author Setare s232629
      * @param subject the subject which changed
      */
     @Override
@@ -201,7 +202,14 @@ public class AppController implements Observer {
                         stopGame();
                         //Så viser den ikke vores dialogboks mere end en gang
                         ((Board) subject).setWon(false);
-                        return;
+                        Optional<ButtonType> result = alert.showAndWait();  // Viser dialogboksen og venter på brugerinput
+
+                        if (result.isPresent() && result.get() == ButtonType.OK) {
+                            stopGame();
+                            ((Board) subject).setWon(false);  // Sørger for at dialogboksen ikke vises mere end én gang
+                            return;  // Returnerer efter at OK er trykket
+                        }
+                        return;  // Returnerer hvis ingen knap er trykket (usandsynligt da dialogboksen blokerer)
                     }
                 }
             }
