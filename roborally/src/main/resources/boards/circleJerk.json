@@ -1,6 +1,7 @@
 {
   "width": 16,
   "height": 8,
+  "totalCheckpoints": 2,
   "spaces": [
 
     {"walls": ["NORTH"], "x": 0, "y": 0}, {"walls": ["NORTH"], "x": 1, "y": 0}, {"walls": ["NORTH"], "x": 2, "y": 0}, {"walls": ["NORTH"], "x": 3, "y": 0},
