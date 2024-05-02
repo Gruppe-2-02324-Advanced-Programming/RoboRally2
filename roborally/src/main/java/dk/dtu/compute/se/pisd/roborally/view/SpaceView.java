@@ -54,8 +54,8 @@ import javafx.scene.image.ImageView;
  */
 public class SpaceView extends StackPane implements ViewObserver {
 
-    final public static int SPACE_HEIGHT = 70; // 75;
-    final public static int SPACE_WIDTH = 70; // 75;
+    final public static int SPACE_HEIGHT = 50; // 75;
+    final public static int SPACE_WIDTH = 50; // 75;
 
     public final Space space;
 
