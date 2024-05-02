@@ -46,8 +46,6 @@ import org.jetbrains.annotations.NotNull;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.util.Objects;
-
 /**
  * ...
  *
@@ -56,8 +54,8 @@ import java.util.Objects;
  */
 public class SpaceView extends StackPane implements ViewObserver {
 
-    final public static int SPACE_HEIGHT = 50; // 75;
-    final public static int SPACE_WIDTH = 50; // 75;
+    final public static int SPACE_HEIGHT = 70; // 75;
+    final public static int SPACE_WIDTH = 70; // 75;
 
     public final Space space;
 
@@ -89,17 +87,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
     /**
-     * This method is called to update the view of a space on the board. It clears all the current
-     * children views (such as images of walls, gears, checkpoints, etc.) and then reconstructs them
-     * based on the current state of the space. It will add an image for an empty field, and then overlay
-     * other images such as checkpoints and gears if they are present in this space. If a player is on
-     * this space, it will also draw the player. Finally, it will draw the walls of the space if they exist.
-     * The images are loaded from the {@code /assets/} directory, and their paths are constructed dynamically
-     * based on the properties of the space and its actions (such as checkpoints and gears). If an image is
-     * not found or an error occurs during loading, a null pointer exception will be thrown.
-     * <p>
-     * This method implements the {@link ViewObserver#updateView(Subject)} method and is meant to be called
-     * whenever the observed {@link Space} subject is changed.
+     * Draws the walls posibly other stuff
      *
      * @author Christoffer Fink, s205449@dtu.dk
      * @author Setare Izadi, s232629@dtu.dk
@@ -119,9 +107,9 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         // Check if the current space is a checkpoint
         for (FieldAction action : space.getActions()) {
-            if (action instanceof Checkpoint checkpoint) {
-
-                // Load the checkpoint image and set it as the background of the space
+            if (action instanceof Checkpoint) {
+                Checkpoint checkpoint = (Checkpoint) action;
+                // Load the checkpoint image
                 Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
                 ImageView checkpointView = new ImageView(checkpointImage);
                 checkpointView.setFitWidth(SPACE_WIDTH);
@@ -132,29 +120,6 @@ public class SpaceView extends StackPane implements ViewObserver {
             }
         }
 
-        // Check if the current space has a gear action and display the corresponding image
-        for (FieldAction action : space.getActions()) {
-            if (action instanceof Gears gears) {
-                ImageView gearImageView;
-                if (gears.rotation == Gears.LEFT_TURN) {
-                    Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearLeft.png")));
-                    gearImageView = new ImageView(gearImage);
-                } else if (gears.rotation == Gears.RIGHT_TURN) {
-                    Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearRight.png")));
-                    gearImageView = new ImageView(gearImage);
-                } else {
-                    continue; // If it's not left or right, we'll skip this action
-                }
-
-                gearImageView.setFitWidth(SPACE_WIDTH);
-                gearImageView.setFitHeight(SPACE_HEIGHT);
-                gearImageView.setPreserveRatio(false);
-                this.getChildren().add(gearImageView); // Added the gear image view as a layer
-                break; // There is only one gear per space, we can break the loop after adding it
-            }
-        }
-
-        // Load and display the wall image
 
         // Check if the current space contains a ConveyorBeltCorner
         for (FieldAction action : space.getActions()) {
@@ -226,7 +191,6 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
         Image wallImage = new Image("/assets/wall.png");
-        ImageView wallView = new ImageView(wallImage);
 
         // Draw player
         Player player = space.getPlayer();
@@ -246,6 +210,8 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         // Draw walls
         for (Heading wall : space.getWalls()) {
+
+            ImageView wallView = new ImageView(wallImage);
 
             switch (wall) {
                 case NORTH:
@@ -282,6 +248,7 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.getChildren().add(wallView);
         }
     }
+
 }
 
 
