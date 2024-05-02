@@ -157,6 +157,71 @@
       "x": 3, "y": 5
     },
 
+
+
+    {
+      "walls": [],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Gears",
+          "INSTANCE": {
+            "rotation": 90
+          }
+        }
+      ],
+      "x": 5,
+      "y": 2
+    },
+
+
+
+
+    {
+      "walls": [],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Gears",
+          "INSTANCE": {
+            "rotation": -90
+          }
+        }
+      ],
+      "x": 3,
+      "y": 2
+    },
+
+
+    {
+      "walls": [],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Gears",
+          "INSTANCE": {
+            "rotation": -90
+          }
+        }
+      ],
+      "x": 3,
+      "y": 4
+    },
+
+
+    {
+      "walls": [],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Gears",
+          "INSTANCE": {
+            "rotation": 90
+          }
+        }
+      ],
+      "x": 5,
+      "y": 4
+    },
+
+
+
     {
       "walls": [],
       "actions": [

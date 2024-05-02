@@ -46,6 +46,8 @@ import org.jetbrains.annotations.NotNull;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.Objects;
+
 /**
  * ...
  *
@@ -120,6 +122,29 @@ public class SpaceView extends StackPane implements ViewObserver {
             }
         }
 
+
+
+        // Check if the current space has a gear action and display the corresponding image
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof Gears gears) {
+                ImageView gearImageView;
+                if (gears.rotation == Gears.LEFT_TURN) {
+                    Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearLeft.png")));
+                    gearImageView = new ImageView(gearImage);
+                } else if (gears.rotation == Gears.RIGHT_TURN) {
+                    Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearRight.png")));
+                    gearImageView = new ImageView(gearImage);
+                } else {
+                    continue; // If it's not left or right, we'll skip this action
+                }
+
+                gearImageView.setFitWidth(SPACE_WIDTH);
+                gearImageView.setFitHeight(SPACE_HEIGHT);
+                gearImageView.setPreserveRatio(false);
+                this.getChildren().add(gearImageView); // Added the gear image view as a layer
+                break; // There is only one gear per space, we can break the loop after adding it
+            }
+        }
 
         // Check if the current space contains a ConveyorBeltCorner
         for (FieldAction action : space.getActions()) {
