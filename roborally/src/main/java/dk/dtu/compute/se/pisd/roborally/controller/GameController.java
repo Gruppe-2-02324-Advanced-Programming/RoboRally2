@@ -498,7 +498,8 @@ public class GameController {
                         return;
                     }
                     executeCommand(player, command);
-                if (card.command == Command.AGAIN) {
+                }
+                if (card != null && card.command == Command.AGAIN) {
                     board.setStep(prevStep);
                     again(player);
                     board.setStep(board.getStep() + 1);
@@ -506,4 +507,4 @@ public class GameController {
             }
         }
     }
-}}
+}
