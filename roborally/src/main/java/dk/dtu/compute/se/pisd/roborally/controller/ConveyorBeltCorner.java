@@ -14,6 +14,10 @@ import org.jetbrains.annotations.NotNull;
  * @author Christoffer s205449
  *
  */
+
+
+
+//todo ligenu ændrer den også robottens heading skal laves om til ikke at den ikke skal ændre heading
 public class ConveyorBeltCorner extends FieldAction {
     Heading heading;
     private int rotation;
