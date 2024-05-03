@@ -152,6 +152,17 @@ public class Player extends Subject {
         return checkpoints;
     }
 
+    private int energyCubes = 0; // Field to store energy cubes
+
+    public void addEnergyCube() {
+        this.energyCubes++;
+        notifyChange(); // Notify observers of the change
+    }
+
+    public int getEnergyCubes() {
+        return energyCubes;
+    }
+
 
 
 

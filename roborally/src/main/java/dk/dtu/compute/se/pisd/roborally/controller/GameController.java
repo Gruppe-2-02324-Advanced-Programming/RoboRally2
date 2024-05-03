@@ -277,6 +277,9 @@ public class GameController {
                 case OPTION_LEFT_RIGHT:
                     this.leftOrRight(player, command);
                     break;
+                case POWER_UP:
+                    player.addEnergyCube();
+                    break;
                 default:
                     // DO NOTHING (for now)
             }

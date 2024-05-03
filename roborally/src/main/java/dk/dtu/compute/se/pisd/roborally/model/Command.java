@@ -43,7 +43,8 @@ public enum Command {
 
     BACKUP("Back Up"),
     UTURN("U-Turn"),
-    OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
+    OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT),
+    POWER_UP("Power Up");
 
     final public String displayName;
 
