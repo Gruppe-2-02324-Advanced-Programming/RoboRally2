@@ -39,15 +39,21 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import java.nio.file.*;
 
 /**
  *
  * AppController is the main controller of the application. It is responsible
  * for starting and stopping games, and for saving and loading games. It also
  * creates the board view and the player views.
+ * 
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Christoffer s205449
  *
@@ -80,8 +86,9 @@ public class AppController implements Observer {
                 }
             }
 
-            // XXX the board should eventually be created programmatically or loaded from a file
-            //     here we just create an empty board with the required number of players.
+            // XXX the board should eventually be created programmatically or loaded from a
+            // file
+            // here we just create an empty board with the required number of players.
 
             gameController = new GameController(initializeBoard());
             int no = result.get();
@@ -103,35 +110,56 @@ public class AppController implements Observer {
 
     /**
      *
-     * this method loads the games from the database and asks the user which of the gameID's they wish to load.
-     * The system then finds the game which has the same gameID as the one requested.
+     * this method loads the games from the database and asks the user which of the
+     * gameID's they wish to load.
+     * The system then finds the game which has the same gameID as the one
+     * requested.
      */
     public void saveGame() {
-        //TODO: implement
+        // TODO: implement
     }
 
-
+    /**
+     * @author Marcus s214962
+     *
+     */
     public void loadGame() {
+        String directoryPath = "roborally/src/main/resources/savedGames";
+        List<String> GAME_IDS = new ArrayList<>();
+        try {
+            List<Path> gdsf = Files.walk(Paths.get(directoryPath))
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".json"))
+                    .collect(Collectors.toList());
+            for (Path p : gdsf) {
+                GAME_IDS.add(p.toString());
+            }
+        } catch (IOException e) {
+            // e.printStackTrace();
+        }
 
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(GAME_IDS.get(0), GAME_IDS);
+        dialog.setTitle("Load Game");
+        dialog.setHeaderText("Select gameID");
+        Optional<String> result = dialog.showAndWait();
 
     }
-
 
     /**
      * @author Christoffer s205449
      *
-     * This method checks which boards are available
+     *         This method checks which boards are available
      */
-    private Board initializeBoard(){
+    private Board initializeBoard() {
         List<String> boards = LoadBoard.getBoards();
         ChoiceDialog<String> dialog = new ChoiceDialog<>(boards.get(0), boards);
         dialog.setTitle("Select board");
         dialog.setHeaderText("Select board");
         Optional<String> result = dialog.showAndWait();
-        if(result.isPresent()) {
+        if (result.isPresent()) {
             return LoadBoard.loadBoard(result.get());
         }
-        return new Board(8,8);
+        return new Board(8, 8);
     }
 
     /**
@@ -154,7 +182,6 @@ public class AppController implements Observer {
         }
         return false;
     }
-
 
     public void exit() {
         if (gameController != null) {
@@ -183,9 +210,9 @@ public class AppController implements Observer {
         return gameController != null;
     }
 
-
     /**
      * Does so player can win
+     * 
      * @author Christoffer Fink s205449
      * @author Marcus
      * @author Setare s232629
@@ -193,23 +220,25 @@ public class AppController implements Observer {
      */
     @Override
     public void update(Subject subject) {
-        if(subject.getClass() == Board.class){
-            if(((Board) subject).isWon()){
-                for (Player player: ((Board) subject).getPlayers()) {
-                    if(player.getCheckpoints() == ((Board) subject).getTotalCheckpoints()) {
-                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by, " + player.getName(), ButtonType.OK);
+        if (subject.getClass() == Board.class) {
+            if (((Board) subject).isWon()) {
+                for (Player player : ((Board) subject).getPlayers()) {
+                    if (player.getCheckpoints() == ((Board) subject).getTotalCheckpoints()) {
+                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by, " + player.getName(),
+                                ButtonType.OK);
                         alert.showAndWait();
                         stopGame();
-                        //Så viser den ikke vores dialogboks mere end en gang
+                        // Så viser den ikke vores dialogboks mere end en gang
                         ((Board) subject).setWon(false);
-                        Optional<ButtonType> result = alert.showAndWait();  // Viser dialogboksen og venter på brugerinput
+                        Optional<ButtonType> result = alert.showAndWait(); // Viser dialogboksen og venter på
+                                                                           // brugerinput
 
                         if (result.isPresent() && result.get() == ButtonType.OK) {
                             stopGame();
-                            ((Board) subject).setWon(false);  // Sørger for at dialogboksen ikke vises mere end én gang
-                            return;  // Returnerer efter at OK er trykket
+                            ((Board) subject).setWon(false); // Sørger for at dialogboksen ikke vises mere end én gang
+                            return; // Returnerer efter at OK er trykket
                         }
-                        return;  // Returnerer hvis ingen knap er trykket (usandsynligt da dialogboksen blokerer)
+                        return; // Returnerer hvis ingen knap er trykket (usandsynligt da dialogboksen blokerer)
                     }
                 }
             }
@@ -217,4 +246,3 @@ public class AppController implements Observer {
     }
 
 }
-
