@@ -187,7 +187,7 @@ public class AppController implements Observer {
     /**
      * Does so player can win
      * @author Christoffer Fink s205449
-     * @author Marcus
+     * @author Marcus s214962
      * @author Setare s232629
      * @param subject the subject which changed
      */
@@ -197,10 +197,20 @@ public class AppController implements Observer {
             if(((Board) subject).isWon()){
                 for (Player player: ((Board) subject).getPlayers()) {
                     if(player.getCheckpoints() == ((Board) subject).getTotalCheckpoints()) {
-                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by, " + player.getName(), ButtonType.OK);
-                        alert.showAndWait();
-                        stopGame();
-                        //Så viser den ikke vores dialogboks mere end en gang
+                        ButtonType playAgainButton = new ButtonType("Play Again");
+                        ButtonType closeButton = new ButtonType("Close Game");
+                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by, " + player.getName(), ButtonType.OK, playAgainButton, closeButton);
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.isPresent() && result.get() == playAgainButton) {
+                            player.setCheckpoints(0);
+                            newGame();
+                        } else if (result.isPresent() && result.get() == closeButton) {
+                            player.setCheckpoints(0);
+                            exit();
+                        } else {
+                            player.setCheckpoints(0);
+                            stopGame();
+                        }
                         ((Board) subject).setWon(false);
                         return;
                     }
