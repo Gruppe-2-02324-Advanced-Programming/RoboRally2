@@ -220,16 +220,14 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
 
-
-
-
-
+        //todo add player as a picture on board
 
         // Draw player
         Player player = space.getPlayer();
         if (player != null) {
+            System.out.println("/assets/" + player.getName() + ".png");
             // Load the player image. You should have different images per player or use a single image and colorize it dynamically if possible.
-            Image playerImage = new Image("/assets" + player.getName() + ".png"); // Assuming each player has a unique ID
+            Image playerImage = new Image("/assets/" + player.getName() + ".png"); // Assuming each player has a unique ID
             ImageView playerView = new ImageView(playerImage);
             playerView.setFitWidth(30); // Adjust the width as needed
             playerView.setFitHeight(30); // Adjust the height as needed
