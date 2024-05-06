@@ -24,6 +24,7 @@ package dk.dtu.compute.se.pisd.roborally.view;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.DoubleConveyorBelt;
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.controller.Gears;
@@ -214,6 +215,34 @@ public class SpaceView extends StackPane implements ViewObserver {
             }
         }
 
+        // Check if the current space contains a Double Conveyor Belt
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof DoubleConveyorBelt) {
+                DoubleConveyorBelt doubleConveyorBelt = (DoubleConveyorBelt) action;
+                Image doubleConveyorBeltImage = new Image("/assets/blue.png");
+                ImageView doubleConveyorBeltView = new ImageView(doubleConveyorBeltImage);
+                doubleConveyorBeltView.setFitWidth(SPACE_WIDTH);
+                doubleConveyorBeltView.setFitHeight(SPACE_HEIGHT);
+                doubleConveyorBeltView.setPreserveRatio(false);
+                // Rotate the image based on its heading
+                switch (doubleConveyorBelt.getHeading()) {
+                    case NORTH:
+                        doubleConveyorBeltView.setRotate(0);
+                        break;
+                    case EAST:
+                        doubleConveyorBeltView.setRotate(90);
+                        break;
+                    case SOUTH:
+                        doubleConveyorBeltView.setRotate(180);
+                        break;
+                    case WEST:
+                        doubleConveyorBeltView.setRotate(270);
+                        break;
+                }
+                this.getChildren().add(doubleConveyorBeltView);  // Add the double conveyor belt view as another layer
+                break; // Assuming only one major action per space
+            }
+        }
 
         Image wallImage = new Image("/assets/wall.png");
 
