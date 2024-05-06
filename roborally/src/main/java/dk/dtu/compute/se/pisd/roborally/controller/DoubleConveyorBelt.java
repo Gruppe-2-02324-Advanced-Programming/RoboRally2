@@ -12,6 +12,15 @@ public class DoubleConveyorBelt extends FieldAction {
         this.heading = heading;
     }
 
+    /**
+     * Executes the action of moving a player two spaces in the direction of this conveyor belt.
+     * The player is moved twice in the same direction if both moves are valid.
+     *
+     * @author Emily, s191174
+     * @param gameController the game controller managing the game logic
+     * @param space the initial space from which the player starts
+     * @return true if the player was successfully moved two spaces; false if any move failed
+     */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
         if (space != null) {

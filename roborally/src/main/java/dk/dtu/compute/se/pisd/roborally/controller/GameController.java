@@ -244,7 +244,14 @@ public class GameController {
 
 
 
-
+    /**
+     * Executes the given command for the specified player. If the command is POWER_UP,
+     * the player will receive one energy cube.
+     *
+     * @author Emily, s191174
+     * @param player the player to whom the command will apply
+     * @param command the command to be executed
+     */
     // XXX: V2
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {

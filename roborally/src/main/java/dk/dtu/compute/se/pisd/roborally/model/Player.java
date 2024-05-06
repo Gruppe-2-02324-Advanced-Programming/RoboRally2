@@ -154,6 +154,12 @@ public class Player extends Subject {
 
     private int energyCubes = 0; // Field to store energy cubes
 
+    /**
+     * Adds one energy cube to the player's current count. This method should be called
+     * when a Power Up card is played.
+     *
+     * @author Emily, s191174
+     */
     public void addEnergyCube() {
         this.energyCubes++;
         notifyChange(); // Notify observers of the change
