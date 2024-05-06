@@ -72,6 +72,29 @@ class GameControllerTest {
         Assertions.assertNull(board.getSpace(0, 0).getPlayer(),
                 "Space (0,0) should be empty!");
     }
+
+
+    /**
+     * Same as moveForward test just checking if it performs the function three times
+     * @author Setare Izadi, s232629
+     */
+    @Test
+    void fwdThree() {
+        // samme som moveForward her gøres det bare 3 gange
+        Board board = gameController.board;
+        Player player = board.getCurrentPlayer();
+
+        gameController.moveThree(player);
+
+        Assertions.assertEquals(player, board.getSpace(0, 3).getPlayer(),
+                "Player " + player.getName() + " should space be (0,3)!");
+        Assertions.assertEquals(Heading.SOUTH, player.getHeading(),
+                "Player should be heading SOUTH!");
+        Assertions.assertNull(board.getSpace(0, 0).getPlayer(),
+                "Space (0,0) should be empty!");
+    }
+
+
     /**
      *@author Christoffer, s205449
      * turnRight test
