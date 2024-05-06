@@ -235,6 +235,7 @@ public class Board extends Subject {
             //System.out.println(p.getCheckpoints() + ":" + totalCheckpoints);
             if (p.getCheckpoints() == totalCheckpoints) {
                 won = true;
+                break;
             }
         }
         return won;
