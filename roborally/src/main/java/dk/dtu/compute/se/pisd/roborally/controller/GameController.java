@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class GameController {
 
-    final public Board board;
+    public Board board;
 
     public GameController(@NotNull Board board) {
         this.board = board;
@@ -494,6 +494,16 @@ public class GameController {
         }
     }
 
+
+
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public Board getBoard() {
+        return this.board;
+    }
     /**
      * Repeats the command card in the previous register of the player. If it is the first card it does nothing,
      * if the previous card is an again card it will repeat the card before that.

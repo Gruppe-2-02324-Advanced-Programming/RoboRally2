@@ -39,6 +39,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
 
+
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +49,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import java.nio.file.*;
+import java.util.stream.Stream;
 
 /**
  *
@@ -124,18 +127,18 @@ public class AppController implements Observer {
      *
      */
     public void loadGame() {
-        String directoryPath = "roborally/src/main/resources/savedGames";
         List<String> GAME_IDS = new ArrayList<>();
-        try {
-            List<Path> gdsf = Files.walk(Paths.get(directoryPath))
+        String directoryPath = "roborally/src/main/resources/savedGames";
+
+        try (Stream<Path> stream = Files.walk(Paths.get(directoryPath))) {
+            GAME_IDS = stream
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(".json"))
+                    .map(Path::toString)
                     .collect(Collectors.toList());
-            for (Path p : gdsf) {
-                GAME_IDS.add(p.toString());
-            }
         } catch (IOException e) {
-            // e.printStackTrace();
+            System.err.println("Error loading game files: " + e.getMessage());
+            return;
         }
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>(GAME_IDS.get(0), GAME_IDS);
