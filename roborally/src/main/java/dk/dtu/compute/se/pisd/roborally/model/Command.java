@@ -40,9 +40,9 @@ public enum Command {
     LEFT("Turn Left"),
     FAST_FORWARD("Fast Fwd"),
     FORWARD_THREE("Fwd Three"),
-
     BACKUP("Back Up"),
     UTURN("U-Turn"),
+    AGAIN("Again"),
     OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
 
     final public String displayName;

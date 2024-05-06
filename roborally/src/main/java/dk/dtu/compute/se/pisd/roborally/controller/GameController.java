@@ -53,13 +53,14 @@ public class GameController {
     }
 
     /**
-     *This is just some dummy controller operation to make a simple move to see something
-     *happening on the board. This method should eventually be deleted!
-     *@param space the space to which the current player should move
+     * This is just some dummy controller operation to make a simple move to see something
+     * happening on the board. This method should eventually be deleted!
+     *
+     * @param space the space to which the current player should move
      */
-    public void moveCurrentPlayerToSpace(@NotNull Space space)  {
+    public void moveCurrentPlayerToSpace(@NotNull Space space) {
         Player currentPlayer = board.getCurrentPlayer();
-        if(space.getPlayer() == null)
+        if (space.getPlayer() == null)
             currentPlayer.setSpace(space);
         else return;
 
@@ -165,7 +166,7 @@ public class GameController {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
                     Command command = card.command;
-                    if (command.isInteractive()){
+                    if (command.isInteractive()) {
                         board.setPhase(Phase.PLAYER_INTERACTION);
                         return;
                     }
@@ -176,10 +177,10 @@ public class GameController {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                 } else {
                     step++;
-                    for(Player player : board.getPlayers()){
+                    for (Player player : board.getPlayers()) {
                         List<FieldAction> actions = player.getSpace().getActions();
-                        if(actions != null) {
-                            for (FieldAction action : actions){
+                        if (actions != null) {
+                            for (FieldAction action : actions) {
                                 action.doAction(this, player.getSpace());
                             }
 
@@ -206,26 +207,25 @@ public class GameController {
 
 
     /**
-     *
      * @author Christoffer, s205449
      */
-    public void executeCommandOptionAndContinue(@NotNull Command option){
+    public void executeCommandOptionAndContinue(@NotNull Command option) {
         Player currentPlayer = board.getCurrentPlayer();
-        if(currentPlayer != null &&
-                board.getPhase()== Phase.PLAYER_INTERACTION &&
-                option !=null);
+        if (currentPlayer != null &&
+                board.getPhase() == Phase.PLAYER_INTERACTION &&
+                option != null) ;
         board.setPhase(Phase.ACTIVATION);
         executeCommand(currentPlayer, option);
 
         int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
-        if(nextPlayerNumber < board.getPlayersNumber()){
+        if (nextPlayerNumber < board.getPlayersNumber()) {
             board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
         } else {
             int step = board.getStep() + 1;
-            for(Player player : board.getPlayers()){
+            for (Player player : board.getPlayers()) {
                 List<FieldAction> actions = player.getSpace().getActions();
-                if(actions != null) {
-                    for (FieldAction action : actions){
+                if (actions != null) {
+                    for (FieldAction action : actions) {
                         action.doAction(this, player.getSpace());
                     }
                 }
@@ -240,9 +240,6 @@ public class GameController {
             }
         }
     }
-
-
-
 
 
     // XXX: V2
@@ -273,6 +270,8 @@ public class GameController {
                     break;
                 case BACKUP:
                     this.backUp(player);
+                case AGAIN:
+                    this.again(player);
                     break;
                 case OPTION_LEFT_RIGHT:
                     this.leftOrRight(player, command);
@@ -284,13 +283,10 @@ public class GameController {
     }
 
 
-
-
     /**
      * ...
      *
      * @author Christoffer, s205449
-     *
      */
 
     class moveNotPossibleException extends Exception {
@@ -304,8 +300,8 @@ public class GameController {
         /**
          * Here we create the Exception moveIsNotPossible, but for now, nothing happens when thrown
          *
-         * @param player the player that is trying to move
-         * @param space the space the player is trying to move to
+         * @param player  the player that is trying to move
+         * @param space   the space the player is trying to move to
          * @param heading the direction the player is trying to move
          */
 
@@ -323,23 +319,23 @@ public class GameController {
     /**
      * ...
      *
+     * @param player the player to move forward
      * @author Christoffer,  s205449
-     *
-
-     *  The moveForward has been slightly modified with a catch statement at the bottom, however it has been set to be ignored since it doesn't do anything
-     *  Moves a player one space forward in the direction they are currently facing.
-     *  If the movement is not possible (e.g., due to a wall), the action is ignored.
-     *
-     *  @param player the player to move forward
-     *  */
+     * <p>
+     * <p>
+     * The moveForward has been slightly modified with a catch statement at the bottom, however it has been set to be ignored since it doesn't do anything
+     * Moves a player one space forward in the direction they are currently facing.
+     * If the movement is not possible (e.g., due to a wall), the action is ignored.
+     */
     public void moveForward(Player player) {
-        if (board != null && player != null && player.board == board) {Heading heading = player.getHeading();
+        if (board != null && player != null && player.board == board) {
+            Heading heading = player.getHeading();
             Space space = player.getSpace();
             Space target = board.getNeighbour(space, heading);
-            if(target != null) {
+            if (target != null) {
                 try {
-                    movePlayerToSpace(player,target,heading);
-                } catch (moveNotPossibleException ignored){
+                    movePlayerToSpace(player, target, heading);
+                } catch (moveNotPossibleException ignored) {
                 }
             }
         }
@@ -353,37 +349,34 @@ public class GameController {
      * @param player the player to move three spaces forward
      * @author Setare Izadi, s232629@dtu.dk
      */
-    public void moveThree(Player player)
-    {
+    public void moveThree(Player player) {
         moveForward(player);
         moveForward(player);
         moveForward(player);
     }
 
 
-
     /**
-     * @author Christoffer,  s205449
-     *
-     * The movePlayerToSpace which relocates the pushed player to the next space which the pushing player is heading.
-     * If none of the criteria met the moveNotPossibleException will be thrown.
-     *
      * @param player
      * @param space
      * @param heading
      * @throws moveNotPossibleException
+     * @author Christoffer,  s205449
+     * <p>
+     * The movePlayerToSpace which relocates the pushed player to the next space which the pushing player is heading.
+     * If none of the criteria met the moveNotPossibleException will be thrown.
      */
     public void movePlayerToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading)
             throws moveNotPossibleException {
         Player other = space.getPlayer();
-        if (other !=null) {
+        if (other != null) {
             Space target = board.getNeighbour(space,
                     heading);
             if (target != null) {
                 movePlayerToSpace(other,
                         target,
                         heading);
-            } else  {
+            } else {
                 throw new moveNotPossibleException(player,
                         space,
                         heading);
@@ -393,18 +386,18 @@ public class GameController {
          * @author Christoffer Fink 205449
          * Does so the player can't wall through the walls
          */
-        if(player.getSpace() != null){
-            if(player.getSpace().getWalls() != null){
-                for(Heading wall : player.getSpace().getWalls()){
-                    if(wall == heading) {
+        if (player.getSpace() != null) {
+            if (player.getSpace().getWalls() != null) {
+                for (Heading wall : player.getSpace().getWalls()) {
+                    if (wall == heading) {
                         throw new moveNotPossibleException(player, space, heading);
                     }
                 }
             }
         }
-        if(space.getWalls() != null){
-            for(Heading wall : space.getWalls()){
-                if(wall.prev().prev() == heading) {
+        if (space.getWalls() != null) {
+            for (Heading wall : space.getWalls()) {
+                if (wall.prev().prev() == heading) {
                     throw new moveNotPossibleException(player, space, heading);
                 }
             }
@@ -427,7 +420,7 @@ public class GameController {
      * Here the player's direction is set to turn right
      */
     public void turnRight(@NotNull Player player) {
-        if(player !=null && player.board == board){
+        if (player != null && player.board == board) {
             player.setHeading(player.getHeading().next());
         }
     }
@@ -436,33 +429,36 @@ public class GameController {
      * Here the player's direction is set to turn left
      */
     public void turnLeft(@NotNull Player player) {
-        if(player !=null && player.board == board){
+        if (player != null && player.board == board) {
             player.setHeading(player.getHeading().prev());
         }
     }
+
     /**
      * Turns the player around
+     *
      * @param player
      * @author Marcus, s214962
      */
     public void uTurn(@NotNull Player player) {
-        if(player !=null && player.board == board){
+        if (player != null && player.board == board) {
             player.setHeading(player.getHeading().next().next());
         }
     }
+
     /**
      * Moves the player backwards
+     *
      * @param player
      * @author Phillip, s224278
      */
     public void backUp(@NotNull Player player) {
-        if(player !=null && player.board == board){
+        if (player != null && player.board == board) {
             uTurn(player);
             moveForward(player);
             uTurn(player);
         }
     }
-
 
 
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
@@ -498,4 +494,32 @@ public class GameController {
         }
     }
 
+    /**
+     * Repeats the command card in the previous register of the player. If it is the first card it does nothing,
+     * if the previous card is an again card it will repeat the card before that.
+     * @author Jacob, s164958
+     * @param player the player to repeat the command card for
+     * @Return void
+     */
+    public void again(Player player) {
+        if (player != null && player.board == board) {
+            int prevStep = board.getStep() - 1;
+            if (prevStep >= 0) {
+                CommandCard card = player.getProgramField(prevStep).getCard();
+                if (card != null && card.command != Command.AGAIN) {
+                    Command command = card.command;
+                    if (command.isInteractive()) {
+                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        return;
+                    }
+                    executeCommand(player, command);
+                }
+                if (card != null && card.command == Command.AGAIN) {
+                    board.setStep(prevStep);
+                    again(player);
+                    board.setStep(board.getStep() + 1);
+                }
+            }
+        }
+    }
 }
