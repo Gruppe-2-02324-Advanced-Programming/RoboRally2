@@ -215,15 +215,15 @@ public class SpaceView extends StackPane implements ViewObserver {
             }
         }
 
-        // Check if the current space contains a Double Conveyor Belt
         for (FieldAction action : space.getActions()) {
             if (action instanceof DoubleConveyorBelt) {
                 DoubleConveyorBelt doubleConveyorBelt = (DoubleConveyorBelt) action;
-                Image doubleConveyorBeltImage = new Image("/assets/blue.png");
+                Image doubleConveyorBeltImage = new Image("/assets/blue.png");  // Ensure this path is correct
                 ImageView doubleConveyorBeltView = new ImageView(doubleConveyorBeltImage);
                 doubleConveyorBeltView.setFitWidth(SPACE_WIDTH);
                 doubleConveyorBeltView.setFitHeight(SPACE_HEIGHT);
                 doubleConveyorBeltView.setPreserveRatio(false);
+
                 // Rotate the image based on its heading
                 switch (doubleConveyorBelt.getHeading()) {
                     case NORTH:
@@ -239,6 +239,7 @@ public class SpaceView extends StackPane implements ViewObserver {
                         doubleConveyorBeltView.setRotate(270);
                         break;
                 }
+
                 this.getChildren().add(doubleConveyorBeltView);  // Add the double conveyor belt view as another layer
                 break; // Assuming only one major action per space
             }

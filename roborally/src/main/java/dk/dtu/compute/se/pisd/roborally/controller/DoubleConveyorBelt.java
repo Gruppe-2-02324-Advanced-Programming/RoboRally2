@@ -23,25 +23,19 @@ public class DoubleConveyorBelt extends FieldAction {
      */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
-        if (space != null) {
-            Player player = space.getPlayer();
-            if (player != null) {
-                Space nextSpace = gameController.board.getNeighbour(space, heading);
-                if (nextSpace != null) {
-                    try {
-                        // Move to the first space
-                        gameController.movePlayerToSpace(player, nextSpace, heading);
-                        // Attempt to move to the second space
-                        Space secondSpace = gameController.board.getNeighbour(nextSpace, heading);
-                        if (secondSpace != null) {
-                            gameController.movePlayerToSpace(player, secondSpace, heading);
-                            return true;
-                        }
-                    } catch (GameController.moveNotPossibleException e) {
-                        // Log the exception or handle it if necessary
-                        return false;
-                    }
+        if(space != null){
+            Player player  = space.getPlayer();
+            Space neighbour = gameController.board.getNeighbour(space, heading);
+            if(player != null && neighbour != null){
+                try {
+                    gameController.movePlayerToSpace(player, neighbour, heading);
+                    neighbour=gameController.board.getNeighbour(player.getSpace(), heading);
+                    gameController.movePlayerToSpace(player, neighbour, heading);
+
+                }catch (GameController.moveNotPossibleException e){
+                    //Gør ikke noget
                 }
+                return true;
             }
         }
         return false;
@@ -51,4 +45,3 @@ public class DoubleConveyorBelt extends FieldAction {
         return heading;
     }
 }
-

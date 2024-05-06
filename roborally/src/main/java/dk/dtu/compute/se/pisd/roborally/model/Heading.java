@@ -22,7 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.model;
 
 /**
- * ...
+ * Enumeration of the different headings of a robot.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
