@@ -73,6 +73,23 @@ public class Board extends Subject {
         }
     }
 
+    /*
+    public void setBoard(Board b) {
+        this.boardName = b.boardName;
+        this.width = b.width;
+        this.height = b.height;
+        spaces = new Space[b.width][b.height];
+        for (int x = 0; x < b.width; x++) {
+            for (int y = 0; y < b.height; y++) {
+                Space space = new Space(this, x, y);
+                spaces[x][y] = space;
+            }
+        }
+        this.stepMode = false;
+    }
+    */
+
+
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
         this.width = width;
