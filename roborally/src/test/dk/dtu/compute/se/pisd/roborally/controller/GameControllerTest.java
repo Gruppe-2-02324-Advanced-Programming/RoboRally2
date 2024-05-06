@@ -1,9 +1,6 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -138,6 +135,26 @@ class GameControllerTest {
 
     }
 
+    /**
+     * Testing again command card by setting up a player with a forward and again card in their programmingfield
+     * @Author Jacob, s164958
+     * @Param player
+     * @Return void
+     */
+    @Test
+    void testAgain(){
+        Board board = gameController.board;
+        Player player = board.getCurrentPlayer();
+        CommandCard fwd = new CommandCard(Command.FORWARD);
+        CommandCard again = new CommandCard(Command.AGAIN);
+        board.setStep(0);
+        player.getProgramField(0).setCard(fwd);
+        player.getProgramField(1).setCard(again);
+        gameController.finishProgrammingPhase();
+        gameController.executePrograms();
+        Assertions.assertEquals(player, board.getSpace(0, 2).getPlayer(),
+                "Player " + player.getName() + "space should be (0,2)");
+    }
 }
 
 
