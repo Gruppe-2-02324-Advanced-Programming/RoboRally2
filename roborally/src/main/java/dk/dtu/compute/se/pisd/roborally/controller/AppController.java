@@ -155,7 +155,11 @@ public class AppController implements Observer {
         return false;
     }
 
-
+    /**
+     * Exit the application, giving the user the option to save the game
+     * before exiting. If the user cancels the exit operation, the method
+     * returns without exiting the application.
+     */
     public void exit() {
         if (gameController != null) {
             Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -176,7 +180,7 @@ public class AppController implements Observer {
     }
 
     /**
-     *
+     * Returns true if a game is currently running, false otherwise.
      * @return
      */
     public boolean isGameRunning() {

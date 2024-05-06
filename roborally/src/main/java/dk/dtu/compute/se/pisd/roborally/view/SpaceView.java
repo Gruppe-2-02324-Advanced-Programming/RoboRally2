@@ -217,21 +217,41 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         Image wallImage = new Image("/assets/wall.png");
 
+
+
+
+
+
+
+
+
         // Draw player
         Player player = space.getPlayer();
         if (player != null) {
-            Polygon arrow = new Polygon(0.0, 0.0,
-                    10.0, 20.0,
-                    20.0, 0.0);
-            try {
-                arrow.setFill(Color.valueOf(player.getColor()));
-            } catch (Exception e) {
-                arrow.setFill(Color.MEDIUMPURPLE);
-            }
+            // Load the player image. You should have different images per player or use a single image and colorize it dynamically if possible.
+            Image playerImage = new Image("/assets" + player.getName() + ".png"); // Assuming each player has a unique ID
+            ImageView playerView = new ImageView(playerImage);
+            playerView.setFitWidth(30); // Adjust the width as needed
+            playerView.setFitHeight(30); // Adjust the height as needed
+            playerView.setPreserveRatio(true);
 
-            arrow.setRotate((90 * player.getHeading().ordinal()) % 360);
-            this.getChildren().add(arrow);
+            // Rotate the player image based on the player's heading
+            playerView.setRotate((90 * player.getHeading().ordinal()) % 360);
+
+            // Add player image to the view
+            this.getChildren().add(playerView);
+
+            // Optionally, you can align the player in the center of the space
+            StackPane.setAlignment(playerView, Pos.CENTER);
         }
+
+
+
+
+
+
+
+
 
         // Draw walls
         for (Heading wall : space.getWalls()) {
