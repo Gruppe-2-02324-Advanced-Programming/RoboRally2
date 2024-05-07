@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.model;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import javafx.scene.image.Image;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -42,5 +43,7 @@ public class CommandCard extends Subject {
         return command.displayName;
     }
 
-
+    public Image getImage() {
+        return command.cardImage;
+    }
 }

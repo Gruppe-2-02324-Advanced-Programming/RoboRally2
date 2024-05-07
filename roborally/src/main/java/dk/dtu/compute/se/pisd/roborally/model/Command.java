@@ -21,6 +21,8 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
+import javafx.scene.image.Image;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,22 +37,25 @@ import java.util.List;
 public enum Command {
 
     // This is a very simplistic way of realizing different commands.
-    FORWARD("Fwd"),
-    RIGHT("Turn Right"),
-    LEFT("Turn Left"),
-    FAST_FORWARD("Fast Fwd"),
-    FORWARD_THREE("Fwd Three"),
-    BACKUP("Back Up"),
-    UTURN("U-Turn"),
-    AGAIN("Again"),
-    OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
+    FORWARD("Fwd", new Image("assets/cardsMove1.png")),
+    RIGHT("Turn Right", new Image("assets/cardsRight.png")),
+    LEFT("Turn Left", new Image("assets/cardsLeft.png")),
+    FAST_FORWARD("Fast Fwd", new Image("assets/cardsMove2.png")),
+    FORWARD_THREE("Fwd Three", new Image("assets/cardsMove3.png")),
+    BACKUP("Back Up", new Image("assets/cardsMoveBack.png")),
+    UTURN("U-Turn", new Image("assets/cardsUTurn.png")),
+    AGAIN("Again", new Image("assets/cardsMove1.png")),
+    OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png"), LEFT, RIGHT);
 
     final public String displayName;
 
     final private List<Command> options;
 
-    Command(String displayName, Command... options) {
+    final public Image cardImage;
+
+    Command(String displayName, Image cardImage, Command... options) {
         this.displayName = displayName;
+        this.cardImage = cardImage;
         this.options = Collections.unmodifiableList(Arrays.asList(options));
     }
 
