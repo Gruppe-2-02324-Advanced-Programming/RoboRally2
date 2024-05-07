@@ -109,8 +109,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         // Check if the current space is a checkpoint
         for (FieldAction action : space.getActions()) {
-            if (action instanceof Checkpoint) {
-                Checkpoint checkpoint = (Checkpoint) action;
+            if (action instanceof Checkpoint checkpoint) {
                 // Load the checkpoint image
                 Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
                 ImageView checkpointView = new ImageView(checkpointImage);
@@ -148,8 +147,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         // Check if the current space contains a ConveyorBeltCorner
         for (FieldAction action : space.getActions()) {
-            if (action instanceof ConveyorBeltCorner) {
-                ConveyorBeltCorner conveyorBeltCorner = (ConveyorBeltCorner) action;
+            if (action instanceof ConveyorBeltCorner conveyorBeltCorner) {
                 // Load the conveyor belt corner image
                 Image conveyorBeltCornerImage;
                 if (conveyorBeltCorner.getRotation() == Gears.LEFT_TURN) {
@@ -185,10 +183,10 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         // Check if the current space contains a conveyor belt
         for (FieldAction action : space.getActions()) {
-            if (action instanceof ConveyorBelt) {
-                ConveyorBelt conveyorBelt = (ConveyorBelt) action;
+            if (action instanceof ConveyorBelt conveyorBelt) {
                 // Load the conveyor belt image
-                Image conveyorBeltImage = new Image("/assets/green.png"); // replace with the actual path to your conveyor belt image
+                Image conveyorBeltImage; // replace with the actual path to your conveyor belt image
+                conveyorBeltImage = new Image("/assets/green.png");
                 ImageView conveyorBeltView = new ImageView(conveyorBeltImage);
                 conveyorBeltView.setFitWidth(SPACE_WIDTH);
                 conveyorBeltView.setFitHeight(SPACE_HEIGHT);

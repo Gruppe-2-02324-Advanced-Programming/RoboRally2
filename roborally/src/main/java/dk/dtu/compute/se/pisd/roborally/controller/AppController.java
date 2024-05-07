@@ -115,7 +115,7 @@ public class AppController implements Observer {
      * The system then finds the game which has the same gameID as the one requested.
      */
     public void saveGame() {
-        if (gameController != null && gameController.board != null) {
+        /*if (gameController != null && gameController.board != null) {
             Gson gson = new Gson();
             String json = gson.toJson(gameController.board);
             String directoryPath = "roborally/src/main/resources/savedGames";
@@ -133,6 +133,8 @@ public class AppController implements Observer {
         } else {
             System.out.println("No game is currently active.");
         }
+
+         */
     }
 
 
@@ -146,10 +148,10 @@ public class AppController implements Observer {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            try {
-                String json = new String(Files.readAllBytes(selectedFile.toPath()), StandardCharsets.UTF_8);
-                Gson gson = new Gson();
-                Board loadedBoard = gson.fromJson(json, Board.class);
+             try {
+             String json = new String(Files.readAllBytes(selectedFile.toPath()), StandardCharsets.UTF_8);
+               Gson gson = new Gson();
+               Board loadedBoard = gson.fromJson(json, Board.class);
                 if (gameController == null) {
                     gameController = new GameController(loadedBoard);
                 } else {
