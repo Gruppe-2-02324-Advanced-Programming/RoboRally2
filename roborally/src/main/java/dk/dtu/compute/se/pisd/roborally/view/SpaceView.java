@@ -89,7 +89,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
     /**
-     * Draws the walls posibly other stuff
+     * Draws the walls possibly other stuff
      *
      * @author Christoffer Fink, s205449@dtu.dk
      * @author Setare Izadi, s232629@dtu.dk
@@ -218,50 +218,6 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
 
-        //todo add player as a picture on board
-/*
-        // Draw player
-        Player player = space.getPlayer();
-        if (player != null) {
-            System.out.println("/assets/" + player.getName() + ".png");
-            // Load the player image. You should have different images per player or use a single image and colorize it dynamically if possible.
-            Image playerImage = new Image("/assets/" + player.getName() + ".png"); // Assuming each player has a unique ID
-            ImageView playerView = new ImageView(playerImage);
-            playerView.setFitWidth(30); // Adjust the width as needed
-            playerView.setFitHeight(30); // Adjust the height as needed
-            playerView.setPreserveRatio(true);
-
-            // Rotate the player image based on the player's heading
-            playerView.setRotate((90 * player.getHeading().ordinal()) % 360);
-
-            // Add player image to the view
-            this.getChildren().add(playerView);
-
-            // Optionally, you can align the player in the center of the space
-            StackPane.setAlignment(playerView, Pos.CENTER);
-        }
-
-*/
-
-        // Draw player
-        Player player = space.getPlayer();
-        if (player != null) {
-            Polygon arrow = new Polygon(0.0, 0.0,
-                    10.0, 20.0,
-                    20.0, 0.0);
-            try {
-                arrow.setFill(Color.valueOf(player.getColor()));
-            } catch (Exception e) {
-                arrow.setFill(Color.MEDIUMPURPLE);
-            }
-
-            arrow.setRotate((90 * player.getHeading().ordinal()) % 360);
-            this.getChildren().add(arrow);
-        }
-
-
-
-
 
 
         // Draw walls
@@ -303,6 +259,23 @@ public class SpaceView extends StackPane implements ViewObserver {
             wallView.setPreserveRatio(false); // Turn off preserve ratio to allow explicit sizing
             this.getChildren().add(wallView);
         }
+
+        // Draw player
+        Player player = space.getPlayer();
+        if (player != null) {
+            Polygon arrow = new Polygon(0.0, 0.0,
+                    10.0, 20.0,
+                    20.0, 0.0);
+            try {
+                arrow.setFill(Color.valueOf(player.getColor()));
+            } catch (Exception e) {
+                arrow.setFill(Color.MEDIUMPURPLE);
+            }
+
+            arrow.setRotate((90 * player.getHeading().ordinal()) % 360);
+            this.getChildren().add(arrow);
+        }
+
     }
 
 }
