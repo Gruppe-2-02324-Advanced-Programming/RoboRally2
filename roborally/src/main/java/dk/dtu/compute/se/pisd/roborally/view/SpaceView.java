@@ -221,7 +221,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
         //todo add player as a picture on board
-
+/*
         // Draw player
         Player player = space.getPlayer();
         if (player != null) {
@@ -243,7 +243,7 @@ public class SpaceView extends StackPane implements ViewObserver {
             StackPane.setAlignment(playerView, Pos.CENTER);
         }
 
-
+*/
 
 
 
