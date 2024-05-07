@@ -38,6 +38,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
 
@@ -115,56 +116,39 @@ public class AppController implements Observer {
      * The system then finds the game which has the same gameID as the one requested.
      */
     public void saveGame() {
-        /*if (gameController != null && gameController.board != null) {
-            Gson gson = new Gson();
-            String json = gson.toJson(gameController.board);
-            String directoryPath = "roborally/src/main/resources/savedGames";
-
+        if (gameController != null && gameController.board != null) {
             // Use gameId if it exists; otherwise, use timestamp
-            String fileName = String.format("%s/game_%s.json", directoryPath, gameController.board.getGameId() != null ? gameController.board.getGameId() : System.currentTimeMillis());
-
-            try {
-                Files.createDirectories(Paths.get(directoryPath)); // Ensure directory exists
-                Files.write(Paths.get(fileName), json.getBytes()); // Write JSON to file
-                System.out.println("Game saved to " + fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            String fileName = gameController.board.getGameId() != null ? String.valueOf(gameController.board.getGameId()) : String.valueOf(System.currentTimeMillis());
+            LoadBoard.saveCurrentGame(gameController.board,
+                    fileName);
+            System.out.println("Game saved to " + fileName);
         } else {
             System.out.println("No game is currently active.");
         }
-
-         */
     }
 
 
 
 
-    public void loadGame() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Save Game");
-        fileChooser.setInitialDirectory(new File("roborally/src/main/resources/savedGames"));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
-        File selectedFile = fileChooser.showOpenDialog(null);
 
-        if (selectedFile != null) {
-             try {
-             String json = new String(Files.readAllBytes(selectedFile.toPath()), StandardCharsets.UTF_8);
-               Gson gson = new Gson();
-               Board loadedBoard = gson.fromJson(json, Board.class);
-                if (gameController == null) {
-                    gameController = new GameController(loadedBoard);
-                } else {
-                    gameController.board = loadedBoard;
-                }
-                gameController.board.attach(this);
+    public void loadGame() {
+        // Prompt the user to enter the name of the game they want to load
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Load Game");
+        dialog.setHeaderText("Enter the name of the game you want to load:");
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            String gameName = result.get();
+            Board loadedBoard = LoadBoard.loadActiveBoard(gameName);
+            if (loadedBoard != null) {
+                // If the board was loaded successfully, create a new GameController for it
+                gameController = new GameController(loadedBoard);
                 roboRally.createBoardView(gameController);
-                System.out.println("Game loaded from " + selectedFile.getPath());
-            } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Game loaded from " + gameName);
+            } else {
+                System.out.println("Failed to load game " + gameName);
             }
-        } else {
-            System.out.println("Game loading cancelled.");
         }
     }
 

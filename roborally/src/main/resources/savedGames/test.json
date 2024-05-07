@@ -1,0 +1,38 @@
+{
+  "width": 5,
+  "height": 5,
+  "players": [
+    {
+      "name": "Player 1",
+      "color": "red",
+      "space": {
+        "x": 0,
+        "y": 0
+      },
+      "heading": "NORTH",
+      "checkpoints": 0
+    },
+    {
+      "name": "Player 2",
+      "color": "blue",
+      "space": {
+        "x": 4,
+        "y": 4
+      },
+      "heading": "SOUTH",
+      "checkpoints": 0
+    }
+  ],
+  "spaces": [
+    {
+      "x": 2,
+      "y": 2,
+      "actions": [
+        {
+          "type": "Checkpoint",
+          "checkpointNumber": 1
+        }
+      ]
+    }
+  ]
+}

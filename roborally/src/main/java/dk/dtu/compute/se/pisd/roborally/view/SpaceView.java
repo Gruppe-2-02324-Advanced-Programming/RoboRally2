@@ -107,20 +107,6 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.getChildren().add(emptyFieldView);  // Add the empty field view as the first layer
 
 
-        // Check if the current space is a checkpoint
-        for (FieldAction action : space.getActions()) {
-            if (action instanceof Checkpoint checkpoint) {
-                // Load the checkpoint image
-                Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
-                ImageView checkpointView = new ImageView(checkpointImage);
-                checkpointView.setFitWidth(SPACE_WIDTH);
-                checkpointView.setFitHeight(SPACE_HEIGHT);
-                checkpointView.setPreserveRatio(false);
-                this.getChildren().add(checkpointView);  // Add the checkpoint view as the second layer
-                break;
-            }
-        }
-
 
 
         // Check if the current space has a gear action and display the corresponding image
@@ -181,6 +167,8 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
 
 
+
+
         // Check if the current space contains a conveyor belt
         for (FieldAction action : space.getActions()) {
             if (action instanceof ConveyorBelt conveyorBelt) {
@@ -218,6 +206,21 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
 
+
+        // Check if the current space is a checkpoint
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof Checkpoint) {
+                Checkpoint checkpoint = (Checkpoint) action;
+                // Load the checkpoint image
+                Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
+                ImageView checkpointView = new ImageView(checkpointImage);
+                checkpointView.setFitWidth(SPACE_WIDTH);
+                checkpointView.setFitHeight(SPACE_HEIGHT);
+                checkpointView.setPreserveRatio(false);
+                this.getChildren().add(checkpointView);  // Add the checkpoint view as the second layer
+                break;
+            }
+        }
 
 
         // Draw walls

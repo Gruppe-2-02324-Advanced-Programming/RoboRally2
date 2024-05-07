@@ -24,6 +24,7 @@ package dk.dtu.compute.se.pisd.roborally.fileaccess;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
@@ -31,14 +32,9 @@ import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * ...
@@ -56,12 +52,48 @@ public class LoadBoard {
     private static final String JSON_EXT = "json";
     public static final int BOARD_WIDTH = 10;
     public static final int BOARD_HEIGHT = 8;
+    private static final String PATH_TO_RES = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+    private static final String ACTIVEGAMES = PATH_TO_RES + "savedGames";
+
 
     public static List<String> getBoards(){
         List<String> boards =  new ArrayList<>();
         Collections.addAll(boards, BOARDS);
         return boards;
     }
+
+    public static void saveCurrentGame(Board board, String name) {
+        if (board == null || name == null || name.isEmpty()) {
+            System.out.println("Invalid board data or name.");
+            return;
+        }
+
+        File directory = new File(ACTIVEGAMES);
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
+                System.out.println("Failed to create directory for saving games.");
+                return;
+            }
+        }
+
+        String filename = directory + File.separator + name + "." + JSON_EXT;
+        GsonBuilder simpleBuilder = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .setPrettyPrinting()
+                .registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>()); // Ensure this adapter is implemented correctly.
+
+        Gson gson = simpleBuilder.create();
+
+        try (FileWriter writer = new FileWriter(filename);
+             JsonWriter jsonWriter = gson.newJsonWriter(writer)) {
+            gson.toJson(board, Board.class, jsonWriter);
+            System.out.println("Game saved successfully to " + filename);
+        } catch (IOException e) {
+            System.out.println("Failed to save the game: " + e.getMessage());
+        }
+    }
+
+
 
     public static Board loadBoard(String boardname) {
         if (boardname == null) {
@@ -112,5 +144,24 @@ public class LoadBoard {
             }
         }
         return null;
+
+
+    }
+    public static Board loadActiveBoard(String activeGameName) {
+        File file = new File(ACTIVEGAMES + File.separator + activeGameName + "." + JSON_EXT);
+        if (!file.exists()) {
+            return null; // Optionally, handle error more gracefully
+        }
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
+        Gson gson = builder.create();
+
+        try (JsonReader reader = gson.newJsonReader(new FileReader(file))) {
+            Board activeBoard = gson.fromJson(reader, Board.class);
+            // Additional logic to set up the board with its state
+            return activeBoard;
+        } catch (IOException e) {
+            // Handle exception, possibly logging or user feedback
+            return null;
+        }
     }
 }
