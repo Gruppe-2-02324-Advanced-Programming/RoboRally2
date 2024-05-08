@@ -21,6 +21,8 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +47,7 @@ public enum Command {
     UTURN("U-Turn"),
     OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
 
+    @Expose
     final public String displayName;
 
     final private List<Command> options;

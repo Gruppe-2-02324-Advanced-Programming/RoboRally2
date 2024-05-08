@@ -21,17 +21,20 @@
  */
 package dk.dtu.compute.se.pisd.roborally.fileaccess;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,50 +52,33 @@ public class LoadBoard {
     private static final String BOARDSFOLDER = "boards";
     private static final String DEFAULTBOARD = "defaultboard";
     private static final String[] BOARDS = new String[]{"defaultboard","circleJerk","Wooooow"};
-    private static final String JSON_EXT = "json";
-    public static final int BOARD_WIDTH = 10;
+    public static final String JSON_EXT = "json";
+    public static final int BOARD_WIDTH = 16;
     public static final int BOARD_HEIGHT = 8;
-    private static final String PATH_TO_RES = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-    private static final String ACTIVEGAMES = PATH_TO_RES + "savedGames";
+    public static final String SAVED_GAMES_FOLDER = "roborally/src/main/resources/savedGames";
 
 
-    public static List<String> getBoards(){
-        List<String> boards =  new ArrayList<>();
+    public static List<String> getBoards() {
+        List<String> boards = new ArrayList<>();
         Collections.addAll(boards, BOARDS);
         return boards;
     }
 
-    public static void saveCurrentGame(Board board, String name) {
-        if (board == null || name == null || name.isEmpty()) {
-            System.out.println("Invalid board data or name.");
-            return;
-        }
+    public static void saveCurrentGame(Board board, String name){
+        String filename = SAVED_GAMES_FOLDER + File.separator + name + "." + JSON_EXT;
+        GsonBuilder builder = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation() // This will only include fields marked with @Expose
+                .setPrettyPrinting();
+        Gson gson = builder.create();
 
-        File directory = new File(ACTIVEGAMES);
-        if (!directory.exists()) {
-            if (!directory.mkdirs()) {
-                System.out.println("Failed to create directory for saving games.");
-                return;
-            }
-        }
-
-        String filename = directory + File.separator + name + "." + JSON_EXT;
-        GsonBuilder simpleBuilder = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .setPrettyPrinting()
-                .registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>()); // Ensure this adapter is implemented correctly.
-
-        Gson gson = simpleBuilder.create();
-
-        try (FileWriter writer = new FileWriter(filename);
-             JsonWriter jsonWriter = gson.newJsonWriter(writer)) {
-            gson.toJson(board, Board.class, jsonWriter);
-            System.out.println("Game saved successfully to " + filename);
+        try (FileWriter fileWriter = new FileWriter(filename);
+             JsonWriter writer = gson.newJsonWriter(fileWriter)) {
+            gson.toJson(board, Board.class, writer);
         } catch (IOException e) {
-            System.out.println("Failed to save the game: " + e.getMessage());
+            System.out.println(e);
         }
-    }
 
+    }
 
 
     public static Board loadBoard(String boardname) {
@@ -121,7 +107,7 @@ public class LoadBoard {
 
             result = new Board(template.width, template.height, boardname);
             result.setTotalCheckpoints(template.totalCheckpoints);
-            for (SpaceTemplate spaceTemplate: template.spaces) {
+            for (SpaceTemplate spaceTemplate : template.spaces) {
                 Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
                 if (space != null) {
                     space.getActions().addAll(spaceTemplate.actions);
@@ -135,33 +121,102 @@ public class LoadBoard {
                 try {
                     reader.close();
                     inputStream = null;
-                } catch (IOException e2) {}
+                } catch (IOException e2) {
+                }
             }
             if (inputStream != null) {
                 try {
                     inputStream.close();
-                } catch (IOException e2) {}
+                } catch (IOException e2) {
+                }
             }
         }
         return null;
 
 
     }
+
     public static Board loadActiveBoard(String activeGameName) {
-        File file = new File(ACTIVEGAMES + File.separator + activeGameName + "." + JSON_EXT);
+        if (activeGameName == null || activeGameName.isEmpty()) {
+            System.out.println("Invalid game name.");
+            return null;
+        }
+
+        File file = new File(SAVED_GAMES_FOLDER + File.separator + activeGameName + "." + JSON_EXT);
         if (!file.exists()) {
+            System.out.println("No saved game found with the name: " + activeGameName);
             return null; // Optionally, handle error more gracefully
         }
-        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
+
+        GsonBuilder builder = new GsonBuilder()
+                .registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
         Gson gson = builder.create();
 
         try (JsonReader reader = gson.newJsonReader(new FileReader(file))) {
-            Board activeBoard = gson.fromJson(reader, Board.class);
-            // Additional logic to set up the board with its state
-            return activeBoard;
+            JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+
+            int width = jsonObject.get("width").getAsInt();
+            int height = jsonObject.get("height").getAsInt();
+            Board board = new Board(width, height);
+            board.setTotalCheckpoints(jsonObject.get("totalCheckpoints").getAsInt());
+
+            // Load players
+            Type playerListType = new TypeToken<List<Player>>() {
+            }.getType();
+            List<Player> players = gson.fromJson(jsonObject.getAsJsonArray("players"), playerListType);
+            for (Player player : players) {
+                board.addPlayer(player);
+            }
+
+            // Set the current player based on the 'current' field in JSON
+            JsonObject currentPlayerJson = jsonObject.getAsJsonObject("current");
+            for (Player player : players) {
+                if (player.getName().equals(currentPlayerJson.get("name").getAsString())) {
+                    board.setCurrentPlayer(player);
+                    break;
+                }
+            }
+
+            // Set the game phase and other states
+            board.setPhase(Phase.valueOf(jsonObject.get("phase").getAsString()));
+            board.setStep(jsonObject.get("step").getAsInt());
+            board.setStepMode(jsonObject.get("stepMode").getAsBoolean());
+            board.setWon(jsonObject.get("won").getAsBoolean());
+
+            // Link players to their respective spaces on the board
+            JsonArray spaces = jsonObject.getAsJsonArray("spaces");
+            for (JsonElement row : spaces) {
+                for (JsonElement spaceJson : row.getAsJsonArray()) {
+                    JsonObject spaceObj = spaceJson.getAsJsonObject();
+                    int x = spaceObj.get("x").getAsInt();
+                    int y = spaceObj.get("y").getAsInt();
+                    Space space = board.getSpace(x, y);
+                    if (spaceObj.has("player")) {
+                        JsonObject playerJson = spaceObj.getAsJsonObject("player");
+                        String playerName = playerJson.get("name").getAsString();
+                        for (Player player : players) {
+                            if (player.getName().equals(playerName)) {
+                                space.setPlayer(player);
+                                player.setSpace(space);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            System.out.println("Game loaded successfully.");
+            return board;
         } catch (IOException e) {
-            // Handle exception, possibly logging or user feedback
+            System.out.println("Failed to load the game: " + e.getMessage());
+            return null;
+        } catch (JsonSyntaxException e) {
+            System.out.println("Error parsing JSON: " + e.getMessage());
             return null;
         }
     }
+
+
+
+
 }

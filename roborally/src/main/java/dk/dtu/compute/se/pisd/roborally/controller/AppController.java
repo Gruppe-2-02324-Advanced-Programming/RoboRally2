@@ -42,11 +42,13 @@ import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -115,27 +117,40 @@ public class AppController implements Observer {
      * this method loads the games from the database and asks the user which of the gameID's they wish to load.
      * The system then finds the game which has the same gameID as the one requested.
      */
+
     public void saveGame() {
         if (gameController != null && gameController.board != null) {
-            // Use gameId if it exists; otherwise, use timestamp
-            String fileName = gameController.board.getGameId() != null ? String.valueOf(gameController.board.getGameId()) : String.valueOf(System.currentTimeMillis());
-            LoadBoard.saveCurrentGame(gameController.board,
-                    fileName);
-            System.out.println("Game saved to " + fileName);
+            // Prompt the user to enter the name of the game they want to save
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Save Game");
+            dialog.setHeaderText("Enter the name of the game you want to save:");
+            Optional<String> result = dialog.showAndWait();
+
+            if (result.isPresent()) {
+                String gameName = result.get();
+                LoadBoard.saveCurrentGame(gameController.board, gameName);
+                System.out.println("Game saved to " + gameName);
+            }
         } else {
             System.out.println("No game is currently active.");
         }
     }
 
-
-
-
-
     public void loadGame() {
-        // Prompt the user to enter the name of the game they want to load
-        TextInputDialog dialog = new TextInputDialog();
+        // Get the list of saved games
+        File folder = new File(LoadBoard.SAVED_GAMES_FOLDER);
+        File[] listOfFiles = folder.listFiles();
+        List<String> savedGames = new ArrayList<>();
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                savedGames.add(file.getName().replaceFirst("[.][^.]+$", ""));
+            }
+        }
+
+        // Prompt the user to select a game to load
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(savedGames.get(0), savedGames);
         dialog.setTitle("Load Game");
-        dialog.setHeaderText("Enter the name of the game you want to load:");
+        dialog.setHeaderText("Select a game to load:");
         Optional<String> result = dialog.showAndWait();
 
         if (result.isPresent()) {
