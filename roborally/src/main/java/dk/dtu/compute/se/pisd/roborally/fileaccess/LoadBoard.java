@@ -192,7 +192,7 @@ public class LoadBoard {
                     int x = spaceObj.get("x").getAsInt();
                     int y = spaceObj.get("y").getAsInt();
                     Space space = board.getSpace(x, y);
-                    System.out.println("Test5");  //når her til i debuggen
+                    System.out.println("Test5");  //                       når her til i debuggen
                     if (spaceObj.has("player")) {
                         JsonObject playerJson = spaceObj.getAsJsonObject("player");
                         String playerName = playerJson.get("name").getAsString();
