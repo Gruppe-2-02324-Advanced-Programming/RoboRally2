@@ -151,7 +151,7 @@ public class LoadBoard {
         GsonBuilder builder = new GsonBuilder()
                 .registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
         Gson gson = builder.create();
-
+        System.out.println("Test1");
         try (JsonReader reader = gson.newJsonReader(new FileReader(file))) {
             JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 
@@ -167,6 +167,7 @@ public class LoadBoard {
             for (Player player : players) {
                 board.addPlayer(player);
             }
+            System.out.println("Test2");
 
             // Set the current player based on the 'current' field in JSON
             JsonObject currentPlayerJson = jsonObject.getAsJsonObject("current");
@@ -176,13 +177,13 @@ public class LoadBoard {
                     break;
                 }
             }
-
+            System.out.println("Test3");
             // Set the game phase and other states
             board.setPhase(Phase.valueOf(jsonObject.get("phase").getAsString()));
             board.setStep(jsonObject.get("step").getAsInt());
             board.setStepMode(jsonObject.get("stepMode").getAsBoolean());
             board.setWon(jsonObject.get("won").getAsBoolean());
-
+            System.out.println("Test4");
             // Link players to their respective spaces on the board
             JsonArray spaces = jsonObject.getAsJsonArray("spaces");
             for (JsonElement row : spaces) {
@@ -191,19 +192,25 @@ public class LoadBoard {
                     int x = spaceObj.get("x").getAsInt();
                     int y = spaceObj.get("y").getAsInt();
                     Space space = board.getSpace(x, y);
+                    System.out.println("Test5");  //når her til i debuggen
                     if (spaceObj.has("player")) {
                         JsonObject playerJson = spaceObj.getAsJsonObject("player");
                         String playerName = playerJson.get("name").getAsString();
+                        System.out.println("Player name from JSON: " + playerName);
                         for (Player player : players) {
+                            System.out.println("Player name in list: " + player.getName());
                             if (player.getName().equals(playerName)) {
                                 space.setPlayer(player);
                                 player.setSpace(space);
+                                System.out.println("Test6");
+                                break;
+                            }
+                        }
                                 break;
                             }
                         }
                     }
-                }
-            }
+
 
             System.out.println("Game loaded successfully.");
             return board;
