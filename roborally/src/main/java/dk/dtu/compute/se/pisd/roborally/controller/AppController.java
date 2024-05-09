@@ -155,7 +155,7 @@ public class AppController implements Observer {
 
         if (result.isPresent()) {
             String gameName = result.get();
-            Board loadedBoard = LoadBoard.loadActiveBoard(gameName);
+            Board loadedBoard = LoadBoard.loadGame(gameName);
             if (loadedBoard != null) {
                 // If the board was loaded successfully, create a new GameController for it
                 gameController = new GameController(loadedBoard);

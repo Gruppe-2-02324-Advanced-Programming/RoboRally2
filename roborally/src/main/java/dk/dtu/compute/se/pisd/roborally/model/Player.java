@@ -104,6 +104,20 @@ public class Player extends Subject {
         }
     }
 
+    public void setProgramField(int i, CommandCardField field) {
+        if (i >= 0 && i < NO_REGISTERS) {
+            program[i] = field;
+        }
+    }
+
+    public void setCardField(int i, CommandCardField field) {
+        if (i >= 0 && i < NO_CARDS) {
+            cards[i] = field;
+        }
+    }
+
+
+
 
     public void setRobotImage(String robotImage) {
         this.robotImage = robotImage;
@@ -126,6 +140,10 @@ public class Player extends Subject {
             notifyChange();
         }
     }
+
+
+
+
 
     public Heading getHeading() {
         return heading;

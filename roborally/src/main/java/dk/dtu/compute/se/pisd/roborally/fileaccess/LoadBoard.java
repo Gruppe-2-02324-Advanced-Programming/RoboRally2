@@ -135,74 +135,24 @@ public class LoadBoard {
 
 
     }
+    public static Board loadGame(String gameName) {
+        String filename = SAVED_GAMES_FOLDER + File.separator + gameName + "." + JSON_EXT;
 
-    public static Board loadActiveBoard(String activeGameName){
-        File file = new File(SAVED_GAMES_FOLDER + File.separator + activeGameName + "." + JSON_EXT);
+        GsonBuilder builder = new GsonBuilder()
+                .registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>())
+                .excludeFieldsWithoutExposeAnnotation()
+                .setPrettyPrinting();
+        Gson gson = builder.create();
 
-        if (!file.exists()) {
+        try (FileReader fileReader = new FileReader(filename);
+             JsonReader reader = gson.newJsonReader(fileReader)) {
+            return gson.fromJson(reader, Board.class);
+        } catch (IOException e) {
+            System.out.println(e);
             return null;
         }
-        GsonBuilder simpleBuilder = new GsonBuilder().
-                registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
-        Gson gson = simpleBuilder.create();
-
-        String mapName = "";
-        List<Player> playerList = null;
-        Player current = null;
-        Phase phase = null;
-        Boolean stepmode = null;
-        int step = 0;
-
-
-        JsonReader reader = null;
-        try {
-            reader = gson.newJsonReader(new FileReader(file));
-            Board template = gson.fromJson(reader, Board.class);
-
-            mapName = template.getMap();
-            playerList = template.getPlayers();
-            current = template.getCurrentPlayer();
-            phase = template.getPhase();
-            stepmode = template.isStepMode();
-            step = template.getStep();
-
-            reader.close();
-
-        } catch (IOException e1) {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e2) {}
-            }
-        }
-
-        Board board = loadBoard(mapName);
-
-        for(Player p : playerList) {
-
-            Player player = new Player(board, p.getColor(), p.getName());
-
-            for(int i = 0; i < player.NO_REGISTERS; i++) player.setProgramField(i,p.getProgramField(i));
-
-            for(int i = 0; i < player.NO_CARDS; i++) player.setCardField(i,p.getCardField(i));
-
-            Space space = board.getSpace(p.getSpace().x,p.getSpace().y);
-            player.setSpace(space);
-
-            player.setHeading(p.getHeading());
-
-            board.addPlayer(player);
-
-            if(player.getName().equals(current.getName()))
-                board.setCurrentPlayer(player);
-
-        }
-        board.setPhase(phase);
-        board.setStepMode(stepmode);
-        board.setStep(step);
-
-        return board;
     }
+
 }
 
 
