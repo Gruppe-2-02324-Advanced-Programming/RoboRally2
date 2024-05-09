@@ -51,7 +51,7 @@ public class LoadBoard {
      */
     private static final String BOARDSFOLDER = "boards";
     private static final String DEFAULTBOARD = "defaultboard";
-    private static final String[] BOARDS = new String[]{"defaultboard","circleJerk","Wooooow"};
+    private static final String[] BOARDS = new String[]{"defaultboard", "circleJerk", "Wooooow"};
     public static final String JSON_EXT = "json";
     public static final int BOARD_WIDTH = 16;
     public static final int BOARD_HEIGHT = 8;
@@ -64,7 +64,7 @@ public class LoadBoard {
         return boards;
     }
 
-    public static void saveCurrentGame(Board board, String name){
+    public static void saveCurrentGame(Board board, String name) {
         String filename = SAVED_GAMES_FOLDER + File.separator + name + "." + JSON_EXT;
         GsonBuilder builder = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation() // This will only include fields marked with @Expose
@@ -136,94 +136,76 @@ public class LoadBoard {
 
     }
 
-    public static Board loadActiveBoard(String activeGameName) {
-        if (activeGameName == null || activeGameName.isEmpty()) {
-            System.out.println("Invalid game name.");
-            return null;
-        }
-
+    public static Board loadActiveBoard(String activeGameName){
         File file = new File(SAVED_GAMES_FOLDER + File.separator + activeGameName + "." + JSON_EXT);
+
         if (!file.exists()) {
-            System.out.println("No saved game found with the name: " + activeGameName);
-            return null; // Optionally, handle error more gracefully
-        }
-
-        GsonBuilder builder = new GsonBuilder()
-                .registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
-        Gson gson = builder.create();
-        System.out.println("Test1");
-        try (JsonReader reader = gson.newJsonReader(new FileReader(file))) {
-            JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-
-            int width = jsonObject.get("width").getAsInt();
-            int height = jsonObject.get("height").getAsInt();
-            Board board = new Board(width, height);
-            board.setTotalCheckpoints(jsonObject.get("totalCheckpoints").getAsInt());
-
-            // Load players
-            Type playerListType = new TypeToken<List<Player>>() {
-            }.getType();
-            List<Player> players = gson.fromJson(jsonObject.getAsJsonArray("players"), playerListType);
-            for (Player player : players) {
-                board.addPlayer(player);
-            }
-            System.out.println("Test2");
-
-            // Set the current player based on the 'current' field in JSON
-            JsonObject currentPlayerJson = jsonObject.getAsJsonObject("current");
-            for (Player player : players) {
-                if (player.getName().equals(currentPlayerJson.get("name").getAsString())) {
-                    board.setCurrentPlayer(player);
-                    break;
-                }
-            }
-            System.out.println("Test3");
-            // Set the game phase and other states
-            board.setPhase(Phase.valueOf(jsonObject.get("phase").getAsString()));
-            board.setStep(jsonObject.get("step").getAsInt());
-            board.setStepMode(jsonObject.get("stepMode").getAsBoolean());
-            board.setWon(jsonObject.get("won").getAsBoolean());
-            System.out.println("Test4");
-            // Link players to their respective spaces on the board
-            JsonArray spaces = jsonObject.getAsJsonArray("spaces");
-            for (JsonElement row : spaces) {
-                for (JsonElement spaceJson : row.getAsJsonArray()) {
-                    JsonObject spaceObj = spaceJson.getAsJsonObject();
-                    int x = spaceObj.get("x").getAsInt();
-                    int y = spaceObj.get("y").getAsInt();
-                    Space space = board.getSpace(x, y);
-                    System.out.println("Test5");  //                       når her til i debuggen
-                    if (spaceObj.has("player")) {
-                        JsonObject playerJson = spaceObj.getAsJsonObject("player");
-                        String playerName = playerJson.get("name").getAsString();
-                        System.out.println("Player name from JSON: " + playerName);
-                        for (Player player : players) {
-                            System.out.println("Player name in list: " + player.getName());
-                            if (player.getName().equals(playerName)) {
-                                space.setPlayer(player);
-                                player.setSpace(space);
-                                System.out.println("Test6");
-                                break;
-                            }
-                        }
-                                break;
-                            }
-                        }
-                    }
-
-
-            System.out.println("Game loaded successfully.");
-            return board;
-        } catch (IOException e) {
-            System.out.println("Failed to load the game: " + e.getMessage());
-            return null;
-        } catch (JsonSyntaxException e) {
-            System.out.println("Error parsing JSON: " + e.getMessage());
             return null;
         }
+        GsonBuilder simpleBuilder = new GsonBuilder().
+                registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
+        Gson gson = simpleBuilder.create();
+
+        String mapName = "";
+        List<Player> playerList = null;
+        Player current = null;
+        Phase phase = null;
+        Boolean stepmode = null;
+        int step = 0;
+
+
+        JsonReader reader = null;
+        try {
+            reader = gson.newJsonReader(new FileReader(file));
+            Board template = gson.fromJson(reader, Board.class);
+
+            mapName = template.getMap();
+            playerList = template.getPlayers();
+            current = template.getCurrentPlayer();
+            phase = template.getPhase();
+            stepmode = template.isStepMode();
+            step = template.getStep();
+
+            reader.close();
+
+        } catch (IOException e1) {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e2) {}
+            }
+        }
+
+        Board board = loadBoard(mapName);
+
+        for(Player p : playerList) {
+
+            Player player = new Player(board, p.getColor(), p.getName());
+
+            for(int i = 0; i < player.NO_REGISTERS; i++) player.setProgramField(i,p.getProgramField(i));
+
+            for(int i = 0; i < player.NO_CARDS; i++) player.setCardField(i,p.getCardField(i));
+
+            Space space = board.getSpace(p.getSpace().x,p.getSpace().y);
+            player.setSpace(space);
+
+            player.setHeading(p.getHeading());
+
+            board.addPlayer(player);
+
+            if(player.getName().equals(current.getName()))
+                board.setCurrentPlayer(player);
+
+        }
+        board.setPhase(phase);
+        board.setStepMode(stepmode);
+        board.setStep(step);
+
+        return board;
     }
-
-
-
-
 }
+
+
+
+
+
