@@ -60,7 +60,7 @@ public class Board extends Subject {
     private boolean stepMode;
     @Expose
     private int totalCheckpoints = 0;
-
+    @Expose
     private int counter;
     @Expose
     private boolean won = false;

@@ -21,12 +21,15 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * ...
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
+
 public enum Heading {
 
     SOUTH, WEST, NORTH, EAST;

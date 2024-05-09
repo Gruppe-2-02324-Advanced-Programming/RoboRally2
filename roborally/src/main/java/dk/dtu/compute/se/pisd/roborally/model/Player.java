@@ -145,6 +145,7 @@ public class Player extends Subject {
 
 
 
+
     public Heading getHeading() {
         return heading;
     }
