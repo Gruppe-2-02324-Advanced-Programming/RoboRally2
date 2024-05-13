@@ -40,12 +40,21 @@ public class CommandCardField extends Subject {
 @Expose
     private boolean visible;
 
+
+    /**
+     * Constructor for the CommandCardField class.
+     *
+     */
     public CommandCardField(Player player) {
         this.player = player;
         this. card = null;
         this.visible = true;
     }
 
+    /**
+     * Method to get the card of the CommandCardField. Getters and setters for the card and visibility of the card.
+     *
+     */
     public CommandCard getCard() {
         return card;
     }
@@ -57,10 +66,18 @@ public class CommandCardField extends Subject {
         }
     }
 
+    /**
+     * Method to get the visibility of the card of the CommandCardField.
+     *
+     */
     public boolean isVisible() {
         return visible;
     }
 
+    /**
+     * Method to set the visibility of the card of the CommandCardField.
+     *
+     */
     public void setVisible(boolean visible) {
         if (visible != this.visible) {
             this.visible = visible;

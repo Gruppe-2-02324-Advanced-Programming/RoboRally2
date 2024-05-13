@@ -31,11 +31,6 @@ import java.util.List;
  * by creating a number of spaces according to the template.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- * @auhtor Christoffer, s205449
- * @auhtor Setare, s232629
- * @auhtor Phillip, s224278
- * @auhtor Emily, s191174
- * @author Jacob, s164958
  *
  */
 public class BoardTemplate {

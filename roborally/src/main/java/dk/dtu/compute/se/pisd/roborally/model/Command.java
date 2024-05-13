@@ -62,6 +62,11 @@ public enum Command {
 
     final public Image cardImage;
 
+
+    /**
+     * The constructor for a command with a given display name and an image
+     *
+     */
     Command(String displayName, Image cardImage, Command... options) {
         this.displayName = displayName;
         this.cardImage = cardImage;

@@ -31,6 +31,11 @@ import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
  * Class for the player in the game. This class is a subject of the observer pattern and can be observed by the GUI.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
+ * @author Setare, s232629
+ * @author Christoffer, s205449
+ * @author Jacob, s164958
+ * @author Emily, s191174
+ * @auhtor Phillip, s224278
  *
  */
 public class Player extends Subject {
@@ -60,6 +65,11 @@ public class Player extends Subject {
         return robotImage;
     }
 
+
+    /**
+     * Constructor for the Player class.
+     *
+     */
     public Player(@NotNull Board board, String color, @NotNull String name) {
         this.board = board;
         this.name = name;
@@ -78,10 +88,20 @@ public class Player extends Subject {
         }
     }
 
+
+    /**
+     * Method to get the name of the player.
+     *
+     */
     public String getName() {
         return name;
     }
 
+
+    /**
+     * Method to set the name of the player.
+     *
+     */
     public void setName(String name) {
         if (name != null && !name.equals(this.name)) {
             this.name = name;
@@ -92,10 +112,18 @@ public class Player extends Subject {
         }
     }
 
+    /**
+     * Method to get the color of the player.
+     *
+     */
     public String getColor() {
         return color;
     }
 
+    /**
+     * Method to set the color of the player.
+     *
+     */
     public void setColor(String color) {
         this.color = color;
         notifyChange();
@@ -104,21 +132,31 @@ public class Player extends Subject {
         }
     }
 
+    /**
+     * Method to get the program of the player.
+     *
+     */
     public void setProgramField(int i, CommandCardField field) {
         if (i >= 0 && i < NO_REGISTERS) {
             program[i] = field;
         }
     }
 
+
+    /**
+     * Method to get the program of the player.
+     *
+     */
     public void setCardField(int i, CommandCardField field) {
         if (i >= 0 && i < NO_CARDS) {
             cards[i] = field;
         }
     }
 
-
-
-
+    /**
+     * Method to get the program of the player.
+     *
+     */
     public void setRobotImage(String robotImage) {
         this.robotImage = robotImage;
     }
@@ -126,6 +164,11 @@ public class Player extends Subject {
         return space;
     }
 
+
+    /**
+     * Method to set the space of the player.
+     *
+     */
     public void setSpace(Space space) {
         Space oldSpace = this.space;
         if (space != oldSpace &&
@@ -142,14 +185,17 @@ public class Player extends Subject {
     }
 
 
-
-
-
-
+    /**
+     * Method to get the heading of the player.
+     *
+     */
     public Heading getHeading() {
         return heading;
     }
 
+    /**
+     * Method to set the heading of the player.
+     */
     public void setHeading(@NotNull Heading heading) {
         if (heading != this.heading) {
             this.heading = heading;
@@ -160,6 +206,10 @@ public class Player extends Subject {
         }
     }
 
+    /**
+     * Getters and setters for the program and cards of the player. Also the checkpoints.
+     *
+     */
     public CommandCardField getProgramField(int i) {
         return program[i];
     }
@@ -189,6 +239,10 @@ public class Player extends Subject {
         notifyChange(); // Notify observers of the change
     }
 
+    /**
+     * Getters for the energy cubes.
+     *
+     */
     public int getEnergyCubes() {
         return energyCubes;
     }
