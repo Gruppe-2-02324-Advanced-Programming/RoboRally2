@@ -135,7 +135,7 @@ public class AppController implements Observer {
             System.out.println("No game is currently active.");
         }
     }
-
+//todo doesnt work
     public void loadGame() {
         // Get the list of saved games
         File folder = new File(LoadBoard.SAVED_GAMES_FOLDER);
@@ -147,7 +147,7 @@ public class AppController implements Observer {
             }
         }
 
-        // Prompt the user to select a game to load
+
         ChoiceDialog<String> dialog = new ChoiceDialog<>(savedGames.get(0), savedGames);
         dialog.setTitle("Load Game");
         dialog.setHeaderText("Select a game to load:");
@@ -171,8 +171,9 @@ public class AppController implements Observer {
 
     /**
      * @author Christoffer s205449
-     *
      * This method checks which boards are available
+     * @return the board that the user has selected
+     *
      */
     private Board initializeBoard(){
         List<String> boards = LoadBoard.getBoards();

@@ -83,7 +83,7 @@
       "actions": [
         {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner", "INSTANCE": {"heading": "EAST", "rotation": 90}}
       ],
-      "x": 6, "y": 1
+      "x": 6, "y": 6
     },
 
     {
