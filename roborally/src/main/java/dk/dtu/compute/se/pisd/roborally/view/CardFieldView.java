@@ -39,19 +39,34 @@ import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ...
+ * A view for a field for a command card. This view is used to display a command card
+ * and to allow the user to drag and drop the card to another field.
+ * The view is also used to display the cards in the program registers of a player.
+ * The view is an observer of the field and updates the view when the field changes.
+ * The view also allows to drag and drop a card from one field to another.
+ *
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class CardFieldView extends GridPane implements ViewObserver {
 
-    // This data format helps avoiding transfers of e.g. Strings from other
-    // programs which can copy/paste Strings.
+ /**
+     * The data format for the drag and drop of a command card.
+     */
     final public static  DataFormat ROBO_RALLY_CARD = new DataFormat("games/roborally/cards");
-
+/**
+     * The width of the card field.
+     */
     final public static int CARDFIELD_WIDTH = 65;
+
+    /**
+     * The height of the card field.
+     */
     final public static int CARDFIELD_HEIGHT = 100;
+    /**
+     * The border for the card field.
+     */
 
     final public static Border BORDER = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
 

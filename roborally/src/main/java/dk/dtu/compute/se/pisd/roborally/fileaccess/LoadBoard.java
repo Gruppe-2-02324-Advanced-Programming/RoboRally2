@@ -40,14 +40,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ...
+ * A class to load a board from a file. The board is stored in a JSON file.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  */
 public class LoadBoard {
     /**
      * @author Christoffer s205449
-     * Board names and width x height
+     * <p>
+     *     This class is used to load a board from a file. The board is stored in a JSON file.
+     *     The class also contains methods to save the current game and load a saved game still in todo.
      */
     private static final String BOARDSFOLDER = "boards";
     private static final String DEFAULTBOARD = "defaultboard";

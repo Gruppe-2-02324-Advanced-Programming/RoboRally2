@@ -26,7 +26,9 @@ import java.util.List;
 
 
 /**
- * ...
+ * A template for a board. This template is used to create a board with a
+ * specific size and a specific number of checkpoints. The board is created
+ * by creating a number of spaces according to the template.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *

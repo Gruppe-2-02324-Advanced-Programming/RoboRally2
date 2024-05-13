@@ -35,7 +35,7 @@ import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ...
+ *  The view of the board of the game. The board is displayed as a grid of spaces.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *

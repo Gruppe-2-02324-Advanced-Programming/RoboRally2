@@ -31,7 +31,10 @@ package dk.dtu.compute.se.pisd.roborally;
  * @author Ekkart Kindler, ekki@dtu.dk
  */
 public class StartRoboRally {
-
+    /**
+     * The main method to start the RoboRally application.
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         RoboRally.main(args);
     }

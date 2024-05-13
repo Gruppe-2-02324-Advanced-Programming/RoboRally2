@@ -29,7 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ...
+ * A space on the board of the game. A space can have a player on it and
+ * can have walls in different directions - also, a spaceAction
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *

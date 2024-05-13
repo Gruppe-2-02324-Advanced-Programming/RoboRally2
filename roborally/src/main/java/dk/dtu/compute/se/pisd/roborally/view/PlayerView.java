@@ -33,35 +33,92 @@ import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ...
+ *  The view of a player of the game. The view shows the program of the player
+ *  and the command cards of the player. The view is updated when the player's
+ *  board changes.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class PlayerView extends Tab implements ViewObserver {
-
+    /**
+     * The player for which this view is created.
+     */
     private Player player;
-
+/**
+     * The top level layout of the view.
+     */
     private VBox top;
-
+/**
+     * The label showing the number of energy cubes of the player.
+     */
     private Label programLabel;
+    /**
+     * The label showing the number of energy cubes of the player.
+     */
     private Label energyCubesLabel;
-    private GridPane programPane;
-    private Label cardsLabel;
-    private GridPane cardsPane;
 
+    /**
+     * The pane showing the program of the player.
+     */
+    private GridPane programPane;
+
+    /**
+     * The views of the program cards of the player.
+     */
+    private Label cardsLabel;
+
+    /**
+     * The pane showing the command cards of the player.
+     */
+    private GridPane cardsPane;
+/**
+     * The views of the command cards of the player.
+     */
     private CardFieldView[] programCardViews;
+
+    /**
+     * The views of the command cards of the player.
+     */
     private CardFieldView[] cardViews;
+
+    /**
+     * The panel with the buttons for the programming phase.
+     */
 
     private VBox buttonPanel;
 
-    private Button finishButton;
-    private Button executeButton;
-    private Button stepButton;
+    /**
+     * The button to finish the programming phase.
+     */
 
+    private Button finishButton;
+
+    /**
+     * The button to execute the program.
+     */
+    private Button executeButton;
+    /**
+     * The button to execute the current register.
+     */
+    private Button stepButton;
+/**
+     * The panel with the buttons for the player interaction phase.
+     */
     private VBox playerInteractionPanel;
 
+    /**
+     * The controller for the game.
+     */
+
     private GameController gameController;
+
+    /**
+     * The constructor for the view of a player.
+     *
+     * @param gameController the controller for the game
+     * @param player the player for which this view is created
+     */
 
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
         super(player.getName());
@@ -136,7 +193,11 @@ public class PlayerView extends Tab implements ViewObserver {
             update(player.board);
         }
     }
-
+/**
+     * This method is called when the observed subject changes.
+     *
+     * @param subject the subject that has changed.
+     */
     @Override
     public void updateView(Subject subject) {
         if (subject == player.board) {

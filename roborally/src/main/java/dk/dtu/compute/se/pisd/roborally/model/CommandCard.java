@@ -27,7 +27,8 @@ import javafx.scene.image.Image;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ...
+ * A command card that can be used by a player to program the robot.
+ * This class is responsible for the command card's name and image.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *

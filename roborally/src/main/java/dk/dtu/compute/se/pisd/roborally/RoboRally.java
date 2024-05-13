@@ -32,7 +32,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * ...
+ * The main class for the RoboRally application. This class is responsible for the setup of the primary stage and the
+ * primary scene. The primary scene contains a menu bar and a pane for the board view. The board view is created and added
+ * to the pane when a new game is created or loaded. The class also contains the main method for starting the application.
+ * @see AppController
+ * @see GameController
+ * @see BoardView
+ * @see RoboRallyMenuBar
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
@@ -75,7 +81,10 @@ public class RoboRally extends Application {
         stage.sizeToScene();
         stage.show();
     }
-
+    /**
+     * Method to create a new board view for the given game controller. If a board view is already present, it is removed
+     * before the new board view is created and added to the pane.
+     */
     public void createBoardView(GameController gameController) {
         // if present, remove old BoardView
         boardRoot.getChildren().clear();
@@ -89,6 +98,9 @@ public class RoboRally extends Application {
         stage.sizeToScene();
     }
 
+    /**
+     * Method to set the game controller for the application.
+     */
     @Override
     public void stop() throws Exception {
         super.stop();
@@ -99,6 +111,10 @@ public class RoboRally extends Application {
         //     so that the AppController can take care of that.
     }
 
+    /**
+     * Main method to start the application.
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }

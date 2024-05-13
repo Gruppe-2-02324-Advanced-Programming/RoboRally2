@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
 
 /**
- * ...
+ * Class for the player in the game. This class is a subject of the observer pattern and can be observed by the GUI.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *

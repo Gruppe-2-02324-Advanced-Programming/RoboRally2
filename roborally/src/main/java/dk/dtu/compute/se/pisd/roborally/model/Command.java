@@ -30,7 +30,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ...
+ * This enumeration defines the commands that can be used in the game. The
+ * commands are used to control the robots in the game.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Setare Izadi, s232629@dtu.dk
