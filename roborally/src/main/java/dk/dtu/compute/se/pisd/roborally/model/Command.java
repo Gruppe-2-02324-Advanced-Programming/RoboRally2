@@ -48,7 +48,11 @@ public enum Command {
     BACKUP("Back Up", new Image("assets/cardsMoveBack.png")),
     UTURN("U-Turn", new Image("assets/cardsUTurn.png")),
     AGAIN("Again", new Image("assets/cardsMove1.png")),
-    OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png"), LEFT, RIGHT);
+    OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png"), LEFT, RIGHT),
+
+    POWER_UP("Power Up", new Image("assets/energyCube.png"));
+
+
 
     @Expose
     final public String displayName;
