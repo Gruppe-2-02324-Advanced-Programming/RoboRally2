@@ -18,10 +18,20 @@ public class Gears extends FieldAction {
 
     public final int rotation;
 
+    /**
+     * Constructor for the gear field action.
+     * @param rotation the rotation of the gear
+     */
     public Gears(int rotation) {
         this.rotation = rotation;
     }
 
+    /**
+     * This method turns the player to the left or to the right based on the gear's rotation.
+     * @param gameController the game controller
+     * @param space the space the player is on
+     * @return true if the player is turned to the left or to the right
+     */
     @Override
     public boolean doAction(GameController gameController, Space space) {
         Player player = space.getPlayer();

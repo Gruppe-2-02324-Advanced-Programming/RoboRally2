@@ -5,16 +5,29 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import org.jetbrains.annotations.NotNull;
 
-/** @author Christoffer s205449
+/** This class represents the conveyor belt field action.
+ *  @author Christoffer s205449
  *
  */
 public class ConveyorBelt extends FieldAction {
     Heading heading;
 
+    /**
+     * Constructor for the conveyor belt.
+     * @autor Christoffer s205449
+     * @param heading the heading of the conveyor belt
+     */
     public ConveyorBelt(Heading heading) {
         this.heading = heading;
     }
 
+    /**
+     * This method moves the player to the next space in the direction of the conveyor belt.
+     * @autor Christoffer s205449
+     * @param gameController the game controller
+     * @param space the space the player is on
+     * @return true if the player is moved to the next space in the direction of the conveyor belt
+     */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
         if (space != null) {
@@ -32,6 +45,11 @@ public class ConveyorBelt extends FieldAction {
         return false;
     }
 
+    /**
+     * Get the heading of the conveyor belt.
+     * @autor Christoffer s205449
+     * @return the heading of the conveyor belt
+     */
     public Heading getHeading() {
         return heading;
     }
