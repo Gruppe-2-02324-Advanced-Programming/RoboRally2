@@ -34,8 +34,8 @@ import java.util.List;
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Setare Izadi, s232629@dtu.dk
+ * @auhtor Christoffer, s205449
  * @author Phillip, s224278
- *
  */
 public enum Command {
 

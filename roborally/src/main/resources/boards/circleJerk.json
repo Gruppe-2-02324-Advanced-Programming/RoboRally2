@@ -186,6 +186,22 @@
     },
 
 
+
+
+    {
+      "walls": [],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.DoubleConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 3,
+      "y": 3
+    },
+
     {
       "walls": [],
       "actions": [

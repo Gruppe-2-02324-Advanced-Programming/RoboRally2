@@ -31,7 +31,9 @@ import java.util.List;
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
 
 /**
- * ...
+ *
+ * The class of the game board. The board is a rectangular grid of spaces. The board
+ * keeps track of the players on the board and the current player. It also keeps track of the phase of the game.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
