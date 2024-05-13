@@ -50,7 +50,7 @@ public enum Command {
     AGAIN("Again", new Image("assets/cardsMove1.png")),
     OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png"), LEFT, RIGHT),
 
-    POWER_UP("Power Up", new Image("assets/energyCube.png"));
+    POWER_UP("Power Up", new Image("assets/powerupcard.png"));
 
 
 
