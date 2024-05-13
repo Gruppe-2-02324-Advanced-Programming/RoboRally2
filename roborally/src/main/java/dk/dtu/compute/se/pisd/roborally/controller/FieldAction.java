@@ -30,6 +30,14 @@ import dk.dtu.compute.se.pisd.roborally.model.Space;
  */
 public abstract class FieldAction {
 
+    /**
+     * This method is called when a player enters a space with a field action.
+     * The method should implement the action that should be taken when a player
+     * enters the space.
+     * @author Ekkart Kindler, ekki@dtu.dk
+     * @param gameController the game controller
+     * @param space the space the player is on
+     */
     public abstract boolean doAction(GameController gameController, Space space);
     
 }

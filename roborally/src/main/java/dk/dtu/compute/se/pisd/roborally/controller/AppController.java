@@ -80,10 +80,22 @@ public class AppController implements Observer {
 
     private GameController gameController;
 
+    /**
+     * The constructor of the AppController.
+     * @author Ekkart Kindler, ekki@dtu.dk
+     * @param roboRally the RoboRally application object
+     */
     public AppController(@NotNull RoboRally roboRally) {
         this.roboRally = roboRally;
     }
 
+    /**
+     * Start a new game. The user is asked to select the number of players
+     * for the game and gameboard. The board is initialized with the selected number of
+     * players, and the game is started with the programming phase.
+     * @author Ekkart Kindler, ekki@dtu.dk
+     * @author Christoffer s205449
+     */
     public void newGame() {
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
         dialog.setTitle("Player number");
@@ -124,6 +136,7 @@ public class AppController implements Observer {
     /**
      * this method loads the games from the json file and asks the user which of the gameID's they wish to load.
      * The system then finds the game which has the same gameID as the one requested.
+     * @author Christoffer s205449
      */
 
     public void saveGame() {
@@ -146,6 +159,7 @@ public class AppController implements Observer {
 //todo doesnt work
 
     /**
+     * This method loads the game from the json file and the user can select which game they want to load.
      * @author Marcus s214962
      * @author Christoffer s205449
      */
@@ -191,7 +205,6 @@ public class AppController implements Observer {
      * @return the board that the user has selected
      * @author Christoffer s205449
      * <p>
-     * This method checks which boards are available
      * This method checks which boards are available
      */
     private Board initializeBoard() {

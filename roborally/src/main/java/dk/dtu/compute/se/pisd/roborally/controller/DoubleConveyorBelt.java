@@ -5,9 +5,22 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class is used to represent a double conveyor belt field action.
+ * It extends the FieldAction class and implements the doAction method to move the player to the correct neighboring space
+ * when the player lands on the double conveyor belt.
+ * The class has a heading field to store the conveyor belt's heading.
+ * The player is moved twice in the same direction if both moves are valid.
+ * @autor Emily s191174
+ */
 public class DoubleConveyorBelt extends FieldAction {
     private final Heading heading;
 
+    /**
+     * Constructor for the double conveyor belt.
+     * @autor Emily s191174
+     * @param heading the heading of the conveyor belt
+     */
     public DoubleConveyorBelt(Heading heading) {
         this.heading = heading;
     }
@@ -41,6 +54,11 @@ public class DoubleConveyorBelt extends FieldAction {
         return false;
     }
 
+    /**
+     * Get the heading of the conveyor belt.
+     * @autor Emily s191174
+     * @return the heading of the conveyor belt
+     */
     public Heading getHeading() {
         return heading;
     }

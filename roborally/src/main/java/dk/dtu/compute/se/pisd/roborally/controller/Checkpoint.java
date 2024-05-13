@@ -5,6 +5,7 @@ import dk.dtu.compute.se.pisd.roborally.model.Space;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * This class represents the checkpoint field action.
  * @author Marcus s214962
  * @author Setare s232629
  *
@@ -19,7 +20,8 @@ public class Checkpoint extends FieldAction {
 
 
     /**
-     *
+     * @autor Marcus s214962
+     * @autor Setare s232629
      * @param gameController the game controller
      * @param space the space the player is on
 
@@ -43,11 +45,23 @@ public class Checkpoint extends FieldAction {
         return false;
     }
 
+    /**
+     * Get the checkpoint number.
+     * @autor Marcus s214962
+     * @autor Setare s232629
+     * @return the checkpoint number
+     */
     public int getCheckpointNumber() {
         return checkpointNumber;
     }
 
 
+    /**
+     * Set the checkpoint number.
+     * @autor Marcus s214962
+     * @autor Setare s232629
+     * @param checkpointNumber the checkpoint number
+     */
     public void setCheckpointNumber(int checkpointNumber) {
         this.checkpointNumber = checkpointNumber;
     }
