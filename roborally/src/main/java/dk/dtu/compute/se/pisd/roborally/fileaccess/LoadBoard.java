@@ -66,6 +66,10 @@ public class LoadBoard {
         return boards;
     }
 
+    /**
+     * Loads a board from a file. The board is stored in a JSON file.
+     *
+     */
     public static void saveCurrentGame(Board board, String name) {
         String filename = SAVED_GAMES_FOLDER + File.separator + name + "." + JSON_EXT;
         GsonBuilder builder = new GsonBuilder()
@@ -83,6 +87,10 @@ public class LoadBoard {
     }
 
 
+    /**
+     * Loads a board from a file. The board is stored in a JSON file.
+     *
+     */
     public static Board loadBoard(String boardname) {
         if (boardname == null) {
             boardname = DEFAULTBOARD;
