@@ -63,14 +63,14 @@ public class RoboRally extends Application {
      * The game controller for the application.
      */
     private GameController gameController;
-/**
+    /**
      * Initializes the application. This method is called before the start method and is used to initialize the application.
      */
     @Override
     public void init() throws Exception {
         super.init();
     }
-/**
+    /**
      * Starts the application. This method is called after the init method and is used to start the application.
      */
     @Override
