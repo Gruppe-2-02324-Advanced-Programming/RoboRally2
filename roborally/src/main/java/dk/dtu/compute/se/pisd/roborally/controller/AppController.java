@@ -122,7 +122,6 @@ public class AppController implements Observer {
     }
 
     /**
-     *
      * this method loads the games from the json file and asks the user which of the gameID's they wish to load.
      * The system then finds the game which has the same gameID as the one requested.
      */
@@ -149,10 +148,9 @@ public class AppController implements Observer {
     /**
      * @author Marcus s214962
      * @author Christoffer s205449
-     *
      */
     public void loadGame() {
-        // Get the list of saved games
+        /* Get the list of saved games
         File folder = new File(LoadBoard.SAVED_GAMES_FOLDER);
         File[] listOfFiles = folder.listFiles();
         List<String> savedGames = new ArrayList<>();
@@ -185,16 +183,16 @@ public class AppController implements Observer {
             }
         }
     }
-
+*/
+    }
 
 
     /**
-     * @author Christoffer s205449
-     *
-     *         This method checks which boards are available
-     * This method checks which boards are available
      * @return the board that the user has selected
-     *
+     * @author Christoffer s205449
+     * <p>
+     * This method checks which boards are available
+     * This method checks which boards are available
      */
     private Board initializeBoard() {
         List<String> boards = LoadBoard.getBoards();
@@ -255,6 +253,7 @@ public class AppController implements Observer {
 
     /**
      * Returns true if a game is currently running, false otherwise.
+     *
      * @return
      */
     public boolean isGameRunning() {
@@ -265,53 +264,37 @@ public class AppController implements Observer {
     /**
      * Does so player can win
      *
+     * @param subject the subject which changed
      * @author Christoffer Fink s205449
      * @author Marcus s214962
      * @author Setare s232629
-     * @param subject the subject which changed
      */
     @Override
     public void update(Subject subject) {
-        if (subject.getClass() == Board.class) {
-            if (((Board) subject).isWon()) {
-                for (Player player : ((Board) subject).getPlayers()) {
-                    if (player.getCheckpoints() == ((Board) subject).getTotalCheckpoints()) {
-                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by, " + player.getName(),
-                                ButtonType.OK);
-                        alert.showAndWait();
-                        stopGame();
-        if(subject.getClass() == Board.class){
-            if(((Board) subject).isWon()){
-                for (Player player: ((Board) subject).getPlayers()) {
-                    if(player.getCheckpoints() == ((Board) subject).getTotalCheckpoints()) {
+        if (subject instanceof Board) {
+            Board board = (Board) subject;
+            if (board.isWon()) {
+                for (Player player : board.getPlayers()) {
+                    if (player.getCheckpoints() == board.getTotalCheckpoints()) {
                         ButtonType playAgainButton = new ButtonType("Play Again");
                         ButtonType closeButton = new ButtonType("Close Game");
-                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by, " + player.getName(), ButtonType.OK, playAgainButton, closeButton);
+                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by " + player.getName(), ButtonType.OK, playAgainButton, closeButton);
                         Optional<ButtonType> result = alert.showAndWait();
+
                         if (result.isPresent() && result.get() == playAgainButton) {
-                            player.setCheckpoints(0);
                             newGame();
                         } else if (result.isPresent() && result.get() == closeButton) {
-                            player.setCheckpoints(0);
                             exit();
                         } else {
-                            player.setCheckpoints(0);
                             stopGame();
                         }
-                        ((Board) subject).setWon(false);
-                        return;
-                        Optional<ButtonType> result = alert.showAndWait(); // Viser dialogboksen og venter på
-                                                                           // brugerinput
 
-                        if (result.isPresent() && result.get() == ButtonType.OK) {
-                            stopGame();
-                            ((Board) subject).setWon(false); // Sørger for at dialogboksen ikke vises mere end én gang
-                            return; // Returnerer efter at OK er trykket
-                        }
-                        return; // Returnerer hvis ingen knap er trykket (usandsynligt da dialogboksen blokerer)
+                        board.setWon(false);
+                        return;
                     }
                 }
             }
         }
     }
 }
+
