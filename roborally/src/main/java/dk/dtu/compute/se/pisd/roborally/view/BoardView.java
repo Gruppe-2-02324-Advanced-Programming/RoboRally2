@@ -49,7 +49,6 @@ public class BoardView extends VBox implements ViewObserver {
     /**
      * The grid pane for the board.
      */
-
     private GridPane mainBoardPane;
 
     /**

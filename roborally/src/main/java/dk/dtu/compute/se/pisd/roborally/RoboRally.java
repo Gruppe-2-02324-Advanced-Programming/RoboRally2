@@ -45,17 +45,34 @@ import javafx.stage.Stage;
  */
 public class RoboRally extends Application {
 
+    /**
+     * The minimum width of the application window.
+     */
     private static final int MIN_APP_WIDTH = 600;
-
+    /**
+     * The primary stage for the application.
+     */
     private Stage stage;
-    private BorderPane boardRoot;
-    private GameController gameController;
 
+    /**
+     * The root pane for the board view.
+     */
+    private BorderPane boardRoot;
+
+    /**
+     * The game controller for the application.
+     */
+    private GameController gameController;
+/**
+     * Initializes the application. This method is called before the start method and is used to initialize the application.
+     */
     @Override
     public void init() throws Exception {
         super.init();
     }
-
+/**
+     * Starts the application. This method is called after the init method and is used to start the application.
+     */
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;

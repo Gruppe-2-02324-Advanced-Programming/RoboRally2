@@ -34,7 +34,7 @@ import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
  *
  * The class of the game board. The board is a rectangular grid of spaces. The board
  * keeps track of the players on the board and the current player. It also keeps track of the phase of the game.
- *
+ * @Expose is used to serialize the field for saving the board.
  * @author Ekkart Kindler, ekki@dtu.dk
  * @auhtor Christoffer, s205449
  * @auhtor Setare, s232629
@@ -48,7 +48,6 @@ public class Board extends Subject {
     public final int width;
     @Expose
     public final int height;
-
     @Expose
     public final String boardName;
 
