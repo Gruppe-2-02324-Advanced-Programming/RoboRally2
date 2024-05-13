@@ -21,20 +21,28 @@
  */
 package dk.dtu.compute.se.pisd.roborally.view;
 
+import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import javafx.application.Platform;
 
 /**
- * ...
- *
+ * Interface for the observer of a view. The observer is notified by the subject
+ * when the subject changes. The observer is expected to update the view
+ * accordingly.
  * @author Ekkart Kindler, ekki@dtu.dk
- *
  */
+
 public interface ViewObserver extends Observer {
-
+    /**
+     * This method is called by the subject when the subject changes.
+     * @param subject the subject that has changed.
+     */
     void updateView(Subject subject);
-
+/**
+     * This method is called by the subject when the subject changes.
+     * @param subject the subject that has changed.
+     */
     @Override
     default void update(Subject subject) {
         // This default implementation of the update method makes sure that ViewObserver implementations

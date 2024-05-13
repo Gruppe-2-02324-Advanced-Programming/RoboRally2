@@ -21,6 +21,7 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
+import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,42 +31,95 @@ import java.util.List;
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
 
 /**
- * ...
  *
+ * The class of the game board. The board is a rectangular grid of spaces. The board
+ * keeps track of the players on the board and the current player. It also keeps track of the phase of the game.
+ * @Expose is used to serialize the field for saving the board.
  * @author Ekkart Kindler, ekki@dtu.dk
+ * @auhtor Christoffer, s205449
+ * @auhtor Setare, s232629
+ * @auhtor Phillip, s224278
+ * @auhtor Emily, s191174
+ * @auhtor Jacob, s164958
  *
  */
 public class Board extends Subject {
-
+    @Expose
     public final int width;
-
+    @Expose
     public final int height;
+    @Expose
+    public final String boardName;
 
     private Integer gameId;
-
+    @Expose
     private final Space[][] spaces;
-
+    @Expose
     private final List<Player> players = new ArrayList<>();
-
+    @Expose
     private Player current;
-
+    @Expose
     private Phase phase = INITIALISATION;
-
+    @Expose
     private int step = 0;
-
+    @Expose
     private boolean stepMode;
+    @Expose
+    private int totalCheckpoints = 0;
+    @Expose
+    private int counter;
+    @Expose
+    private boolean won = false;
 
-    public Board(int width, int height) {
-        this.width = width;
-        this.height = height;
-        spaces = new Space[width][height];
-        for (int x = 0; x < width; x++) {
-            for(int y = 0; y < height; y++) {
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        if (counter != this.counter) {
+            this.counter = counter;
+            notifyChange();
+        }
+    }
+
+    /*
+    public void setBoard(Board b) {
+        this.boardName = b.boardName;
+        this.width = b.width;
+        this.height = b.height;
+        spaces = new Space[b.width][b.height];
+        for (int x = 0; x < b.width; x++) {
+            for (int y = 0; y < b.height; y++) {
                 Space space = new Space(this, x, y);
                 spaces[x][y] = space;
             }
         }
         this.stepMode = false;
+    }
+    */
+
+
+    /**
+     * Creates a new board with the given width and height and the given name.
+     *
+     */
+    public Board(int width, int height, @NotNull String boardName) {
+        this.boardName = boardName;
+        this.width = width;
+        this.height = height;
+        spaces = new Space[width][height];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Space space = new Space(this, x, y);
+                spaces[x][y] = space;
+            }
+        }
+        this.stepMode = false;
+
+    }
+
+    public Board(int width, int height) {
+        this(width, height, "defaultboard");
     }
 
     public Integer getGameId() {
@@ -82,6 +136,10 @@ public class Board extends Subject {
         }
     }
 
+    /**
+     * Returns the space at the given position on the board.
+     *
+     */
     public Space getSpace(int x, int y) {
         if (x >= 0 && x < width &&
                 y >= 0 && y < height) {
@@ -91,6 +149,16 @@ public class Board extends Subject {
         }
     }
 
+
+        public String getBoardName() {
+            return boardName;
+        }
+
+
+    /**
+     * Returns the number of players on the board.
+     *
+     */
     public int getPlayersNumber() {
         return players.size();
     }
@@ -102,6 +170,11 @@ public class Board extends Subject {
         }
     }
 
+
+    /**
+     * Returns the player with the given index on the board.
+     *
+     */
     public Player getPlayer(int i) {
         if (i >= 0 && i < players.size()) {
             return players.get(i);
@@ -110,6 +183,11 @@ public class Board extends Subject {
         }
     }
 
+
+    /**
+     * Returns the current player on the board.
+     *
+     */
     public Player getCurrentPlayer() {
         return current;
     }
@@ -121,6 +199,10 @@ public class Board extends Subject {
         }
     }
 
+    /**
+     * Returns the phase of the game. Setters and getters for phase and step
+     *
+     */
     public Phase getPhase() {
         return phase;
     }
@@ -143,6 +225,11 @@ public class Board extends Subject {
         }
     }
 
+
+    /**
+     * Returns whether the board is in step mode.
+     *
+     */
     public boolean isStepMode() {
         return stepMode;
     }
@@ -154,6 +241,10 @@ public class Board extends Subject {
         }
     }
 
+    /**
+     * Returns the number of the given player on the board. If the player is not
+     *
+     */
     public int getPlayerNumber(@NotNull Player player) {
         if (player.board == this) {
             return players.indexOf(player);
@@ -168,22 +259,12 @@ public class Board extends Subject {
      * (no walls or obstacles in either of the involved spaces); otherwise,
      * null will be returned.
      *
-     * @param space the space for which the neighbour should be computed
+     * @param space   the space for which the neighbour should be computed
      * @param heading the heading of the neighbour
-     * @return the space in the given direction; null if there is no (reachable) neighbour
+     * @return the space in the given direction; null if there is no (reachable)
+     *         neighbour
      */
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
-        if (space.getWalls().contains(heading)) {
-            return null;
-        }
-        // TODO needs to be implemented based on the actual spaces
-        //      and obstacles and walls placed there. For now it,
-        //      just calculates the next space in the respective
-        //      direction in a cyclic way.
-
-        // XXX an other option (not for now) would be that null represents a hole
-        //     or the edge of the board in which the players can fall
-
         int x = space.x;
         int y = space.y;
         switch (heading) {
@@ -200,18 +281,57 @@ public class Board extends Subject {
                 x = (x + 1) % width;
                 break;
         }
-        Heading reverse = Heading.values()[(heading.ordinal() + 2)% Heading.values().length];
-        Space result = getSpace(x, y);
-        if (result != null) {
-            if (result.getWalls().contains(reverse)) {
-                return null;
+
+        return getSpace(x, y);
+    }
+
+
+    /**
+     * Returns the number of checkpoints on the board. Getters and setters for totalCheckpoints and won
+     *
+     */
+    public int getTotalCheckpoints() {
+        return totalCheckpoints;
+    }
+
+    public void setTotalCheckpoints(int totalCheckpoints) {
+        this.totalCheckpoints = totalCheckpoints;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+
+    /**
+     * Returns whether the game is won. The game is won, if one of the players
+     *
+     */
+    public boolean isWon() {
+        for (Player p : players) {
+            //System.out.println(p.getCheckpoints() + ":" + totalCheckpoints);
+            if (p.getCheckpoints() == totalCheckpoints) {
+                won = true;
+                break;
             }
         }
-        return result;
+        return won;
     }
 
+    public void setWon(boolean won) {
+        this.won = won;
+        notifyChange();
+    }
+
+
+    /**
+     * Returns the status message of the board. The status message contains
+     *
+     */
     public String getStatusMessage() {
-
-        return "";
+        return "Phase: " + getPhase().name() +
+                ", Player = " + getCurrentPlayer().getName() +
+                ", Counter " + counter;
     }
+
 }

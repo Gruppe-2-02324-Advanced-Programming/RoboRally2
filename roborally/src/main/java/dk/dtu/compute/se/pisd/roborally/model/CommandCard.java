@@ -21,17 +21,21 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
+import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import javafx.scene.image.Image;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ...
+ * A command card that can be used by a player to program the robot.
+ * This class is responsible for the command card's name and image.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class CommandCard extends Subject {
 
+    @Expose
     final public Command command;
 
     public CommandCard(@NotNull Command command) {
@@ -42,5 +46,7 @@ public class CommandCard extends Subject {
         return command.displayName;
     }
 
-
+    public Image getImage() {
+        return command.cardImage;
+    }
 }

@@ -21,10 +21,13 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
+import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 /**
- * ...
+ *
+ * Class for the command card field of a player. This class is a subject of the observer pattern and can be observed by the GUI.
+ *
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
@@ -32,17 +35,26 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 public class CommandCardField extends Subject {
 
     final public Player player;
-
+@Expose
     private CommandCard card;
-
+@Expose
     private boolean visible;
 
+
+    /**
+     * Constructor for the CommandCardField class.
+     *
+     */
     public CommandCardField(Player player) {
         this.player = player;
         this. card = null;
         this.visible = true;
     }
 
+    /**
+     * Method to get the card of the CommandCardField. Getters and setters for the card and visibility of the card.
+     *
+     */
     public CommandCard getCard() {
         return card;
     }
@@ -54,10 +66,18 @@ public class CommandCardField extends Subject {
         }
     }
 
+    /**
+     * Method to get the visibility of the card of the CommandCardField.
+     *
+     */
     public boolean isVisible() {
         return visible;
     }
 
+    /**
+     * Method to set the visibility of the card of the CommandCardField.
+     *
+     */
     public void setVisible(boolean visible) {
         if (visible != this.visible) {
             this.visible = visible;

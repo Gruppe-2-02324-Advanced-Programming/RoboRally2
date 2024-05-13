@@ -52,6 +52,11 @@ public class Adapter<E> implements JsonSerializer<E>, JsonDeserializer<E>{
     private static final String CLASSNAME = "CLASSNAME";
     private static final String INSTANCE  = "INSTANCE";
 
+
+    /**
+     * Serializes an object of type E into a JsonElement.
+     *
+     */
     @Override
     public JsonElement serialize(E src, Type typeOfSrc,
             JsonSerializationContext context) {
@@ -64,6 +69,11 @@ public class Adapter<E> implements JsonSerializer<E>, JsonDeserializer<E>{
         return retValue;
     }
 
+
+    /**
+     * Deserializes a JsonElement into an object of type E.
+     *
+     */
     @Override
     public E deserialize(JsonElement json, Type typeOfT,
             JsonDeserializationContext context) throws JsonParseException  {

@@ -21,33 +21,55 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
+import javafx.scene.image.Image;
+
+import com.google.gson.annotations.Expose;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * ...
+ * This enumeration defines the commands that can be used in the game. The
+ * commands are used to control the robots in the game.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Setare Izadi, s232629@dtu.dk
+ * @auhtor Christoffer, s205449
+ * @author Phillip, s224278
  */
 public enum Command {
 
     // This is a very simplistic way of realizing different commands.
+    FORWARD("Fwd", new Image("assets/cardsMove1.png")),
+    RIGHT("Turn Right", new Image("assets/cardsRight.png")),
+    LEFT("Turn Left", new Image("assets/cardsLeft.png")),
+    FAST_FORWARD("Fast Fwd", new Image("assets/cardsMove2.png")),
+    FORWARD_THREE("Fwd Three", new Image("assets/cardsMove3.png")),
+    BACKUP("Back Up", new Image("assets/cardsMoveBack.png")),
+    UTURN("U-Turn", new Image("assets/cardsUTurn.png")),
+    AGAIN("Again", new Image("assets/cardsMove1.png")),
+    OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png"), LEFT, RIGHT),
 
-    FORWARD("Fwd"),
-    RIGHT("Turn Right"),
-    LEFT("Turn Left"),
-    FAST_FORWARD("Fast Fwd"),
+    POWER_UP("Power Up", new Image("assets/powerupcard.png"));
 
-    OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
 
+
+    @Expose
     final public String displayName;
 
     final private List<Command> options;
 
-    Command(String displayName, Command... options) {
+    final public Image cardImage;
+
+
+    /**
+     * The constructor for a command with a given display name and an image
+     *
+     */
+    Command(String displayName, Image cardImage, Command... options) {
         this.displayName = displayName;
+        this.cardImage = cardImage;
         this.options = Collections.unmodifiableList(Arrays.asList(options));
     }
 

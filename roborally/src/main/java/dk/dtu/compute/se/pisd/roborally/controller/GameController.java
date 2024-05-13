@@ -24,196 +24,70 @@ package dk.dtu.compute.se.pisd.roborally.controller;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
- * ...
+ * Controller for managing the game logic of RoboRally. It handles player movements,
+ * command execution, and the transition between different phases of the game.
+ * <p>
+ * The controller is responsible for starting the programming phase, executing programs,
+ * and moving players on the board based on their chosen command cards.
+ * <p>
+ * Usage:
+ * <pre>{@code
+ * Board board = new Board(8, 8);
+ * GameController controller = new GameController(board);
+ * controller.startProgrammingPhase();
+ * // ...
+ * }</pre>
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class GameController {
 
-    final public Board board;
+    public Board board;
 
-    public GameController(Board board) {
+    /**
+     * Constructor for the GameController.
+     * @author Ekkart Kindler
+     * @param board the board to which the controller is connected
+     */
+    public GameController(@NotNull Board board) {
         this.board = board;
     }
 
-
-
-    public void moveForward(@NotNull Player player) {
-        if (player.board == board) {
-            Space space = player.getSpace();
-            Heading heading = player.getHeading();
-
-            Space target = board.getNeighbour(space, heading);
-            if (target != null) {
-                try {
-                    moveToSpace(player, target, heading);
-                } catch (ImpossibleMoveException e) {
-                    // we don't do anything here  for now; we just catch the
-                    // exception so that we do no pass it on to the caller
-                    // (which would be very bad style).
-                }
-            }
-        }
-    }
-
-    // TODO Assignment A3
-    public void fastForward(@NotNull Player player) {
-
-    }
-
-    // TODO Assignment A3
-    public void turnRight(@NotNull Player player) {
-
-    }
-
-    // TODO Assignment A3
-    public void turnLeft(@NotNull Player player) {
-
-    }
-
-    void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
-        assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
-        Player other = space.getPlayer();
-        if (other != null){
-            Space target = board.getNeighbour(space, heading);
-            if (target != null) {
-                // XXX Note that there might be additional problems with
-                //     infinite recursion here (in some special cases)!
-                //     We will come back to that!
-                moveToSpace(other, target, heading);
-
-                // Note that we do NOT embed the above statement in a try catch block, since
-                // the thrown exception is supposed to be passed on to the caller
-
-                assert target.getPlayer() == null : target; // make sure target is free now
-            } else {
-                throw new ImpossibleMoveException(player, space, heading);
-            }
-        }
-        player.setSpace(space);
-    }
-
-    public void moveCurrentPlayerToSpace(Space space) {
-        // TODO: Import or Implement this method. This method is only for debugging purposes. Not useful for the game.
-    }
-
-    private void makeProgramFieldsVisible(int register) {
-        if (register >= 0 && register < Player.NO_REGISTERS) {
-            for (int i = 0; i < board.getPlayersNumber(); i++) {
-                Player player = board.getPlayer(i);
-                CommandCardField field = player.getProgramField(register);
-                field.setVisible(true);
-            }
-        }
-    }
-
-    private void makeProgramFieldsInvisible() {
-        for (int i = 0; i < board.getPlayersNumber(); i++) {
-            Player player = board.getPlayer(i);
-            for (int j = 0; j < Player.NO_REGISTERS; j++) {
-                CommandCardField field = player.getProgramField(j);
-                field.setVisible(false);
-            }
-        }
-    }
-
-    public void finishProgrammingPhase() {
-        makeProgramFieldsInvisible();
-        makeProgramFieldsVisible(0);
-        board.setPhase(Phase.ACTIVATION);
-        board.setCurrentPlayer(board.getPlayer(0));
-        board.setStep(0);
-    }
-
-    public void executePrograms() {
-        board.setStepMode(false);
-        continuePrograms();
-    }
-
-    public void executeStep() {
-        board.setStepMode(true);
-        continuePrograms();
-    }
-
-    private void continuePrograms() {
-        do {
-            executeNextStep();
-        } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
-    }
-
-    private void executeNextStep() {
+    /**
+     * This is just some dummy controller operation to make a simple move to see something
+     * happening on the board. This method should eventually be deleted!
+     * @author Ekkart Kindler
+     * @param space the space to which the current player should move
+     */
+    public void moveCurrentPlayerToSpace(@NotNull Space space) {
         Player currentPlayer = board.getCurrentPlayer();
-        if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
-            int step = board.getStep();
-            if (step >= 0 && step < Player.NO_REGISTERS) {
-                CommandCard card = currentPlayer.getProgramField(step).getCard();
-                if (card != null) {
-                    Command command = card.command;
-                    executeCommand(currentPlayer, command);
-                }
-                int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
-                if (nextPlayerNumber < board.getPlayersNumber()) {
-                    board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
-                } else {
-                    step++;
-                    if (step < Player.NO_REGISTERS) {
-                        makeProgramFieldsVisible(step);
-                        board.setStep(step);
-                        board.setCurrentPlayer(board.getPlayer(0));
-                    } else {
-                        startProgrammingPhase();
-                    }
-                }
-            } else {
-                // this should not happen
-                assert false;
-            }
-        } else {
-            // this should not happen
-            assert false;
-        }
-    }
+        if (space.getPlayer() == null)
+            currentPlayer.setSpace(space);
+        else return;
 
-    private void executeCommand(@NotNull Player player, Command command) {
-        if (player != null && player.board == board && command != null) {
-            // XXX This is a very simplistic way of dealing with some basic cards and
-            //     their execution. This should eventually be done in a more elegant way
-            //     (this concerns the way cards are modelled as well as the way they are executed).
+        int currentPlayerNumber = board.getPlayerNumber(currentPlayer);
+        Player nextPlayer = board.getPlayer((currentPlayerNumber + 1) % board.getPlayersNumber());
+        board.setCurrentPlayer(nextPlayer);
 
-            switch (command) {
-                case FORWARD:
-                    this.moveForward(player);
-                    break;
-                case RIGHT:
-                    this.turnRight(player);
-                    break;
-                case LEFT:
-                    this.turnLeft(player);
-                    break;
-                case FAST_FORWARD:
-                    this.fastForward(player);
-                    break;
-                default:
-                    // DO NOTHING (for now)
-            }
-        }
-    }
-
-    public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
-        CommandCard sourceCard = source.getCard();
-        CommandCard targetCard = target.getCard();
-        if (sourceCard != null && targetCard == null) {
-            target.setCard(sourceCard);
-            source.setCard(null);
-            return true;
-        } else {
-            return false;
-        }
+        board.setCounter(board.getCounter() + 1);
     }
 
 
+    /**
+     * This method starts the programming phase of the game. It sets the phase to PROGRAMMING,
+     * sets the current player to the first player, and sets the step to 0.
+     * <p>
+     * It also sets the program fields of each player to be empty and the card fields to contain
+     * random command cards.
+     * <p>
+     * The method is called at the beginning of the game and after each activation phase.
+     *
+     * @author Ekkart Kindler
+     */
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
         board.setCurrentPlayer(board.getPlayer(0));
@@ -236,34 +110,482 @@ public class GameController {
         }
     }
 
+    /**
+     * This method generates a random command card.
+     * @author Ekkart Kindler
+     * @return a random command card
+     */
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
         return new CommandCard(commands[random]);
     }
 
+
+    /**
+     * This method ends the programming phase, which makes the execute button active to press.
+     * @author Ekkart Kindler
+     */
+    public void finishProgrammingPhase() {
+        makeProgramFieldsInvisible();
+        makeProgramFieldsVisible(0);
+        board.setPhase(Phase.ACTIVATION);
+        board.setCurrentPlayer(board.getPlayer(0));
+        board.setStep(0);
+    }
+
+    /**
+     * This method makes the program fields of the players visible for the given register.
+     * @author Ekkart Kindler
+     * @param register the register for which the program fields should be made visible
+     */
+    private void makeProgramFieldsVisible(int register) {
+        if (register >= 0 && register < Player.NO_REGISTERS) {
+            for (int i = 0; i < board.getPlayersNumber(); i++) {
+                Player player = board.getPlayer(i);
+                CommandCardField field = player.getProgramField(register);
+                field.setVisible(true);
+            }
+        }
+    }
+
+    /**
+     * This method makes the program fields of the players invisible. This is used to hide the program
+     * fields after the programming phase has ended.
+     *
+     */
+    private void makeProgramFieldsInvisible() {
+        for (int i = 0; i < board.getPlayersNumber(); i++) {
+            Player player = board.getPlayer(i);
+            for (int j = 0; j < Player.NO_REGISTERS; j++) {
+                CommandCardField field = player.getProgramField(j);
+                field.setVisible(false);
+            }
+        }
+    }
+
+    /**
+     * This method executes the moves which the player has requested
+     */
+    public void executePrograms() {
+        board.setStepMode(false);
+        continuePrograms();
+    }
+
+    /**
+     * This method executes the moves which the player has requested in step mode
+     */
+    public void executeStep() {
+        board.setStepMode(true);
+        continuePrograms();
+    }
+
+    /**
+     * This method continues the execution of the programs of the players. It executes the next step
+     * of the current player until the phase is not ACTIVATION or the step mode is not set.
+     */
+    private void continuePrograms() {
+        do {
+            executeNextStep();
+        } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
+    }
+
+    /**
+     * This method executes the next step of the current player. If the phase is ACTIVATION, the next
+     * step of the current player is executed. If the phase is not ACTIVATION, the method does nothing.
+     * If the step is the last step of the current player, the method starts the programming phase.
+     */
+    private void executeNextStep() {
+        Player currentPlayer = board.getCurrentPlayer();
+        if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
+            int step = board.getStep();
+            if (step >= 0 && step < Player.NO_REGISTERS) {
+                CommandCard card = currentPlayer.getProgramField(step).getCard();
+                if (card != null) {
+                    Command command = card.command;
+                    if (command.isInteractive()) {
+                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        return;
+                    }
+                    executeCommand(currentPlayer, command);
+                }
+                int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
+                if (nextPlayerNumber < board.getPlayersNumber()) {
+                    board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
+                } else {
+                    step++;
+                    for (Player player : board.getPlayers()) {
+                        List<FieldAction> actions = player.getSpace().getActions();
+                        if (actions != null) {
+                            for (FieldAction action : actions) {
+                                action.doAction(this, player.getSpace());
+                            }
+
+                        }
+                    }
+                    if (step < Player.NO_REGISTERS) {
+                        makeProgramFieldsVisible(step);
+                        board.setStep(step);
+                        board.setCurrentPlayer(board.getPlayer(0));
+
+                    } else {
+                        startProgrammingPhase();
+                    }
+                }
+            } else {
+                // this should not happen
+                assert false;
+            }
+        } else {
+            // this should not happen
+            assert false;
+        }
+    }
+
+
+    /**
+     * This method executes the given command for the specified player.
+     * @author Christoffer, s205449
+     */
+    public void executeCommandOptionAndContinue(@NotNull Command option) {
+        Player currentPlayer = board.getCurrentPlayer();
+        if (currentPlayer != null &&
+                board.getPhase() == Phase.PLAYER_INTERACTION &&
+                option != null) ;
+        board.setPhase(Phase.ACTIVATION);
+        executeCommand(currentPlayer, option);
+
+        int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
+        if (nextPlayerNumber < board.getPlayersNumber()) {
+            board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
+        } else {
+            int step = board.getStep() + 1;
+            for (Player player : board.getPlayers()) {
+                List<FieldAction> actions = player.getSpace().getActions();
+                if (actions != null) {
+                    for (FieldAction action : actions) {
+                        action.doAction(this, player.getSpace());
+                    }
+                }
+
+            }
+            if (step < Player.NO_REGISTERS) {
+                makeProgramFieldsVisible(step);
+                board.setStep(step);
+                board.setCurrentPlayer(board.getPlayer(0));
+            } else {
+                startProgrammingPhase();
+            }
+        }
+    }
+
+
+
+
+    /**
+     * Executes the given command for the specified player. If the command is POWER_UP,
+     * the player will receive one energy cube.
+     *
+     * @author Emily, s191174
+     * @param player the player to whom the command will apply
+     * @param command the command to be executed
+     */
+    // XXX: V2
+    private void executeCommand(@NotNull Player player, Command command) {
+        if (player != null && player.board == board && command != null) {
+            // XXX This is a very simplistic way of dealing with some basic cards and
+            //     their execution. This should eventually be done in a more elegant way
+            //     (this concerns the way cards are modelled as well as the way they are executed).
+
+            switch (command) {
+                case FORWARD_THREE:
+                    this.moveThree(player);
+                    break;
+                case FORWARD:
+                    this.moveForward(player);
+                    break;
+                case RIGHT:
+                    this.turnRight(player);
+                    break;
+                case LEFT:
+                    this.turnLeft(player);
+                    break;
+                case FAST_FORWARD:
+                    this.fastForward(player);
+                    break;
+                case UTURN:
+                    this.uTurn(player);
+                    break;
+                case BACKUP:
+                    this.backUp(player);
+                case AGAIN:
+                    this.again(player);
+                    break;
+                case OPTION_LEFT_RIGHT:
+                    this.leftOrRight(player, command);
+                    break;
+                case POWER_UP:
+                    player.addEnergyCube();
+                    break;
+                default:
+                    // DO NOTHING (for now)
+            }
+        }
+    }
+
+
+    /**
+     * This exception is thrown when a player tries to move to a space that is not possible to move to.
+     */
+
+    class moveNotPossibleException extends Exception {
+
+        private Space space;
+
+        private Heading heading;
+
+        private Player player;
+
+        /**
+         * Here we create the Exception moveIsNotPossible, but for now, nothing happens when thrown
+         *
+         * @param player  the player that is trying to move
+         * @param space   the space the player is trying to move to
+         * @param heading the direction the player is trying to move
+         */
+
+        public moveNotPossibleException(Player player, Space space, Heading heading) {
+            super("Move is not possible");
+
+            this.heading = heading;
+
+            this.space = space;
+
+            this.player = player;
+        }
+    }
+
+    /**
+     *
+     * @param player the player to move forward
+     * @author Christoffer,  s205449
+     * <p>
+     * <p>
+     * The moveForward has been slightly modified with a catch statement at the bottom, however it has been set to be ignored since it doesn't do anything
+     * Moves a player one space forward in the direction they are currently facing.
+     * If the movement is not possible (e.g., due to a wall), the action is ignored.
+     */
+    public void moveForward(Player player) {
+        if (board != null && player != null && player.board == board) {
+            Heading heading = player.getHeading();
+            Space space = player.getSpace();
+            Space target = board.getNeighbour(space, heading);
+            if (target != null) {
+                try {
+                    movePlayerToSpace(player, target, heading);
+                } catch (moveNotPossibleException ignored) {
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Moves a player three spaces forward in the direction they are currently facing.
+     * This is done by calling {@code moveForward} method three times.
+     *
+     * @param player the player to move three spaces forward
+     * @author Setare Izadi, s232629@dtu.dk
+     */
+    public void moveThree(Player player) {
+        moveForward(player);
+        moveForward(player);
+        moveForward(player);
+    }
+
+
+    /**
+     * @param player
+     * @param space
+     * @param heading
+     * @throws moveNotPossibleException
+     * @author Christoffer,  s205449
+     * <p>
+     * The movePlayerToSpace which relocates the pushed player to the next space which the pushing player is heading.
+     * If none of the criteria met the moveNotPossibleException will be thrown.
+     */
+    public void movePlayerToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading)
+            throws moveNotPossibleException {
+        Player other = space.getPlayer();
+        if (other != null) {
+            Space target = board.getNeighbour(space,
+                    heading);
+            if (target != null) {
+                movePlayerToSpace(other,
+                        target,
+                        heading);
+            } else {
+                throw new moveNotPossibleException(player,
+                        space,
+                        heading);
+            }
+        }
+        /**
+         * @author Christoffer Fink 205449
+         * Does so the player can't wall through the walls
+         */
+        if (player.getSpace() != null) {
+            if (player.getSpace().getWalls() != null) {
+                for (Heading wall : player.getSpace().getWalls()) {
+                    if (wall == heading) {
+                        throw new moveNotPossibleException(player, space, heading);
+                    }
+                }
+            }
+        }
+        if (space.getWalls() != null) {
+            for (Heading wall : space.getWalls()) {
+                if (wall.prev().prev() == heading) {
+                    throw new moveNotPossibleException(player, space, heading);
+                }
+            }
+        }
+
+        player.setSpace(space);
+    }
+
+
+    /**
+     * @author Christoffer,  s205449
+     * Same function as moveForward, however the method is set two times to get the fastForward function
+     */
+    public void fastForward(@NotNull Player player) {
+        moveForward(player);
+        moveForward(player);
+    }
+
+    /**
+     * Here the player's direction is set to turn right
+     */
+    public void turnRight(@NotNull Player player) {
+        if (player != null && player.board == board) {
+            player.setHeading(player.getHeading().next());
+        }
+    }
+
+    /**
+     * Here the player's direction is set to turn left
+     */
+    public void turnLeft(@NotNull Player player) {
+        if (player != null && player.board == board) {
+            player.setHeading(player.getHeading().prev());
+        }
+    }
+
+    /**
+     * Turns the player around
+     *
+     * @param player
+     * @author Marcus, s214962
+     */
+    public void uTurn(@NotNull Player player) {
+        if (player != null && player.board == board) {
+            player.setHeading(player.getHeading().next().next());
+        }
+    }
+
+    /**
+     * Moves the player backwards
+     *
+     * @param player
+     * @author Phillip, s224278
+     */
+    public void backUp(@NotNull Player player) {
+        if (player != null && player.board == board) {
+            uTurn(player);
+            moveForward(player);
+            uTurn(player);
+        }
+    }
+
+
+    public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
+        CommandCard sourceCard = source.getCard();
+        CommandCard targetCard = target.getCard();
+        if (sourceCard != null && targetCard == null) {
+            target.setCard(sourceCard);
+            source.setCard(null);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * A method called when no corresponding controller operation is implemented yet. This
      * should eventually be removed.
      */
-    public void notImplemented() {
-        // XXX just for now to indicate that the actual method is not yet implemented
-        assert false;
-    }
-
-
-    class ImpossibleMoveException extends Exception {
-
-        private Player player;
-        private Space space;
-        private Heading heading;
-
-        public ImpossibleMoveException(Player player, Space space, Heading heading) {
-            super("Move impossible");
-            this.player = player;
-            this.space = space;
-            this.heading = heading;
+    public void leftOrRight(Player player, Command option) {
+        if (player != null && option != null && player.board.getPhase() == Phase.PLAYER_INTERACTION) {
+            switch (option) {
+                case LEFT:
+                    executeCommandOptionAndContinue(Command.LEFT);
+                    continuePrograms();
+                    break;
+                case RIGHT:
+                    executeCommandOptionAndContinue(Command.RIGHT);
+                    continuePrograms();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
+
+
+
+    /**
+     * Sets the board of the controller.
+     * @param board the board to be set
+     */
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    /**
+     * Gets the board of the controller.
+     * @return the board of the controller
+     */
+    public Board getBoard() {
+        return this.board;
+    }
+
+    /**
+     * Repeats the command card in the previous register of the player. If it is the first card it does nothing,
+     * if the previous card is an again card it will repeat the card before that.
+     * @author Jacob, s164958
+     * @param player the player to repeat the command card for
+     */
+    public void again(Player player) {
+        if (player != null && player.board == board) {
+            int prevStep = board.getStep() - 1;
+            if (prevStep >= 0) {
+                CommandCard card = player.getProgramField(prevStep).getCard();
+                if (card != null && card.command != Command.AGAIN) {
+                    Command command = card.command;
+                    if (command.isInteractive()) {
+                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        return;
+                    }
+                    executeCommand(player, command);
+                }
+                if (card != null && card.command == Command.AGAIN) {
+                    board.setStep(prevStep);
+                    again(player);
+                    board.setStep(board.getStep() + 1);
+                }
+            }
+        }
+    }
 }

@@ -27,27 +27,46 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 
 /**
- * ...
+ * The menu bar for the RoboRally application.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class RoboRallyMenuBar extends MenuBar {
 
+
+    /**
+     * The controller for the application.
+     */
     private AppController appController;
-
+/**
+     * The menu for the control items.
+     */
     private Menu controlMenu;
-
+/**
+     * The menu item for saving the game.
+     */
     private MenuItem saveGame;
-
+/**
+     * The menu item for starting a new game.
+     */
     private MenuItem newGame;
-
+/**
+     * The menu item for loading a game.
+     */
     private MenuItem loadGame;
-
+/**
+     * The menu item for stopping a game.
+     */
     private MenuItem stopGame;
-
+/**
+     * The menu item for exiting the application.
+     */
     private MenuItem exitApp;
-
+/**
+     * The constructor for the menu bar.
+     * @param appController The controller for the application.
+     */
     public RoboRallyMenuBar(AppController appController) {
         this.appController = appController;
 
@@ -78,7 +97,9 @@ public class RoboRallyMenuBar extends MenuBar {
         controlMenu.setOnShown(e -> this.updateBounds());
         update();
     }
-
+/**
+     * This method updates the menu bar.
+     */
     public void update() {
         if (appController.isGameRunning()) {
             newGame.setVisible(false);
