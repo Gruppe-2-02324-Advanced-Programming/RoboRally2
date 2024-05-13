@@ -48,6 +48,11 @@ public class GameController {
 
     public Board board;
 
+    /**
+     * Constructor for the GameController.
+     * @author Ekkart Kindler
+     * @param board the board to which the controller is connected
+     */
     public GameController(@NotNull Board board) {
         this.board = board;
     }
@@ -55,7 +60,7 @@ public class GameController {
     /**
      * This is just some dummy controller operation to make a simple move to see something
      * happening on the board. This method should eventually be deleted!
-     *
+     * @author Ekkart Kindler
      * @param space the space to which the current player should move
      */
     public void moveCurrentPlayerToSpace(@NotNull Space space) {
@@ -72,7 +77,17 @@ public class GameController {
     }
 
 
-    // XXX: V2
+    /**
+     * This method starts the programming phase of the game. It sets the phase to PROGRAMMING,
+     * sets the current player to the first player, and sets the step to 0.
+     * <p>
+     * It also sets the program fields of each player to be empty and the card fields to contain
+     * random command cards.
+     * <p>
+     * The method is called at the beginning of the game and after each activation phase.
+     *
+     * @author Ekkart Kindler
+     */
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
         board.setCurrentPlayer(board.getPlayer(0));
@@ -95,7 +110,11 @@ public class GameController {
         }
     }
 
-    // XXX: V2
+    /**
+     * This method generates a random command card.
+     * @author Ekkart Kindler
+     * @return a random command card
+     */
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
@@ -105,6 +124,7 @@ public class GameController {
 
     /**
      * This method ends the programming phase, which makes the execute button active to press.
+     * @author Ekkart Kindler
      */
     public void finishProgrammingPhase() {
         makeProgramFieldsInvisible();
@@ -114,7 +134,11 @@ public class GameController {
         board.setStep(0);
     }
 
-    // XXX: V2
+    /**
+     * This method makes the program fields of the players visible for the given register.
+     * @author Ekkart Kindler
+     * @param register the register for which the program fields should be made visible
+     */
     private void makeProgramFieldsVisible(int register) {
         if (register >= 0 && register < Player.NO_REGISTERS) {
             for (int i = 0; i < board.getPlayersNumber(); i++) {
@@ -125,7 +149,11 @@ public class GameController {
         }
     }
 
-    // XXX: V2
+    /**
+     * This method makes the program fields of the players invisible. This is used to hide the program
+     * fields after the programming phase has ended.
+     *
+     */
     private void makeProgramFieldsInvisible() {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
             Player player = board.getPlayer(i);
@@ -144,20 +172,29 @@ public class GameController {
         continuePrograms();
     }
 
-    // XXX: V2
+    /**
+     * This method executes the moves which the player has requested in step mode
+     */
     public void executeStep() {
         board.setStepMode(true);
         continuePrograms();
     }
 
-    // XXX: V2
+    /**
+     * This method continues the execution of the programs of the players. It executes the next step
+     * of the current player until the phase is not ACTIVATION or the step mode is not set.
+     */
     private void continuePrograms() {
         do {
             executeNextStep();
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
 
-    // XXX: V2
+    /**
+     * This method executes the next step of the current player. If the phase is ACTIVATION, the next
+     * step of the current player is executed. If the phase is not ACTIVATION, the method does nothing.
+     * If the step is the last step of the current player, the method starts the programming phase.
+     */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
         if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
@@ -207,6 +244,7 @@ public class GameController {
 
 
     /**
+     * This method executes the given command for the specified player.
      * @author Christoffer, s205449
      */
     public void executeCommandOptionAndContinue(@NotNull Command option) {
@@ -297,9 +335,7 @@ public class GameController {
 
 
     /**
-     * ...
-     *
-     * @author Christoffer, s205449
+     * This exception is thrown when a player tries to move to a space that is not possible to move to.
      */
 
     class moveNotPossibleException extends Exception {
@@ -330,7 +366,6 @@ public class GameController {
     }
 
     /**
-     * ...
      *
      * @param player the player to move forward
      * @author Christoffer,  s205449
@@ -510,19 +545,27 @@ public class GameController {
 
 
 
+    /**
+     * Sets the board of the controller.
+     * @param board the board to be set
+     */
     public void setBoard(Board board) {
         this.board = board;
     }
 
+    /**
+     * Gets the board of the controller.
+     * @return the board of the controller
+     */
     public Board getBoard() {
         return this.board;
     }
+
     /**
      * Repeats the command card in the previous register of the player. If it is the first card it does nothing,
      * if the previous card is an again card it will repeat the card before that.
      * @author Jacob, s164958
      * @param player the player to repeat the command card for
-     * @Return void
      */
     public void again(Player player) {
         if (player != null && player.board == board) {

@@ -15,18 +15,30 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 
-
-
-//todo ligenu ændrer den også robottens heading skal laves om til ikke at den ikke skal ændre heading
+//todo Currently also changes the heading of the robot, which it should not do
 public class ConveyorBeltCorner extends FieldAction {
     Heading heading;
     private int rotation;
 
+    /**
+     * Constructor for the conveyor belt corner
+     * @autor Christoffer s205449
+     * @param heading the heading of the conveyor belt corner
+     * @param rotation the rotation of the conveyor belt corner
+     */
     public ConveyorBeltCorner(Heading heading, int rotation) {
         this.heading = heading;
         this.rotation = rotation;
     }
 
+    /**
+     * This method moves the player to the next space in the direction of the conveyor belt corner
+     * and changes the player's heading based on the conveyor belt corner's rotation
+     * @autor Christoffer s205449
+     * @param gameController the game controller
+     * @param space the space the player is on
+     * @return true if the player is moved to the next space in the direction of the conveyor belt corner
+     */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
         if (space != null) {
@@ -61,10 +73,21 @@ public class ConveyorBeltCorner extends FieldAction {
         }
         return false;
     }
+
+    /**
+     * Get the heading of the conveyor belt corner
+     * @autor Christoffer s205449
+     * @return the heading of the conveyor belt corner
+     */
     public Heading getHeading() {
         return heading;
     }
 
+    /**
+     * Get the rotation of the conveyor belt corner
+     * @autor Christoffer s205449
+     * @return the rotation of the conveyor belt corner
+     */
     public int getRotation() {
         return rotation;
     }
