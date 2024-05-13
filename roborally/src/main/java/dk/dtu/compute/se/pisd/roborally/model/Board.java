@@ -21,6 +21,7 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
+import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,30 +37,32 @@ import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
  *
  */
 public class Board extends Subject {
-
+    @Expose
     public final int width;
-
+    @Expose
     public final int height;
 
+    @Expose
     public final String boardName;
 
     private Integer gameId;
-
+    @Expose
     private final Space[][] spaces;
-
+    @Expose
     private final List<Player> players = new ArrayList<>();
-
+    @Expose
     private Player current;
-
+    @Expose
     private Phase phase = INITIALISATION;
-
+    @Expose
     private int step = 0;
-
+    @Expose
     private boolean stepMode;
-
+    @Expose
     private int totalCheckpoints = 0;
-
+    @Expose
     private int counter;
+    @Expose
     private boolean won = false;
 
     public int getCounter() {
@@ -131,6 +134,11 @@ public class Board extends Subject {
             return null;
         }
     }
+
+
+        public String getBoardName() {
+            return boardName;
+        }
 
     public int getPlayersNumber() {
         return players.size();
@@ -252,6 +260,7 @@ public class Board extends Subject {
             //System.out.println(p.getCheckpoints() + ":" + totalCheckpoints);
             if (p.getCheckpoints() == totalCheckpoints) {
                 won = true;
+                break;
             }
         }
         return won;

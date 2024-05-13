@@ -89,7 +89,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
     /**
-     * Draws the walls posibly other stuff
+     * Draws the walls possibly other stuff
      *
      * @author Christoffer Fink, s205449@dtu.dk
      * @author Setare Izadi, s232629@dtu.dk
@@ -106,21 +106,6 @@ public class SpaceView extends StackPane implements ViewObserver {
         emptyFieldView.setPreserveRatio(false);
         this.getChildren().add(emptyFieldView);  // Add the empty field view as the first layer
 
-
-        // Check if the current space is a checkpoint
-        for (FieldAction action : space.getActions()) {
-            if (action instanceof Checkpoint) {
-                Checkpoint checkpoint = (Checkpoint) action;
-                // Load the checkpoint image
-                Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
-                ImageView checkpointView = new ImageView(checkpointImage);
-                checkpointView.setFitWidth(SPACE_WIDTH);
-                checkpointView.setFitHeight(SPACE_HEIGHT);
-                checkpointView.setPreserveRatio(false);
-                this.getChildren().add(checkpointView);  // Add the checkpoint view as the second layer
-                break;
-            }
-        }
 
 
 
@@ -148,8 +133,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         // Check if the current space contains a ConveyorBeltCorner
         for (FieldAction action : space.getActions()) {
-            if (action instanceof ConveyorBeltCorner) {
-                ConveyorBeltCorner conveyorBeltCorner = (ConveyorBeltCorner) action;
+            if (action instanceof ConveyorBeltCorner conveyorBeltCorner) {
                 // Load the conveyor belt corner image
                 Image conveyorBeltCornerImage;
                 if (conveyorBeltCorner.getRotation() == Gears.LEFT_TURN) {
@@ -183,12 +167,14 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
 
 
+
+
         // Check if the current space contains a conveyor belt
         for (FieldAction action : space.getActions()) {
-            if (action instanceof ConveyorBelt) {
-                ConveyorBelt conveyorBelt = (ConveyorBelt) action;
+            if (action instanceof ConveyorBelt conveyorBelt) {
                 // Load the conveyor belt image
-                Image conveyorBeltImage = new Image("/assets/green.png"); // replace with the actual path to your conveyor belt image
+                Image conveyorBeltImage; // replace with the actual path to your conveyor belt image
+                conveyorBeltImage = new Image("/assets/green.png");
                 ImageView conveyorBeltView = new ImageView(conveyorBeltImage);
                 conveyorBeltView.setFitWidth(SPACE_WIDTH);
                 conveyorBeltView.setFitHeight(SPACE_HEIGHT);
@@ -217,21 +203,25 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         Image wallImage = new Image("/assets/wall.png");
 
-        // Draw player
-        Player player = space.getPlayer();
-        if (player != null) {
-            Polygon arrow = new Polygon(0.0, 0.0,
-                    10.0, 20.0,
-                    20.0, 0.0);
-            try {
-                arrow.setFill(Color.valueOf(player.getColor()));
-            } catch (Exception e) {
-                arrow.setFill(Color.MEDIUMPURPLE);
-            }
 
-            arrow.setRotate((90 * player.getHeading().ordinal()) % 360);
-            this.getChildren().add(arrow);
+
+
+
+        // Check if the current space is a checkpoint
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof Checkpoint) {
+                Checkpoint checkpoint = (Checkpoint) action;
+                // Load the checkpoint image
+                Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
+                ImageView checkpointView = new ImageView(checkpointImage);
+                checkpointView.setFitWidth(SPACE_WIDTH);
+                checkpointView.setFitHeight(SPACE_HEIGHT);
+                checkpointView.setPreserveRatio(false);
+                this.getChildren().add(checkpointView);  // Add the checkpoint view as the second layer
+                break;
+            }
         }
+
 
         // Draw walls
         for (Heading wall : space.getWalls()) {
@@ -272,6 +262,23 @@ public class SpaceView extends StackPane implements ViewObserver {
             wallView.setPreserveRatio(false); // Turn off preserve ratio to allow explicit sizing
             this.getChildren().add(wallView);
         }
+
+        // Draw player
+        Player player = space.getPlayer();
+        if (player != null) {
+            Polygon arrow = new Polygon(0.0, 0.0,
+                    10.0, 20.0,
+                    20.0, 0.0);
+            try {
+                arrow.setFill(Color.valueOf(player.getColor()));
+            } catch (Exception e) {
+                arrow.setFill(Color.MEDIUMPURPLE);
+            }
+
+            arrow.setRotate((90 * player.getHeading().ordinal()) % 360);
+            this.getChildren().add(arrow);
+        }
+
     }
 
 }

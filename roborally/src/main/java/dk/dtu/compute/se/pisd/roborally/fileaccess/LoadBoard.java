@@ -21,24 +21,23 @@
  */
 package dk.dtu.compute.se.pisd.roborally.fileaccess;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * ...
@@ -52,16 +51,35 @@ public class LoadBoard {
      */
     private static final String BOARDSFOLDER = "boards";
     private static final String DEFAULTBOARD = "defaultboard";
-    private static final String[] BOARDS = new String[]{"defaultboard","circleJerk"};
-    private static final String JSON_EXT = "json";
-    public static final int BOARD_WIDTH = 10;
+    private static final String[] BOARDS = new String[]{"defaultboard", "circleJerk", "Wooooow"};
+    public static final String JSON_EXT = "json";
+    public static final int BOARD_WIDTH = 16;
     public static final int BOARD_HEIGHT = 8;
+    public static final String SAVED_GAMES_FOLDER = "roborally/src/main/resources/savedGames";
 
-    public static List<String> getBoards(){
-        List<String> boards =  new ArrayList<>();
+
+    public static List<String> getBoards() {
+        List<String> boards = new ArrayList<>();
         Collections.addAll(boards, BOARDS);
         return boards;
     }
+
+    public static void saveCurrentGame(Board board, String name) {
+        String filename = SAVED_GAMES_FOLDER + File.separator + name + "." + JSON_EXT;
+        GsonBuilder builder = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation() // This will only include fields marked with @Expose
+                .setPrettyPrinting();
+        Gson gson = builder.create();
+
+        try (FileWriter fileWriter = new FileWriter(filename);
+             JsonWriter writer = gson.newJsonWriter(fileWriter)) {
+            gson.toJson(board, Board.class, writer);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+    }
+
 
     public static Board loadBoard(String boardname) {
         if (boardname == null) {
@@ -89,7 +107,7 @@ public class LoadBoard {
 
             result = new Board(template.width, template.height, boardname);
             result.setTotalCheckpoints(template.totalCheckpoints);
-            for (SpaceTemplate spaceTemplate: template.spaces) {
+            for (SpaceTemplate spaceTemplate : template.spaces) {
                 Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
                 if (space != null) {
                     space.getActions().addAll(spaceTemplate.actions);
@@ -103,14 +121,41 @@ public class LoadBoard {
                 try {
                     reader.close();
                     inputStream = null;
-                } catch (IOException e2) {}
+                } catch (IOException e2) {
+                }
             }
             if (inputStream != null) {
                 try {
                     inputStream.close();
-                } catch (IOException e2) {}
+                } catch (IOException e2) {
+                }
             }
         }
         return null;
+
+
     }
+    public static Board loadGame(String gameName) {
+        String filename = SAVED_GAMES_FOLDER + File.separator + gameName + "." + JSON_EXT;
+
+        GsonBuilder builder = new GsonBuilder()
+                .registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>())
+                .excludeFieldsWithoutExposeAnnotation()
+                .setPrettyPrinting();
+        Gson gson = builder.create();
+
+        try (FileReader fileReader = new FileReader(filename);
+             JsonReader reader = gson.newJsonReader(fileReader)) {
+            return gson.fromJson(reader, Board.class);
+        } catch (IOException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
 }
+
+
+
+
+

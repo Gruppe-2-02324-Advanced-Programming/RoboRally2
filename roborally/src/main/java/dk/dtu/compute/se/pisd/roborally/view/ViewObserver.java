@@ -21,6 +21,7 @@
  */
 package dk.dtu.compute.se.pisd.roborally.view;
 
+import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import javafx.application.Platform;
@@ -31,6 +32,7 @@ import javafx.application.Platform;
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
+
 public interface ViewObserver extends Observer {
 
     void updateView(Subject subject);

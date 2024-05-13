@@ -23,6 +23,8 @@ package dk.dtu.compute.se.pisd.roborally.model;
 
 import javafx.scene.image.Image;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +34,7 @@ import java.util.List;
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Setare Izadi, s232629@dtu.dk
+ * @author Phillip, s224278
  *
  */
 public enum Command {
@@ -47,6 +50,7 @@ public enum Command {
     AGAIN("Again", new Image("assets/cardsMove1.png")),
     OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png"), LEFT, RIGHT);
 
+    @Expose
     final public String displayName;
 
     final private List<Command> options;

@@ -32,30 +32,35 @@ public class ConveyorBeltCorner extends FieldAction {
         if (space != null) {
             Player player = space.getPlayer();
             if (player != null) {
-                // Determine the new heading
                 Heading newHeading = heading;
                 if (rotation == Gears.LEFT_TURN) {
                     newHeading = heading.prev();
                 } else if (rotation == Gears.RIGHT_TURN) {
                     newHeading = heading.next();
                 }
-                player.setHeading(newHeading);
 
-                // Move the player to the neighboring space
+
                 Space neighbor = gameController.board.getNeighbour(space, newHeading);
                 if (neighbor != null) {
                     try {
                         gameController.movePlayerToSpace(player, neighbor, newHeading);
                     } catch (GameController.moveNotPossibleException e) {
-                        return false; // Movement failure
+                        return false;
                     }
+
+
+                    if (rotation == Gears.LEFT_TURN) {
+                        player.setHeading(newHeading.next());
+                    } else if (rotation == Gears.RIGHT_TURN) {
+                        player.setHeading(newHeading.prev());
+                    }
+
                     return true;
                 }
             }
         }
         return false;
     }
-
     public Heading getHeading() {
         return heading;
     }

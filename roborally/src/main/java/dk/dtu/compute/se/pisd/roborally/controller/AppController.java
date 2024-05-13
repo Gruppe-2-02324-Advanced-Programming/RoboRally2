@@ -21,6 +21,7 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import com.google.gson.Gson;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
@@ -37,8 +38,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextInputDialog;
+import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
 
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
 
 import java.io.IOException;
@@ -46,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import com.google.gson.Gson;
 import java.util.stream.Collectors;
 
 import java.nio.file.*;
@@ -56,7 +67,6 @@ import java.util.stream.Stream;
  * AppController is the main controller of the application. It is responsible
  * for starting and stopping games, and for saving and loading games. It also
  * creates the board view and the player views.
- * 
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Christoffer s205449
  *
@@ -113,45 +123,78 @@ public class AppController implements Observer {
 
     /**
      *
-     * this method loads the games from the database and asks the user which of the
-     * gameID's they wish to load.
-     * The system then finds the game which has the same gameID as the one
-     * requested.
+     * this method loads the games from the json file and asks the user which of the gameID's they wish to load.
+     * The system then finds the game which has the same gameID as the one requested.
      */
+
     public void saveGame() {
-        // TODO: implement
+        if (gameController != null && gameController.board != null) {
+            // Prompt the user to enter the name of the game they want to save
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Save Game");
+            dialog.setHeaderText("Enter the name of the game you want to save:");
+            Optional<String> result = dialog.showAndWait();
+
+            if (result.isPresent()) {
+                String gameName = result.get();
+                LoadBoard.saveCurrentGame(gameController.board, gameName);
+                System.out.println("Game saved to " + gameName);
+            }
+        } else {
+            System.out.println("No game is currently active.");
+        }
     }
+//todo doesnt work
 
     /**
      * @author Marcus s214962
+     * @author Christoffer s205449
      *
      */
     public void loadGame() {
-        List<String> GAME_IDS = new ArrayList<>();
-        String directoryPath = "roborally/src/main/resources/savedGames";
-
-        try (Stream<Path> stream = Files.walk(Paths.get(directoryPath))) {
-            GAME_IDS = stream
-                    .filter(Files::isRegularFile)
-                    .filter(p -> p.toString().endsWith(".json"))
-                    .map(Path::toString)
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            System.err.println("Error loading game files: " + e.getMessage());
-            return;
+        // Get the list of saved games
+        File folder = new File(LoadBoard.SAVED_GAMES_FOLDER);
+        File[] listOfFiles = folder.listFiles();
+        List<String> savedGames = new ArrayList<>();
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                savedGames.add(file.getName().replaceFirst("[.][^.]+$", ""));
+            }
         }
 
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(savedGames.get(0), savedGames);
+        dialog.setTitle("Load Game");
+        dialog.setHeaderText("Select a game to load:");
+        Optional<String> result = dialog.showAndWait();
         ChoiceDialog<String> dialog = new ChoiceDialog<>(GAME_IDS.get(0), GAME_IDS);
         dialog.setTitle("Load Game");
         dialog.setHeaderText("Select gameID");
         Optional<String> result = dialog.showAndWait();
 
+        if (result.isPresent()) {
+            String gameName = result.get();
+            Board loadedBoard = LoadBoard.loadGame(gameName);
+            if (loadedBoard != null) {
+                // If the board was loaded successfully, create a new GameController for it
+                gameController = new GameController(loadedBoard);
+                roboRally.createBoardView(gameController);
+                System.out.println("Game loaded from " + gameName);
+            } else {
+                System.out.println("Failed to load game " + gameName);
+            }
+        }
     }
+
+
 
     /**
      * @author Christoffer s205449
      *
      *         This method checks which boards are available
+     * This method checks which boards are available
+     * @return the board that the user has selected
+     *
      */
     private Board initializeBoard() {
         List<String> boards = LoadBoard.getBoards();
@@ -186,6 +229,11 @@ public class AppController implements Observer {
         return false;
     }
 
+    /**
+     * Exit the application, giving the user the option to save the game
+     * before exiting. If the user cancels the exit operation, the method
+     * returns without exiting the application.
+     */
     public void exit() {
         if (gameController != null) {
             Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -206,18 +254,19 @@ public class AppController implements Observer {
     }
 
     /**
-     *
+     * Returns true if a game is currently running, false otherwise.
      * @return
      */
     public boolean isGameRunning() {
         return gameController != null;
     }
 
+
     /**
      * Does so player can win
-     * 
+     *
      * @author Christoffer Fink s205449
-     * @author Marcus
+     * @author Marcus s214962
      * @author Setare s232629
      * @param subject the subject which changed
      */
@@ -231,8 +280,26 @@ public class AppController implements Observer {
                                 ButtonType.OK);
                         alert.showAndWait();
                         stopGame();
-                        // Så viser den ikke vores dialogboks mere end en gang
+        if(subject.getClass() == Board.class){
+            if(((Board) subject).isWon()){
+                for (Player player: ((Board) subject).getPlayers()) {
+                    if(player.getCheckpoints() == ((Board) subject).getTotalCheckpoints()) {
+                        ButtonType playAgainButton = new ButtonType("Play Again");
+                        ButtonType closeButton = new ButtonType("Close Game");
+                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by, " + player.getName(), ButtonType.OK, playAgainButton, closeButton);
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.isPresent() && result.get() == playAgainButton) {
+                            player.setCheckpoints(0);
+                            newGame();
+                        } else if (result.isPresent() && result.get() == closeButton) {
+                            player.setCheckpoints(0);
+                            exit();
+                        } else {
+                            player.setCheckpoints(0);
+                            stopGame();
+                        }
                         ((Board) subject).setWon(false);
+                        return;
                         Optional<ButtonType> result = alert.showAndWait(); // Viser dialogboksen og venter på
                                                                            // brugerinput
 
@@ -247,5 +314,4 @@ public class AppController implements Observer {
             }
         }
     }
-
 }
