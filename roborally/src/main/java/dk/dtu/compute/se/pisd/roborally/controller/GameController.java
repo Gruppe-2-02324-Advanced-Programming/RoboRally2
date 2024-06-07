@@ -375,7 +375,7 @@ public class GameController {
      * Moves a player one space forward in the direction they are currently facing.
      * If the movement is not possible (e.g., due to a wall), the action is ignored.
      */
-    public void moveForward(Player player) {
+    public void moveForwardLogic(Player player) {
         if (board != null && player != null && player.board == board) {
             Heading heading = player.getHeading();
             Space space = player.getSpace();
@@ -389,6 +389,18 @@ public class GameController {
         }
     }
 
+    public void moveForward(Player player) {
+        moveForwardLogic(player);
+    }
+
+    /**
+     * @author Christoffer,  s205449
+     * Same function as moveForward, however the method is set two times to get the fastForward function
+     */
+    public void fastForward(@NotNull Player player) {
+        moveForwardLogic(player);
+        moveForwardLogic(player);
+    }
 
     /**
      * Moves a player three spaces forward in the direction they are currently facing.
@@ -398,9 +410,9 @@ public class GameController {
      * @author Setare Izadi, s232629@dtu.dk
      */
     public void moveThree(Player player) {
-        moveForward(player);
-        moveForward(player);
-        moveForward(player);
+        moveForwardLogic(player);
+        moveForwardLogic(player);
+        moveForwardLogic(player);
     }
 
 
@@ -455,14 +467,7 @@ public class GameController {
     }
 
 
-    /**
-     * @author Christoffer,  s205449
-     * Same function as moveForward, however the method is set two times to get the fastForward function
-     */
-    public void fastForward(@NotNull Player player) {
-        moveForward(player);
-        moveForward(player);
-    }
+    
 
     /**
      * Here the player's direction is set to turn right
