@@ -508,7 +508,7 @@ public class GameController {
     public void backUp(@NotNull Player player) {
         if (player != null && player.board == board) {
             uTurn(player);
-            moveForward(player);
+            moveForwardLogic(player);
             uTurn(player);
         }
     }
