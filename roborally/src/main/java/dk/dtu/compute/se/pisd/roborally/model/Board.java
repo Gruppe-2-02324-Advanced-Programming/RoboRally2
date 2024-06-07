@@ -24,6 +24,7 @@ package dk.dtu.compute.se.pisd.roborally.model;
 import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,8 @@ import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
  * @auhtor Jacob, s164958
  *
  */
+
+
 public class Board extends Subject {
     @Expose
     public final int width;
@@ -103,6 +106,7 @@ public class Board extends Subject {
      * Creates a new board with the given width and height and the given name.
      *
      */
+
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
         this.width = width;

@@ -51,6 +51,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,12 +74,19 @@ import java.util.stream.Stream;
  * @author Christoffer s205449
  *
  */
+@RestController
 public class AppController implements Observer {
 
     final private List<Integer> PLAYER_NUMBER_OPTIONS = Arrays.asList(2, 3, 4, 5, 6);
     final private List<String> PLAYER_COLORS = Arrays.asList("red", "green", "blue", "orange", "grey", "magenta");
 
     final private RoboRally roboRally;
+
+    @GetMapping("/test")
+    public String testEndpoint() {
+        return "Hello, this is a test endpoint from AppController!";
+    }
+
 
     private GameController gameController;
 
