@@ -29,7 +29,11 @@ import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Command;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
 import dk.dtu.compute.se.pisd.roborally.model.Space;
@@ -41,7 +45,7 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
-
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +63,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.google.gson.Gson;
 import java.util.stream.Collectors;
 
@@ -70,11 +77,11 @@ import java.util.stream.Stream;
  * AppController is the main controller of the application. It is responsible
  * for starting and stopping games, and for saving and loading games. It also
  * creates the board view and the player views.
+ *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Christoffer s205449
  *
  */
-@RestController
 public class AppController implements Observer {
 
     final private List<Integer> PLAYER_NUMBER_OPTIONS = Arrays.asList(2, 3, 4, 5, 6);
@@ -92,6 +99,7 @@ public class AppController implements Observer {
 
     /**
      * The constructor of the AppController.
+     *
      * @author Ekkart Kindler, ekki@dtu.dk
      * @param roboRally the RoboRally application object
      */
@@ -101,8 +109,10 @@ public class AppController implements Observer {
 
     /**
      * Start a new game. The user is asked to select the number of players
-     * for the game and gameboard. The board is initialized with the selected number of
+     * for the game and gameboard. The board is initialized with the selected number
+     * of
      * players, and the game is started with the programming phase.
+     *
      * @author Ekkart Kindler, ekki@dtu.dk
      * @author Christoffer s205449
      */
@@ -144,8 +154,11 @@ public class AppController implements Observer {
     }
 
     /**
-     * this method loads the games from the json file and asks the user which of the gameID's they wish to load.
-     * The system then finds the game which has the same gameID as the one requested.
+     * this method loads the games from the json file and asks the user which of the
+     * gameID's they wish to load.
+     * The system then finds the game which has the same gameID as the one
+     * requested.
+     *
      * @author Christoffer s205449
      */
 
@@ -166,56 +179,142 @@ public class AppController implements Observer {
             System.out.println("No game is currently active.");
         }
     }
-//todo doesnt work
+    // todo doesnt work
+
+    private List<String> getFilesInDirectory(String directoryPath) {
+        File directory = new File(directoryPath);
+        List<String> fileList = new ArrayList<>();
+
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".json"));
+            if (files != null) {
+                for (File file : files) {
+                    fileList.add(file.getName());
+                }
+            }
+        } else {
+            System.err.println("Directory does not exist: " + directoryPath);
+        }
+        return fileList;
+    }
+
+    public static String removeJsonExtension(String fileName) {
+        return fileName.replaceFirst("[.][jJ][sS][oO][nN]$", "");
+    }
+
+    public static int extractNumberFromString(String input) {
+        // Define the regular expression pattern to find the number
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(input);
+
+        // Find the first occurrence of the pattern in the input string
+        if (matcher.find()) {
+            // Extract the matched substring
+            String numberStr = matcher.group();
+            // Convert the extracted substring to an integer
+            return Integer.parseInt(numberStr);
+        } else {
+            throw new IllegalArgumentException("No number found in the input string: " + input);
+        }
+    }
 
     /**
-     * This method loads the game from the json file and the user can select which game they want to load.
+     * This method loads the game from the json file and the user can select which
+     * game they want to load.
+     *
      * @author Marcus s214962
      * @author Christoffer s205449
      */
     public void loadGame() {
-        /* Get the list of saved games
-        File folder = new File(LoadBoard.SAVED_GAMES_FOLDER);
-        File[] listOfFiles = folder.listFiles();
-        List<String> savedGames = new ArrayList<>();
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                savedGames.add(file.getName().replaceFirst("[.][^.]+$", ""));
-            }
+        List<String> fileList = getFilesInDirectory(LoadBoard.SAVED_GAMES_FOLDER);
+
+        if (fileList.isEmpty()) {
+            System.out.println("No files found in the directory.");
+            return;
         }
 
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(fileList.get(0), fileList);
+        dialog.setTitle("Select Game File");
+        dialog.setHeaderText("Choose the game file you want to load:");
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(savedGames.get(0), savedGames);
-        dialog.setTitle("Load Game");
-        dialog.setHeaderText("Select a game to load:");
         Optional<String> result = dialog.showAndWait();
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(GAME_IDS.get(0), GAME_IDS);
-        dialog.setTitle("Load Game");
-        dialog.setHeaderText("Select gameID");
-        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(fileName -> {
+            System.out.println("Selected file: " + fileName);
+            JSONObject json = LoadBoard.loadJSON(removeJsonExtension(fileName));
 
-        if (result.isPresent()) {
-            String gameName = result.get();
-            Board loadedBoard = LoadBoard.loadGame(gameName);
-            if (loadedBoard != null) {
-                // If the board was loaded successfully, create a new GameController for it
-                gameController = new GameController(loadedBoard);
-                roboRally.createBoardView(gameController);
-                System.out.println("Game loaded from " + gameName);
-            } else {
-                System.out.println("Failed to load game " + gameName);
+            String boardName = json.getString("boardName");
+            gameController = new GameController(LoadBoard.loadBoard(boardName));
+
+            int no = json.getJSONArray("players").length();
+            Board board = gameController.board;
+            board.attach(this);
+            for (int i = 0; i < no; i++) {
+                String color = json.getJSONArray("players").getJSONObject(i).getString("color");
+                String name = json.getJSONArray("players").getJSONObject(i).getString("name");
+                String heading = json.getJSONArray("players").getJSONObject(i).getString("heading");
+                Player player = new Player(board, color, name);
+                player.setHeading(Heading.valueOf(heading));
+                board.addPlayer(player);
+
+                int x = json.getJSONArray("players").getJSONObject(i).getJSONObject("space").getInt("x");
+                int y = json.getJSONArray("players").getJSONObject(i).getJSONObject("space").getInt("y");
+
+                player.setSpace(board.getSpace(x % board.width, y));
             }
-        }
-    }
-*/
-    }
+            String currentPlayerName = json.getJSONObject("current").getString("name");
+            int currentPlayerNumber = extractNumberFromString(currentPlayerName);
+            board.setCurrentPlayer(board.getPlayer(currentPlayerNumber));
 
+            Phase phase = Phase.valueOf(json.getString("phase"));
+            int step = json.getInt("step");
+
+            gameController.board.setPhase(phase);
+            gameController.board.setCurrentPlayer(board.getPlayer(currentPlayerNumber));
+            gameController.board.setStep(step);
+
+            for (int i = 0; i < board.getPlayersNumber(); i++) {
+                Player player = board.getPlayer(i);
+                JSONObject jsonPlayer = json.getJSONArray("players").getJSONObject(i);
+                if (player != null) {
+                    for (int j = 0; j < Player.NO_REGISTERS; j++) {
+                        CommandCardField field = player.getProgramField(j);
+                        JSONObject program = jsonPlayer.getJSONArray("program").getJSONObject(j);
+                        Command command;
+                        boolean visible = program.getBoolean("visible");
+
+                        if (program.has("card")) {
+                            command = Command.valueOf(program.getJSONObject("card").getString("command"));
+                            field.setCard(new CommandCard(command));
+                        } else {
+                            field.setCard(null);
+                        }
+                        field.setVisible(visible);
+                    }
+                    for (int j = 0; j < Player.NO_CARDS; j++) {
+                        CommandCardField field = player.getCardField(j);
+                        JSONObject cards = jsonPlayer.getJSONArray("cards").getJSONObject(j);
+                        Command command;
+                        boolean visible = cards.getBoolean("visible");
+                        if (cards.has("card")) {
+                            command = Command.valueOf(cards.getJSONObject("card").getString("command"));
+                            field.setCard(new CommandCard(command));
+                        } else {
+                            field.setCard(null);
+                        }
+                        field.setVisible(visible);
+                    }
+                }
+            }
+
+            roboRally.createBoardView(gameController);
+        });
+    }
 
     /**
      * @return the board that the user has selected
      * @author Christoffer s205449
-     * <p>
-     * This method checks which boards are available
+     *         <p>
+     *         This method checks which boards are available
      */
     private Board initializeBoard() {
         List<String> boards = LoadBoard.getBoards();
@@ -283,7 +382,6 @@ public class AppController implements Observer {
         return gameController != null;
     }
 
-
     /**
      * Does so player can win
      *
@@ -301,7 +399,8 @@ public class AppController implements Observer {
                     if (player.getCheckpoints() == board.getTotalCheckpoints()) {
                         ButtonType playAgainButton = new ButtonType("Play Again");
                         ButtonType closeButton = new ButtonType("Close Game");
-                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by " + player.getName(), ButtonType.OK, playAgainButton, closeButton);
+                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by " + player.getName(),
+                                ButtonType.OK, playAgainButton, closeButton);
                         Optional<ButtonType> result = alert.showAndWait();
 
                         if (result.isPresent() && result.get() == playAgainButton) {
@@ -320,4 +419,3 @@ public class AppController implements Observer {
         }
     }
 }
-
