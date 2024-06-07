@@ -53,15 +53,12 @@ public enum Command {
 
     POWER_UP("Power Up", new Image("assets/powerupcard.png"));
 
-
-
-    @Expose
+    // @Expose
     final public String displayName;
 
     final private List<Command> options;
 
     final public Image cardImage;
-
 
     /**
      * The constructor for a command with a given display name and an image

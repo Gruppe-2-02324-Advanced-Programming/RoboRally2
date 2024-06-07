@@ -32,8 +32,11 @@ import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
 
 /**
  *
- * The class of the game board. The board is a rectangular grid of spaces. The board
- * keeps track of the players on the board and the current player. It also keeps track of the phase of the game.
+ * The class of the game board. The board is a rectangular grid of spaces. The
+ * board
+ * keeps track of the players on the board and the current player. It also keeps
+ * track of the phase of the game.
+ * 
  * @Expose is used to serialize the field for saving the board.
  * @author Ekkart Kindler, ekki@dtu.dk
  * @auhtor Christoffer, s205449
@@ -44,15 +47,15 @@ import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
  *
  */
 public class Board extends Subject {
-    @Expose
+    // @Expose
     public final int width;
-    @Expose
+    // @Expose
     public final int height;
     @Expose
     public final String boardName;
-
+    // @Expose
     private Integer gameId;
-    @Expose
+    // @Expose
     private final Space[][] spaces;
     @Expose
     private final List<Player> players = new ArrayList<>();
@@ -62,13 +65,13 @@ public class Board extends Subject {
     private Phase phase = INITIALISATION;
     @Expose
     private int step = 0;
-    @Expose
+    // @Expose
     private boolean stepMode;
-    @Expose
+    // @Expose
     private int totalCheckpoints = 0;
-    @Expose
+    // @Expose
     private int counter;
-    @Expose
+    // @Expose
     private boolean won = false;
 
     public int getCounter() {
@@ -83,21 +86,20 @@ public class Board extends Subject {
     }
 
     /*
-    public void setBoard(Board b) {
-        this.boardName = b.boardName;
-        this.width = b.width;
-        this.height = b.height;
-        spaces = new Space[b.width][b.height];
-        for (int x = 0; x < b.width; x++) {
-            for (int y = 0; y < b.height; y++) {
-                Space space = new Space(this, x, y);
-                spaces[x][y] = space;
-            }
-        }
-        this.stepMode = false;
-    }
-    */
-
+     * public void setBoard(Board b) {
+     * this.boardName = b.boardName;
+     * this.width = b.width;
+     * this.height = b.height;
+     * spaces = new Space[b.width][b.height];
+     * for (int x = 0; x < b.width; x++) {
+     * for (int y = 0; y < b.height; y++) {
+     * Space space = new Space(this, x, y);
+     * spaces[x][y] = space;
+     * }
+     * }
+     * this.stepMode = false;
+     * }
+     */
 
     /**
      * Creates a new board with the given width and height and the given name.
@@ -149,11 +151,9 @@ public class Board extends Subject {
         }
     }
 
-
-        public String getBoardName() {
-            return boardName;
-        }
-
+    public String getBoardName() {
+        return boardName;
+    }
 
     /**
      * Returns the number of players on the board.
@@ -170,7 +170,6 @@ public class Board extends Subject {
         }
     }
 
-
     /**
      * Returns the player with the given index on the board.
      *
@@ -182,7 +181,6 @@ public class Board extends Subject {
             return null;
         }
     }
-
 
     /**
      * Returns the current player on the board.
@@ -197,6 +195,10 @@ public class Board extends Subject {
             this.current = player;
             notifyChange();
         }
+    }
+
+    public int getNumPlayers() {
+        return players.size();
     }
 
     /**
@@ -224,7 +226,6 @@ public class Board extends Subject {
             notifyChange();
         }
     }
-
 
     /**
      * Returns whether the board is in step mode.
@@ -285,9 +286,9 @@ public class Board extends Subject {
         return getSpace(x, y);
     }
 
-
     /**
-     * Returns the number of checkpoints on the board. Getters and setters for totalCheckpoints and won
+     * Returns the number of checkpoints on the board. Getters and setters for
+     * totalCheckpoints and won
      *
      */
     public int getTotalCheckpoints() {
@@ -302,14 +303,13 @@ public class Board extends Subject {
         return players;
     }
 
-
     /**
      * Returns whether the game is won. The game is won, if one of the players
      *
      */
     public boolean isWon() {
         for (Player p : players) {
-            //System.out.println(p.getCheckpoints() + ":" + totalCheckpoints);
+            // System.out.println(p.getCheckpoints() + ":" + totalCheckpoints);
             if (p.getCheckpoints() == totalCheckpoints) {
                 won = true;
                 break;
@@ -322,7 +322,6 @@ public class Board extends Subject {
         this.won = won;
         notifyChange();
     }
-
 
     /**
      * Returns the status message of the board. The status message contains

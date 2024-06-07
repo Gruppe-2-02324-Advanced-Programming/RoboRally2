@@ -26,7 +26,8 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 /**
  *
- * Class for the command card field of a player. This class is a subject of the observer pattern and can be observed by the GUI.
+ * Class for the command card field of a player. This class is a subject of the
+ * observer pattern and can be observed by the GUI.
  *
  *
  * @author Ekkart Kindler, ekki@dtu.dk
@@ -35,11 +36,10 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 public class CommandCardField extends Subject {
 
     final public Player player;
-@Expose
+    @Expose
     private CommandCard card;
-@Expose
+    @Expose
     private boolean visible;
-
 
     /**
      * Constructor for the CommandCardField class.
@@ -47,12 +47,13 @@ public class CommandCardField extends Subject {
      */
     public CommandCardField(Player player) {
         this.player = player;
-        this. card = null;
+        this.card = null;
         this.visible = true;
     }
 
     /**
-     * Method to get the card of the CommandCardField. Getters and setters for the card and visibility of the card.
+     * Method to get the card of the CommandCardField. Getters and setters for the
+     * card and visibility of the card.
      *
      */
     public CommandCard getCard() {
