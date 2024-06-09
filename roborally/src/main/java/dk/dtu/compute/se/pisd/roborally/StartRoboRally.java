@@ -21,21 +21,47 @@
  */
 package dk.dtu.compute.se.pisd.roborally;
 
+import javax.swing.JOptionPane;
+
+import org.springframework.boot.SpringApplication;
+
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import dk.dtu.compute.se.pisd.roborally.service.NetworkService;
+
 /**
  * This is a class for starting up the RoboRally application. This is a
  * workaround for a strange quirk in the Open JavaFX project launcher,
  * which prevents starting a JavaFX application in IntelliJ directly:
  *
- *   https://stackoverflow.com/questions/52569724/javafx-11-create-a-jar-file-with-gradle/52571719#52571719
+ * https://stackoverflow.com/questions/52569724/javafx-11-create-a-jar-file-with-gradle/52571719#52571719
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  */
+@SpringBootApplication
 public class StartRoboRally {
     /**
      * The main method to start the RoboRally application.
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
+        String[] options = { "Server", "Client" };
+        int choice = JOptionPane.showOptionDialog(null,
+                "Vælg applikations tilstand",
+                "Tilstand valg",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
+
+        if (choice == 1) {
+            NetworkService.runClient();
+        } else {
+            SpringApplication.run(StartRoboRally.class, args);
+            NetworkService.printLocalIpAddress();
+        }
+
         RoboRally.main(args);
     }
 
