@@ -138,7 +138,7 @@ public class PlayerView extends Tab implements ViewObserver {
         energyCubesLabel = new Label("Energy Cubes: " + player.getEnergyCubes());
         energyCubesLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
 
-        checkpointLabel = new Label("Checkpoints: " + player.getTotalCheckpoints());
+        checkpointLabel = new Label("Checkpoints: " + player.getCheckpoints());
         top.getChildren().add(checkpointLabel);  // Add the label to the layout
 
         programLabel = new Label("Program");
@@ -210,7 +210,7 @@ public class PlayerView extends Tab implements ViewObserver {
     public void updateView(Subject subject) {
         if (subject == player.board) {
             energyCubesLabel.setText("Energy Cubes: " + player.getEnergyCubes());
-            checkpointLabel.setText("Checkpoints: " + player.getTotalCheckpoints());
+            checkpointLabel.setText("Checkpoints: " + player.getCheckpoints());
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {

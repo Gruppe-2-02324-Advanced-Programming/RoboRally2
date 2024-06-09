@@ -251,11 +251,4 @@ public class Player extends Subject {
      * Get the total number of checkpoints collected by the player.
      * @return the number of checkpoints
      */
-    public int getTotalCheckpoints() {
-        return checkpoints;  // Assuming 'checkpoints' is the variable storing the checkpoint count.
-    }
-
-
-
-
 }
