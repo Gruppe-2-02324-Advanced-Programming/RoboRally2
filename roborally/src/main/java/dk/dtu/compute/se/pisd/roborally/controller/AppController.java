@@ -54,6 +54,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,7 +77,7 @@ import java.util.stream.Stream;
  * AppController is the main controller of the application. It is responsible
  * for starting and stopping games, and for saving and loading games. It also
  * creates the board view and the player views.
- * 
+ *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Christoffer s205449
  *
@@ -85,11 +89,17 @@ public class AppController implements Observer {
 
     final private RoboRally roboRally;
 
+    @GetMapping("/test")
+    public String testEndpoint() {
+        return "Hello, this is a test endpoint from AppController!";
+    }
+
+
     private GameController gameController;
 
     /**
      * The constructor of the AppController.
-     * 
+     *
      * @author Ekkart Kindler, ekki@dtu.dk
      * @param roboRally the RoboRally application object
      */
@@ -102,7 +112,7 @@ public class AppController implements Observer {
      * for the game and gameboard. The board is initialized with the selected number
      * of
      * players, and the game is started with the programming phase.
-     * 
+     *
      * @author Ekkart Kindler, ekki@dtu.dk
      * @author Christoffer s205449
      */
@@ -148,7 +158,7 @@ public class AppController implements Observer {
      * gameID's they wish to load.
      * The system then finds the game which has the same gameID as the one
      * requested.
-     * 
+     *
      * @author Christoffer s205449
      */
 
@@ -211,7 +221,7 @@ public class AppController implements Observer {
     /**
      * This method loads the game from the json file and the user can select which
      * game they want to load.
-     * 
+     *
      * @author Marcus s214962
      * @author Christoffer s205449
      */

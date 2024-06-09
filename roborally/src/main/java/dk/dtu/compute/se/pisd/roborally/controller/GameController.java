@@ -23,6 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -44,6 +45,8 @@ import java.util.List;
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Emily, s191174
  */
+
+@RestController
 public class GameController {
 
     public Board board;
