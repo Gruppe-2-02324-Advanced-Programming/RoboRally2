@@ -245,6 +245,9 @@ public class AppController implements Observer {
             String boardName = json.getString("boardName");
             gameController = new GameController(LoadBoard.loadBoard(boardName));
 
+            gameController.board.setTotalCheckpoints(json.getInt("totalCheckpoints"));
+            gameController.board.setCounter(json.getInt("counter"));
+
             int no = json.getJSONArray("players").length();
             Board board = gameController.board;
             board.attach(this);
@@ -253,6 +256,7 @@ public class AppController implements Observer {
                 String name = json.getJSONArray("players").getJSONObject(i).getString("name");
                 String heading = json.getJSONArray("players").getJSONObject(i).getString("heading");
                 Player player = new Player(board, color, name);
+                player.setCheckpoints(json.getJSONArray("players").getJSONObject(i).getInt("checkpoints"));
                 player.setHeading(Heading.valueOf(heading));
                 board.addPlayer(player);
 
