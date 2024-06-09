@@ -44,8 +44,7 @@ public class Player extends Subject {
     final public static int NO_CARDS = 8;
 
     final public Board board;
-    @Expose
-    private int checkpoints = 0;
+
     @Expose
     private String name;
     @Expose
@@ -245,6 +244,15 @@ public class Player extends Subject {
      */
     public int getEnergyCubes() {
         return energyCubes;
+    }
+    private int checkpoints = 0;
+
+    /**
+     * Get the total number of checkpoints collected by the player.
+     * @return the number of checkpoints
+     */
+    public int getTotalCheckpoints() {
+        return checkpoints;  // Assuming 'checkpoints' is the variable storing the checkpoint count.
     }
 
 

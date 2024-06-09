@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
  *  board changes.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Emily, s191174
  */
 public class PlayerView extends Tab implements ViewObserver {
     /**
@@ -114,6 +114,11 @@ public class PlayerView extends Tab implements ViewObserver {
     private GameController gameController;
 
     /**
+     * Label to display the checkpoint count.
+     */
+    private Label checkpointLabel;
+
+    /**
      * The constructor for the view of a player.
      *
      * @param gameController the controller for the game
@@ -132,6 +137,9 @@ public class PlayerView extends Tab implements ViewObserver {
 
         energyCubesLabel = new Label("Energy Cubes: " + player.getEnergyCubes());
         energyCubesLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
+
+        checkpointLabel = new Label("Checkpoints: " + player.getTotalCheckpoints());
+        top.getChildren().add(checkpointLabel);  // Add the label to the layout
 
         programLabel = new Label("Program");
 
@@ -202,6 +210,7 @@ public class PlayerView extends Tab implements ViewObserver {
     public void updateView(Subject subject) {
         if (subject == player.board) {
             energyCubesLabel.setText("Energy Cubes: " + player.getEnergyCubes());
+            checkpointLabel.setText("Checkpoints: " + player.getTotalCheckpoints());
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {
