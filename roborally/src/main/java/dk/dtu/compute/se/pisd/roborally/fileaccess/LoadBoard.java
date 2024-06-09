@@ -147,7 +147,7 @@ public class LoadBoard {
         return null;
 
     }
-
+/*
     public static Board loadGame(String gameName) {
         String filename = SAVED_GAMES_FOLDER + File.separator + gameName + "." + JSON_EXT;
 
@@ -165,7 +165,7 @@ public class LoadBoard {
             return null;
         }
     }
-
+*/
     public static JSONObject loadJSON(String gameName) {
         String filePath = SAVED_GAMES_FOLDER + File.separator + gameName + "." + JSON_EXT;
         File file = new File(filePath);

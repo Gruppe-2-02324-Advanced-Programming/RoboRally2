@@ -1,5 +1,6 @@
-package dk.dtu.compute.se.pisd.roborally;
+package dk.dtu.compute.se.pisd.server;
 
+import dk.dtu.compute.se.pisd.roborally.RoboRally;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
