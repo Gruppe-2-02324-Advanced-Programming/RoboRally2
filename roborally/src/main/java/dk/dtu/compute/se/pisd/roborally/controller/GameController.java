@@ -203,46 +203,45 @@ public class GameController {
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
-                    executeCommand(currentPlayer, card.command);
+                    Command command = card.command;
+                    if (command.isInteractive()){
+                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        return;
+                    }
+                    executeCommand(currentPlayer, command);
                 }
-                movePlayerIfOnConveyor(currentPlayer); // New method to handle continuous conveyor belt movement
-
                 int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                 } else {
                     step++;
+                    for(Player player : board.getPlayers()){
+                        List<FieldAction> actions = player.getSpace().getActions();
+                        if(actions != null) {
+                            for (FieldAction action : actions){
+                                action.doAction(this, player.getSpace());
+                            }
+
+                        }
+                    }
                     if (step < Player.NO_REGISTERS) {
                         makeProgramFieldsVisible(step);
                         board.setStep(step);
                         board.setCurrentPlayer(board.getPlayer(0));
+
                     } else {
                         startProgrammingPhase();
                     }
                 }
+            } else {
+                // this should not happen
+                assert false;
             }
+        } else {
+            // this should not happen
+            assert false;
         }
     }
-
-    private void movePlayerIfOnConveyor(Player player) {
-        Space space = player.getSpace();
-        List<FieldAction> actions = space.getActions();
-        boolean moved;
-        do {
-            moved = false;
-            for (FieldAction action : actions) {
-                if (action instanceof ConveyorBelt || action instanceof ConveyorBeltCorner) {
-                    moved = action.doAction(this, space);
-                    if (moved) {
-                        space = player.getSpace(); // Update to new space after movement
-                        actions = space.getActions(); // Get new actions from the new space
-                        break; // Only one conveyor action per loop iteration
-                    }
-                }
-            }
-        } while (moved); // Continue if the player was moved to another conveyor belt
-    }
-
 
 
     /**

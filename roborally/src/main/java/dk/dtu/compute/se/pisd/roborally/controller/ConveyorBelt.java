@@ -32,18 +32,26 @@ public class ConveyorBelt extends FieldAction {
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
         if (space != null) {
             Player player = space.getPlayer();
-            Space neighbor = gameController.board.getNeighbour(space, heading);
-            if (player != null && neighbor != null) {
-                try {
-                    gameController.movePlayerToSpace(player, neighbor, heading);
-                } catch (GameController.moveNotPossibleException e) {
-                    return false;
+            if (player != null) {
+                Space nextSpace = gameController.board.getNeighbour(space, this.heading);
+                if (nextSpace != null && nextSpace.getPlayer() == null) { // Ensure the space is empty
+                    try {
+                        gameController.movePlayerToSpace(player, nextSpace, this.heading);
+                        // Recursively handle movement if there's another conveyor
+                        FieldAction action = nextSpace.findAction(ConveyorBelt.class);
+                        if (action != null) {
+                            action.doAction(gameController, nextSpace);
+                        }
+                        return true;
+                    } catch (GameController.moveNotPossibleException e) {
+                        return false;
+                    }
                 }
-                return true;
             }
         }
         return false;
     }
+
 
     /**
      * Get the heading of the conveyor belt.
