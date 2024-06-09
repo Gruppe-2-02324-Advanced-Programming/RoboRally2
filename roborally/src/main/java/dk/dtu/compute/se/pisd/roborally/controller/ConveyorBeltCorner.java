@@ -44,31 +44,33 @@ public class ConveyorBeltCorner extends FieldAction {
         if (space != null) {
             Player player = space.getPlayer();
             if (player != null) {
-                // Set the new heading according to the corner's rotation effect
-                Heading newHeading = heading;
-                if (rotation == Gears.LEFT_TURN) {
-                    newHeading = heading.prev();
-                } else if (rotation == Gears.RIGHT_TURN) {
-                    newHeading = heading.next();
+                Heading newHeading = this.heading;
+                if (this.rotation == Gears.LEFT_TURN) {
+                    newHeading = this.heading.prev();
+                } else if (this.rotation == Gears.RIGHT_TURN) {
+                    newHeading = this.heading.next();
                 }
 
-                // Set the player's heading to the new heading before moving
-                player.setHeading(newHeading);
-
-                // Move the player to the neighboring space in the new heading direction
-                Space neighbor = gameController.board.getNeighbour(space, newHeading);
-                if (neighbor != null) {
+                Space nextSpace = gameController.board.getNeighbour(space, newHeading);
+                if (nextSpace != null && nextSpace.getPlayer() == null) {
                     try {
-                        gameController.movePlayerToSpace(player, neighbor, newHeading);
+                        player.setHeading(newHeading);
+                        gameController.movePlayerToSpace(player, nextSpace, newHeading);
+                        // Check for another conveyor action recursively
+                        FieldAction action = nextSpace.findAction(ConveyorBelt.class);
+                        if (action != null) {
+                            action.doAction(gameController, nextSpace);
+                        }
                         return true;
                     } catch (GameController.moveNotPossibleException e) {
-                        return false; // Movement failed
+                        return false;
                     }
                 }
             }
         }
         return false;
     }
+
 
 
     /**
