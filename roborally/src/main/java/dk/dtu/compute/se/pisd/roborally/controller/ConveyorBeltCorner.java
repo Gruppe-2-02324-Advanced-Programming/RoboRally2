@@ -44,6 +44,7 @@ public class ConveyorBeltCorner extends FieldAction {
         if (space != null) {
             Player player = space.getPlayer();
             if (player != null) {
+                // Set the new heading according to the corner's rotation effect
                 Heading newHeading = heading;
                 if (rotation == Gears.LEFT_TURN) {
                     newHeading = heading.prev();
@@ -51,28 +52,24 @@ public class ConveyorBeltCorner extends FieldAction {
                     newHeading = heading.next();
                 }
 
+                // Set the player's heading to the new heading before moving
+                player.setHeading(newHeading);
 
+                // Move the player to the neighboring space in the new heading direction
                 Space neighbor = gameController.board.getNeighbour(space, newHeading);
                 if (neighbor != null) {
                     try {
                         gameController.movePlayerToSpace(player, neighbor, newHeading);
+                        return true;
                     } catch (GameController.moveNotPossibleException e) {
-                        return false;
+                        return false; // Movement failed
                     }
-
-
-                    if (rotation == Gears.LEFT_TURN) {
-                        player.setHeading(newHeading.next());
-                    } else if (rotation == Gears.RIGHT_TURN) {
-                        player.setHeading(newHeading.prev());
-                    }
-
-                    return true;
                 }
             }
         }
         return false;
     }
+
 
     /**
      * Get the heading of the conveyor belt corner
