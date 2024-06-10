@@ -34,37 +34,46 @@ import javafx.scene.control.MenuItem;
  */
 public class RoboRallyMenuBar extends MenuBar {
 
-
     /**
      * The controller for the application.
      */
     private AppController appController;
-/**
+    /**
      * The menu for the control items.
      */
     private Menu controlMenu;
-/**
+    /**
      * The menu item for saving the game.
      */
     private MenuItem saveGame;
-/**
+    /**
      * The menu item for starting a new game.
      */
     private MenuItem newGame;
-/**
+    /**
+     * The menu item for starting a new game.
+     */
+    private MenuItem hostGame;
+    /**
+     * The menu item for starting a new game.
+     */
+    private MenuItem joinGame;
+    /**
      * The menu item for loading a game.
      */
     private MenuItem loadGame;
-/**
+    /**
      * The menu item for stopping a game.
      */
     private MenuItem stopGame;
-/**
+    /**
      * The menu item for exiting the application.
      */
     private MenuItem exitApp;
-/**
+
+    /**
      * The constructor for the menu bar.
+     * 
      * @param appController The controller for the application.
      */
     public RoboRallyMenuBar(AppController appController) {
@@ -74,30 +83,39 @@ public class RoboRallyMenuBar extends MenuBar {
         this.getMenus().add(controlMenu);
 
         newGame = new MenuItem("New Game");
-        newGame.setOnAction( e -> this.appController.newGame());
+        newGame.setOnAction(e -> this.appController.newGame());
         controlMenu.getItems().add(newGame);
 
+        hostGame = new MenuItem("Host Game");
+        hostGame.setOnAction(e -> this.appController.hostGame());
+        controlMenu.getItems().add(hostGame);
+
+        joinGame = new MenuItem("Join Game");
+        joinGame.setOnAction(e -> this.appController.joinGame());
+        controlMenu.getItems().add(joinGame);
+
         stopGame = new MenuItem("Stop Game");
-        stopGame.setOnAction( e -> this.appController.stopGame());
+        stopGame.setOnAction(e -> this.appController.stopGame());
         controlMenu.getItems().add(stopGame);
 
         saveGame = new MenuItem("Save Game");
-        saveGame.setOnAction( e -> this.appController.saveGame());
+        saveGame.setOnAction(e -> this.appController.saveGame());
         controlMenu.getItems().add(saveGame);
 
         loadGame = new MenuItem("Load Game");
-        loadGame.setOnAction( e -> this.appController.loadGame());
+        loadGame.setOnAction(e -> this.appController.loadGame());
         controlMenu.getItems().add(loadGame);
 
         exitApp = new MenuItem("Exit");
-        exitApp.setOnAction( e -> this.appController.exit());
+        exitApp.setOnAction(e -> this.appController.exit());
         controlMenu.getItems().add(exitApp);
 
         controlMenu.setOnShowing(e -> update());
         controlMenu.setOnShown(e -> this.updateBounds());
         update();
     }
-/**
+
+    /**
      * This method updates the menu bar.
      */
     public void update() {

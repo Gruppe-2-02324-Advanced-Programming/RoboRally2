@@ -22,11 +22,12 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import com.google.gson.Gson;
+
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
-
+import dk.dtu.compute.se.pisd.roborally.StartRoboRally;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Command;
@@ -37,15 +38,29 @@ import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.service.NetworkService;
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import org.springframework.boot.SpringApplication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +93,8 @@ import java.util.stream.Stream;
  * @author Christoffer s205449
  *
  */
+// @RestController
+// @RequestMapping("/game")
 public class AppController implements Observer {
 
     final private List<Integer> PLAYER_NUMBER_OPTIONS = Arrays.asList(2, 3, 4, 5, 6);
@@ -95,6 +112,12 @@ public class AppController implements Observer {
      */
     public AppController(@NotNull RoboRally roboRally) {
         this.roboRally = roboRally;
+    }
+
+    // @PostMapping("/start")
+    public String startOnlineGame() {
+        newGame();
+        return "Game started!";
     }
 
     /**
@@ -412,4 +435,64 @@ public class AppController implements Observer {
             }
         }
     }
+
+    public void hostGame() {
+
+        String hostPlayerName = getPlayerName();
+
+        StartRoboRally.runServer();
+
+        Stage stageLobby = new Stage();
+        stageLobby.setTitle("Lobby");
+
+        Button startBTN = new Button();
+        startBTN.setText("Start Game");
+
+        Button refreshBTN = new Button();
+        refreshBTN.setText("Refresh");
+
+        Label ip = new Label();
+        ip.setText(NetworkService.getLocalIpAddress());
+
+        ListView<String> playerListView = new ListView<>();
+        playerListView.getItems().add(hostPlayerName);
+
+        VBox vbox = new VBox(10);
+        vbox.getChildren().addAll(startBTN, refreshBTN, ip, playerListView);
+
+        Scene scene = new Scene(vbox, 300, 400);
+
+        stageLobby.setScene(scene);
+
+        stageLobby.show();
+
+        // Wait for players to join or start game
+    }
+
+    public void joinGame() {
+        String message = getPlayerName();
+        String ip = setIp();
+        SendPostRequest.sendPostRequest("http://" + ip + ":8080/setString?newStr=" + message);
+    }
+
+    private String getPlayerName() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Player Name Input");
+        dialog.setHeaderText(null); // Optional: remove the header text
+        dialog.setContentText("Please enter your name:");
+
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse(null);
+    }
+
+    private String setIp() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("SetIP");
+        dialog.setHeaderText(null); // Optional: remove the header text
+        dialog.setContentText("Please enter IP:");
+
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse(null);
+    }
+
 }

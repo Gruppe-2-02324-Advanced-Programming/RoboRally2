@@ -59,4 +59,14 @@ public class NetworkService {
             JOptionPane.showMessageDialog(null, "Kunne ikke hente IP-adressen", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    public static String getLocalIpAddress() {
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            return localHost.getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return "Kunne ikke hente IP-adressen";
+        }
+    }
 }

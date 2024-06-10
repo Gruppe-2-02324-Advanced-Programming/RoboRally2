@@ -58,11 +58,15 @@ public class StartRoboRally {
         if (choice == 1) {
             NetworkService.runClient();
         } else {
-            SpringApplication.run(StartRoboRally.class, args);
-            NetworkService.printLocalIpAddress();
+            // SpringApplication.run(StartRoboRally.class, args);
+            // NetworkService.printLocalIpAddress();
         }
 
         RoboRally.main(args);
+    }
+
+    public static void runServer() {
+        SpringApplication.run(StartRoboRally.class);
     }
 
 }
