@@ -314,7 +314,7 @@ public class Board extends Subject {
     public boolean isWon() {
         for (Player p : players) {
             // System.out.println(p.getCheckpoints() + ":" + totalCheckpoints);
-            if (p.getCheckpoints() == totalCheckpoints) {
+            if (p.getCheckpoints() == totalCheckpoints && totalCheckpoints > 0) {
                 won = true;
                 break;
             }
