@@ -108,7 +108,7 @@ public class PlayerView extends Tab implements ViewObserver {
      */
     private Button push;
 
-    ComboBox<Integer> comboBox;
+    private Label playerNo;
 
     /**
      * The button to pull opponents cards from the server.
@@ -176,25 +176,16 @@ public class PlayerView extends Tab implements ViewObserver {
         // players, but on the PlayersView (view for all players). This should be
         // refactored.
 
-        comboBox = new ComboBox<>();
-        for (int i = 1; i < gameController.board.getPlayersNumber() + 1; i++) {
-            comboBox.getItems().add(i);
-        }
+        playerNo = new Label("Player " + gameController.getPlayerNumber());
 
         pull = new Button("pull");
         pull.setOnAction(e -> {
-            Integer selectedNumber = comboBox.getValue();
-            if (selectedNumber != null) {
-                gameController.getOtherPlayersCards(selectedNumber);
-            }
+            gameController.getOtherPlayersCards();
         });
 
         push = new Button("push");
         push.setOnAction(e -> {
-            Integer selectedNumber = comboBox.getValue();
-            if (selectedNumber != null) {
-                gameController.pushYourCards(selectedNumber);
-            }
+            gameController.pushYourCards();
         });
 
         finishButton = new Button("Finish Programming");
@@ -206,7 +197,7 @@ public class PlayerView extends Tab implements ViewObserver {
         stepButton = new Button("Execute Current Register");
         stepButton.setOnAction(e -> gameController.executeStep());
 
-        buttonPanel = new VBox(finishButton, executeButton, stepButton, pull, push, comboBox);
+        buttonPanel = new VBox(finishButton, executeButton, stepButton, pull, push, playerNo);
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
         buttonPanel.setSpacing(3.0);
         // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now

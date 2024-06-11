@@ -37,6 +37,7 @@ import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.network.Network;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -54,7 +55,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,7 +65,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 /**
  *
@@ -88,7 +87,6 @@ public class AppController implements Observer {
     public String testEndpoint() {
         return "Hello, this is a test endpoint from AppController!";
     }
-
 
     private GameController gameController;
 
@@ -140,6 +138,37 @@ public class AppController implements Observer {
                 player.setSpace(board.getSpace(i % board.width, i));
             }
             board.setCurrentPlayer(board.getPlayer(0));
+
+            // Opret en TextInputDialog
+            TextInputDialog dialogip = new TextInputDialog(Network.getIPv4Address());
+            dialog.setTitle("Insert ip");
+            dialog.setHeaderText("Enter the server IP");
+            dialog.setContentText("URL:");
+
+            // Vis dialogboksen og vent på brugerinput
+            Optional<String> ip = dialogip.showAndWait();
+
+            ip.ifPresent(url -> {
+                gameController.updateBaseUrl(url);
+            });
+
+            List<Integer> choices = new ArrayList<>();
+            for (int i = 1; i <= no; i++) {
+                choices.add(i);
+            }
+
+            // Create the ChoiceDialog with default choice as 1
+            ChoiceDialog<Integer> playerNo = new ChoiceDialog<>(choices.get(0), choices);
+            playerNo.setTitle("Select Number");
+            playerNo.setHeaderText("Choose a number between 1 and max players");
+            playerNo.setContentText("Number:");
+
+            // Show dialog and wait for user input
+            Optional<Integer> playerNumber = playerNo.showAndWait();
+
+            playerNumber.ifPresent(number -> {
+                gameController.setPlayerNumber(number);
+            });
 
             gameController.startProgrammingPhase();
 

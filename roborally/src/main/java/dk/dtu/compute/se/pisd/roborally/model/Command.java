@@ -78,4 +78,13 @@ public enum Command {
         return options;
     }
 
+    public static Command fromDisplayName(String displayName) {
+        for (Command command : Command.values()) {
+            if (command.displayName.equalsIgnoreCase(displayName)) {
+                return command;
+            }
+        }
+        return FORWARD; // skal måske ændres..burde ikke komme her til return forward
+    }
+
 }

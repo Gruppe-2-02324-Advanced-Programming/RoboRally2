@@ -19,11 +19,15 @@ import java.util.List;
 public class GameClient extends JFrame {
 
     private final RestTemplate restTemplate;
-    private final String baseUrl = "http://localhost:8080/games";
+    private String baseUrl = "http://localhost:8080/games";
 
     public GameClient() {
         this.restTemplate = new RestTemplate();
         initializeUI();
+    }
+
+    public void updateBaseUrl(String ip) {
+        baseUrl = "http://" + ip + ":8080/games";
     }
 
     public void updatePlayerCards(Long gameId, Long playerId, List<String> newCards) {

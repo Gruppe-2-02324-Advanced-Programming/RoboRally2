@@ -60,6 +60,8 @@ public class GameController {
 
     public int currentTabIndex;
 
+    public int playerNumber;
+
     /**
      * Constructor for the GameController.
      * 
@@ -70,6 +72,7 @@ public class GameController {
         this.board = board;
         gameClient = new GameClient();
         currentTabIndex = 0;
+        playerNumber = 1;
     }
 
     /**
@@ -637,32 +640,40 @@ public class GameController {
         currentTabIndex = newIndex;
     }
 
-    public void getOtherPlayersCards(int playerIndex) {
-        Long playerID = (long) playerIndex;
+    public void getOtherPlayersCards() {
         int playersListLength = board.getPlayersNumber();
-        for (int i = 1; i < playersListLength + 1; i++) {
-            Long ID = (long) i;
-            if (i == playerIndex) {
-
-            } else {
-                List<String> cards = gameClient.getPlayerCards(1L, ID);
-                Player p = board.getPlayer(i - 1);
-                for (int j = 0; j < cards.size(); j++) {
-                    Command command = Command.valueOf(cards.get(i));
-                    CommandCardField c = new CommandCardField(p);
-                    CommandCard cc = new CommandCard(command);
-                    c.setVisible(true);
-                    c.setCard(cc);
-                    p.setProgramField(j, c);
-                }
+        for (int i = 0; i < playersListLength; i++) {
+            Long ID = (long) (i + 1);
+            List<String> cards = gameClient.getPlayerCards(1L, ID);
+            Player p = board.getPlayer(i);
+            for (int j = 0; j < cards.size(); j++) {
+                CommandCardField from = p.getCardField(j);
+                CommandCardField to = p.getProgramField(j);
+                Command command = Command.fromDisplayName(cards.get(j));
+                to.setCard(new CommandCard(command));
+                moveCards(from, to);
             }
+
         }
+
     }
 
-    public void pushYourCards(int playerIndex) {
-        Long playerID = (long) playerIndex;
-        List<String> cards = board.getProgramFields(playerIndex);
+    public void pushYourCards() {
+        Long playerID = (long) playerNumber;
+        List<String> cards = board.getProgramFields(playerNumber - 1);
         gameClient.updatePlayerCards(1L, playerID, cards);
+    }
+
+    public void updateBaseUrl(String ip) {
+        gameClient.updateBaseUrl(ip);
+    }
+
+    public void setPlayerNumber(int number) {
+        playerNumber = number;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 
 }
