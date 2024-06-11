@@ -35,24 +35,48 @@ import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ...
+ *  The view of the board of the game. The board is displayed as a grid of spaces.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class BoardView extends VBox implements ViewObserver {
-
+    /**
+     * The board of the game.
+     */
     private Board board;
 
+    /**
+     * The grid pane for the board.
+     */
     private GridPane mainBoardPane;
+
+    /**
+     * The view of the spaces of the board.
+     */
     private SpaceView[][] spaces;
+
+    /**
+     * The view of the players of the game.
+     */
 
     private PlayersView playersView;
 
+    /**
+     * The label for the status of the game.
+     */
     private Label statusLabel;
 
-    private SpaceEventHandler spaceEventHandler;
+    /**
+     * The event handler for the spaces.
+     */
 
+    private SpaceEventHandler spaceEventHandler;
+/**
+     * The constructor of the board view. The view is created for the given game controller.
+     *
+     * @param gameController the game controller for the game.
+     */
     public BoardView(@NotNull GameController gameController) {
         board = gameController.board;
 
@@ -81,7 +105,11 @@ public class BoardView extends VBox implements ViewObserver {
         board.attach(this);
         update(board);
     }
-
+/**
+     * Update the view of the board. This method is called when the board changes.
+     *
+     * @param subject the subject of the update.
+     */
     @Override
     public void updateView(Subject subject) {
         if (subject == board) {
@@ -89,17 +117,31 @@ public class BoardView extends VBox implements ViewObserver {
             statusLabel.setText(board.getStatusMessage());
         }
     }
-
+/**
+     * The event handler for the spaces. This handler is used to move the current player to a space
+     * when the space is clicked - is going to be removed later.
+     */
     // XXX this handler and its uses should eventually be deleted! This is just to help test the
     //     behaviour of the game by being able to explicitly move the players on the board!
     private class SpaceEventHandler implements EventHandler<MouseEvent> {
 
+        /**
+         * The game controller for the game.
+         */
         final public GameController gameController;
-
+/**
+         * The constructor of the space event handler.
+         *
+         * @param gameController the game controller for the game.
+         */
         public SpaceEventHandler(@NotNull GameController gameController) {
             this.gameController = gameController;
         }
-
+/**
+         * Handle the mouse event for a space.
+         *
+         * @param event the mouse event.
+         */
         @Override
         public void handle(MouseEvent event) {
             Object source = event.getSource();

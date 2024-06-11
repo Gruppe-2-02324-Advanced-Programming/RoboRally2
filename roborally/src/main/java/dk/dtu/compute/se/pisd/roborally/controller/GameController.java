@@ -23,6 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -42,24 +43,32 @@ import java.util.List;
  * }</pre>
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Emily, s191174
  */
+
+@RestController
 public class GameController {
 
-    final public Board board;
+    public Board board;
 
+    /**
+     * Constructor for the GameController.
+     * @author Ekkart Kindler
+     * @param board the board to which the controller is connected
+     */
     public GameController(@NotNull Board board) {
         this.board = board;
     }
 
     /**
-     *This is just some dummy controller operation to make a simple move to see something
-     *happening on the board. This method should eventually be deleted!
-     *@param space the space to which the current player should move
+     * This is just some dummy controller operation to make a simple move to see something
+     * happening on the board. This method should eventually be deleted!
+     * @author Ekkart Kindler
+     * @param space the space to which the current player should move
      */
-    public void moveCurrentPlayerToSpace(@NotNull Space space)  {
+    public void moveCurrentPlayerToSpace(@NotNull Space space) {
         Player currentPlayer = board.getCurrentPlayer();
-        if(space.getPlayer() == null)
+        if (space.getPlayer() == null)
             currentPlayer.setSpace(space);
         else return;
 
@@ -71,7 +80,17 @@ public class GameController {
     }
 
 
-    // XXX: V2
+    /**
+     * This method starts the programming phase of the game. It sets the phase to PROGRAMMING,
+     * sets the current player to the first player, and sets the step to 0.
+     * <p>
+     * It also sets the program fields of each player to be empty and the card fields to contain
+     * random command cards.
+     * <p>
+     * The method is called at the beginning of the game and after each activation phase.
+     *
+     * @author Ekkart Kindler
+     */
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
         board.setCurrentPlayer(board.getPlayer(0));
@@ -94,7 +113,11 @@ public class GameController {
         }
     }
 
-    // XXX: V2
+    /**
+     * This method generates a random command card.
+     * @author Ekkart Kindler
+     * @return a random command card
+     */
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
@@ -104,6 +127,7 @@ public class GameController {
 
     /**
      * This method ends the programming phase, which makes the execute button active to press.
+     * @author Ekkart Kindler
      */
     public void finishProgrammingPhase() {
         makeProgramFieldsInvisible();
@@ -113,7 +137,11 @@ public class GameController {
         board.setStep(0);
     }
 
-    // XXX: V2
+    /**
+     * This method makes the program fields of the players visible for the given register.
+     * @author Ekkart Kindler
+     * @param register the register for which the program fields should be made visible
+     */
     private void makeProgramFieldsVisible(int register) {
         if (register >= 0 && register < Player.NO_REGISTERS) {
             for (int i = 0; i < board.getPlayersNumber(); i++) {
@@ -124,7 +152,11 @@ public class GameController {
         }
     }
 
-    // XXX: V2
+    /**
+     * This method makes the program fields of the players invisible. This is used to hide the program
+     * fields after the programming phase has ended.
+     *
+     */
     private void makeProgramFieldsInvisible() {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
             Player player = board.getPlayer(i);
@@ -143,20 +175,30 @@ public class GameController {
         continuePrograms();
     }
 
-    // XXX: V2
+    /**
+     * This method executes the moves which the player has requested in step mode
+     */
     public void executeStep() {
         board.setStepMode(true);
         continuePrograms();
     }
 
-    // XXX: V2
+    /**
+     * This method continues the execution of the programs of the players. It executes the next step
+     * of the current player until the phase is not ACTIVATION or the step mode is not set.
+     */
     private void continuePrograms() {
         do {
             executeNextStep();
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
 
-    // XXX: V2
+    /**
+     * This method executes the next step of the current player. If the phase is ACTIVATION, the next
+     * step of the current player is executed. If the phase is not ACTIVATION, the method does nothing.
+     * If the step is the last step of the current player, the method starts the programming phase.
+     * @author Emily, s191174
+     */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
         if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
@@ -206,26 +248,26 @@ public class GameController {
 
 
     /**
-     *
+     * This method executes the given command for the specified player.
      * @author Christoffer, s205449
      */
-    public void executeCommandOptionAndContinue(@NotNull Command option){
+    public void executeCommandOptionAndContinue(@NotNull Command option) {
         Player currentPlayer = board.getCurrentPlayer();
-        if(currentPlayer != null &&
-                board.getPhase()== Phase.PLAYER_INTERACTION &&
-                option !=null);
+        if (currentPlayer != null &&
+                board.getPhase() == Phase.PLAYER_INTERACTION &&
+                option != null) ;
         board.setPhase(Phase.ACTIVATION);
         executeCommand(currentPlayer, option);
 
         int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
-        if(nextPlayerNumber < board.getPlayersNumber()){
+        if (nextPlayerNumber < board.getPlayersNumber()) {
             board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
         } else {
             int step = board.getStep() + 1;
-            for(Player player : board.getPlayers()){
+            for (Player player : board.getPlayers()) {
                 List<FieldAction> actions = player.getSpace().getActions();
-                if(actions != null) {
-                    for (FieldAction action : actions){
+                if (actions != null) {
+                    for (FieldAction action : actions) {
                         action.doAction(this, player.getSpace());
                     }
                 }
@@ -244,7 +286,14 @@ public class GameController {
 
 
 
-
+    /**
+     * Executes the given command for the specified player. If the command is POWER_UP,
+     * the player will receive one energy cube.
+     *
+     * @author Emily, s191174
+     * @param player the player to whom the command will apply
+     * @param command the command to be executed
+     */
     // XXX: V2
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
@@ -273,9 +322,14 @@ public class GameController {
                     break;
                 case BACKUP:
                     this.backUp(player);
+                case AGAIN:
+                    this.again(player);
                     break;
                 case OPTION_LEFT_RIGHT:
                     this.leftOrRight(player, command);
+                    break;
+                case POWER_UP:
+                    player.addEnergyCube();
                     break;
                 default:
                     // DO NOTHING (for now)
@@ -284,13 +338,8 @@ public class GameController {
     }
 
 
-
-
     /**
-     * ...
-     *
-     * @author Christoffer, s205449
-     *
+     * This exception is thrown when a player tries to move to a space that is not possible to move to.
      */
 
     class moveNotPossibleException extends Exception {
@@ -304,8 +353,8 @@ public class GameController {
         /**
          * Here we create the Exception moveIsNotPossible, but for now, nothing happens when thrown
          *
-         * @param player the player that is trying to move
-         * @param space the space the player is trying to move to
+         * @param player  the player that is trying to move
+         * @param space   the space the player is trying to move to
          * @param heading the direction the player is trying to move
          */
 
@@ -321,30 +370,41 @@ public class GameController {
     }
 
     /**
-     * ...
      *
+     * @param player the player to move forward
      * @author Christoffer,  s205449
-     *
-
-     *  The moveForward has been slightly modified with a catch statement at the bottom, however it has been set to be ignored since it doesn't do anything
-     *  Moves a player one space forward in the direction they are currently facing.
-     *  If the movement is not possible (e.g., due to a wall), the action is ignored.
-     *
-     *  @param player the player to move forward
-     *  */
-    public void moveForward(Player player) {
-        if (board != null && player != null && player.board == board) {Heading heading = player.getHeading();
+     * <p>
+     * <p>
+     * The moveForward has been slightly modified with a catch statement at the bottom, however it has been set to be ignored since it doesn't do anything
+     * Moves a player one space forward in the direction they are currently facing.
+     * If the movement is not possible (e.g., due to a wall), the action is ignored.
+     */
+    public void moveForwardLogic(Player player) {
+        if (board != null && player != null && player.board == board) {
+            Heading heading = player.getHeading();
             Space space = player.getSpace();
             Space target = board.getNeighbour(space, heading);
-            if(target != null) {
+            if (target != null) {
                 try {
-                    movePlayerToSpace(player,target,heading);
-                } catch (moveNotPossibleException ignored){
+                    movePlayerToSpace(player, target, heading);
+                } catch (moveNotPossibleException ignored) {
                 }
             }
         }
     }
 
+    public void moveForward(Player player) {
+        moveForwardLogic(player);
+    }
+
+    /**
+     * @author Christoffer,  s205449
+     * Same function as moveForward, however the method is set two times to get the fastForward function
+     */
+    public void fastForward(@NotNull Player player) {
+        moveForwardLogic(player);
+        moveForwardLogic(player);
+    }
 
     /**
      * Moves a player three spaces forward in the direction they are currently facing.
@@ -353,37 +413,34 @@ public class GameController {
      * @param player the player to move three spaces forward
      * @author Setare Izadi, s232629@dtu.dk
      */
-    public void moveThree(Player player)
-    {
-        moveForward(player);
-        moveForward(player);
-        moveForward(player);
+    public void moveThree(Player player) {
+        moveForwardLogic(player);
+        moveForwardLogic(player);
+        moveForwardLogic(player);
     }
 
 
-
     /**
-     * @author Christoffer,  s205449
-     *
-     * The movePlayerToSpace which relocates the pushed player to the next space which the pushing player is heading.
-     * If none of the criteria met the moveNotPossibleException will be thrown.
-     *
      * @param player
      * @param space
      * @param heading
      * @throws moveNotPossibleException
+     * @author Christoffer,  s205449
+     * <p>
+     * The movePlayerToSpace which relocates the pushed player to the next space which the pushing player is heading.
+     * If none of the criteria met the moveNotPossibleException will be thrown.
      */
     public void movePlayerToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading)
             throws moveNotPossibleException {
         Player other = space.getPlayer();
-        if (other !=null) {
+        if (other != null) {
             Space target = board.getNeighbour(space,
                     heading);
             if (target != null) {
                 movePlayerToSpace(other,
                         target,
                         heading);
-            } else  {
+            } else {
                 throw new moveNotPossibleException(player,
                         space,
                         heading);
@@ -393,18 +450,18 @@ public class GameController {
          * @author Christoffer Fink 205449
          * Does so the player can't wall through the walls
          */
-        if(player.getSpace() != null){
-            if(player.getSpace().getWalls() != null){
-                for(Heading wall : player.getSpace().getWalls()){
-                    if(wall == heading) {
+        if (player.getSpace() != null) {
+            if (player.getSpace().getWalls() != null) {
+                for (Heading wall : player.getSpace().getWalls()) {
+                    if (wall == heading) {
                         throw new moveNotPossibleException(player, space, heading);
                     }
                 }
             }
         }
-        if(space.getWalls() != null){
-            for(Heading wall : space.getWalls()){
-                if(wall.prev().prev() == heading) {
+        if (space.getWalls() != null) {
+            for (Heading wall : space.getWalls()) {
+                if (wall.prev().prev() == heading) {
                     throw new moveNotPossibleException(player, space, heading);
                 }
             }
@@ -414,20 +471,13 @@ public class GameController {
     }
 
 
-    /**
-     * @author Christoffer,  s205449
-     * Same function as moveForward, however the method is set two times to get the fastForward function
-     */
-    public void fastForward(@NotNull Player player) {
-        moveForward(player);
-        moveForward(player);
-    }
+    
 
     /**
      * Here the player's direction is set to turn right
      */
     public void turnRight(@NotNull Player player) {
-        if(player !=null && player.board == board){
+        if (player != null && player.board == board) {
             player.setHeading(player.getHeading().next());
         }
     }
@@ -436,33 +486,36 @@ public class GameController {
      * Here the player's direction is set to turn left
      */
     public void turnLeft(@NotNull Player player) {
-        if(player !=null && player.board == board){
+        if (player != null && player.board == board) {
             player.setHeading(player.getHeading().prev());
         }
     }
+
     /**
      * Turns the player around
+     *
      * @param player
      * @author Marcus, s214962
      */
     public void uTurn(@NotNull Player player) {
-        if(player !=null && player.board == board){
+        if (player != null && player.board == board) {
             player.setHeading(player.getHeading().next().next());
         }
     }
+
     /**
      * Moves the player backwards
+     *
      * @param player
      * @author Phillip, s224278
      */
     public void backUp(@NotNull Player player) {
-        if(player !=null && player.board == board){
+        if (player != null && player.board == board) {
             uTurn(player);
-            moveForward(player);
+            moveForwardLogic(player);
             uTurn(player);
         }
     }
-
 
 
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
@@ -498,4 +551,50 @@ public class GameController {
         }
     }
 
+
+
+
+    /**
+     * Sets the board of the controller.
+     * @param board the board to be set
+     */
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    /**
+     * Gets the board of the controller.
+     * @return the board of the controller
+     */
+    public Board getBoard() {
+        return this.board;
+    }
+
+    /**
+     * Repeats the command card in the previous register of the player. If it is the first card it does nothing,
+     * if the previous card is an again card it will repeat the card before that.
+     * @author Jacob, s164958
+     * @param player the player to repeat the command card for
+     */
+    public void again(Player player) {
+        if (player != null && player.board == board) {
+            int prevStep = board.getStep() - 1;
+            if (prevStep >= 0) {
+                CommandCard card = player.getProgramField(prevStep).getCard();
+                if (card != null && card.command != Command.AGAIN) {
+                    Command command = card.command;
+                    if (command.isInteractive()) {
+                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        return;
+                    }
+                    executeCommand(player, command);
+                }
+                if (card != null && card.command == Command.AGAIN) {
+                    board.setStep(prevStep);
+                    again(player);
+                    board.setStep(board.getStep() + 1);
+                }
+            }
+        }
+    }
 }

@@ -33,34 +33,97 @@ import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ...
+ *  The view of a player of the game. The view shows the program of the player
+ *  and the command cards of the player. The view is updated when the player's
+ *  board changes.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Emily, s191174
  */
 public class PlayerView extends Tab implements ViewObserver {
-
+    /**
+     * The player for which this view is created.
+     */
     private Player player;
-
+/**
+     * The top level layout of the view.
+     */
     private VBox top;
-
+/**
+     * The label showing the number of energy cubes of the player.
+     */
     private Label programLabel;
-    private GridPane programPane;
-    private Label cardsLabel;
-    private GridPane cardsPane;
+    /**
+     * The label showing the number of energy cubes of the player.
+     */
+    private Label energyCubesLabel;
 
+    /**
+     * The pane showing the program of the player.
+     */
+    private GridPane programPane;
+
+    /**
+     * The views of the program cards of the player.
+     */
+    private Label cardsLabel;
+
+    /**
+     * The pane showing the command cards of the player.
+     */
+    private GridPane cardsPane;
+/**
+     * The views of the command cards of the player.
+     */
     private CardFieldView[] programCardViews;
+
+    /**
+     * The views of the command cards of the player.
+     */
     private CardFieldView[] cardViews;
+
+    /**
+     * The panel with the buttons for the programming phase.
+     */
 
     private VBox buttonPanel;
 
-    private Button finishButton;
-    private Button executeButton;
-    private Button stepButton;
+    /**
+     * The button to finish the programming phase.
+     */
 
+    private Button finishButton;
+
+    /**
+     * The button to execute the program.
+     */
+    private Button executeButton;
+    /**
+     * The button to execute the current register.
+     */
+    private Button stepButton;
+/**
+     * The panel with the buttons for the player interaction phase.
+     */
     private VBox playerInteractionPanel;
 
+    /**
+     * The controller for the game.
+     */
+
     private GameController gameController;
+
+    /**
+     * Label to display the checkpoint count.
+     */
+    private Label checkpointLabel;
+
+    /**
+     * The constructor for the view of a player.
+     *
+     * @param gameController the controller for the game
+     * @param player the player for which this view is created
+     */
 
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
         super(player.getName());
@@ -71,6 +134,12 @@ public class PlayerView extends Tab implements ViewObserver {
 
         this.gameController = gameController;
         this.player = player;
+
+        energyCubesLabel = new Label("Energy Cubes: " + player.getEnergyCubes());
+        energyCubesLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
+
+        checkpointLabel = new Label("Checkpoints: " + player.getCheckpoints());
+        top.getChildren().add(checkpointLabel);  // Add the label to the layout
 
         programLabel = new Label("Program");
 
@@ -125,16 +194,23 @@ public class PlayerView extends Tab implements ViewObserver {
         top.getChildren().add(programPane);
         top.getChildren().add(cardsLabel);
         top.getChildren().add(cardsPane);
+        top.getChildren().add(energyCubesLabel);
 
         if (player.board != null) {
             player.board.attach(this);
             update(player.board);
         }
     }
-
+/**
+     * This method is called when the observed subject changes.
+     *
+     * @param subject the subject that has changed.
+     */
     @Override
     public void updateView(Subject subject) {
         if (subject == player.board) {
+            energyCubesLabel.setText("Energy Cubes: " + player.getEnergyCubes());
+            checkpointLabel.setText("Checkpoints: " + player.getCheckpoints());
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {

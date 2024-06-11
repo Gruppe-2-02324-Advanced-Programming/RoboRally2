@@ -24,6 +24,7 @@ package dk.dtu.compute.se.pisd.roborally.view;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.DoubleConveyorBelt;
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.controller.Gears;
@@ -49,19 +50,34 @@ import javafx.scene.image.ImageView;
 import java.util.Objects;
 
 /**
- * ...
+ * SpaceView is a view of a space on the board. It is responsible for drawing the spaces on the board.
+ * and updating the view when the space changes. For example if there is a player on the space, the view should update
+ * to show the player on the space. Also, if there is a wall on the space, the view should update to show the wall. etc
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class SpaceView extends StackPane implements ViewObserver {
+/**
+     * The height and width of the space
+     */
 
     final public static int SPACE_HEIGHT = 50; // 75;
+    /**
+     * The height and width of the space
+     */
+
     final public static int SPACE_WIDTH = 50; // 75;
+/**
+     * The space that this view represents
+     */
 
     public final Space space;
 
-
+    /**
+     * Constructor for the SpaceView class
+     * @param space the space that this view should represent
+     */
     public SpaceView(@NotNull Space space) {
         this.space = space;
 
@@ -80,7 +96,6 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.setStyle("-fx-background-color: purple;");
         }
 
-        // updatePlayer();
 
         // This space view should listen to changes of the space
         space.attach(this);
@@ -89,7 +104,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
     /**
-     * Draws the walls posibly other stuff
+     * Draws the walls possibly other stuff
      *
      * @author Christoffer Fink, s205449@dtu.dk
      * @author Setare Izadi, s232629@dtu.dk
@@ -104,24 +119,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         emptyFieldView.setFitWidth(SPACE_WIDTH);
         emptyFieldView.setFitHeight(SPACE_HEIGHT);
         emptyFieldView.setPreserveRatio(false);
-        this.getChildren().add(emptyFieldView);  // Add the empty field view as the first layer
-
-
-        // Check if the current space is a checkpoint
-        for (FieldAction action : space.getActions()) {
-            if (action instanceof Checkpoint) {
-                Checkpoint checkpoint = (Checkpoint) action;
-                // Load the checkpoint image
-                Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
-                ImageView checkpointView = new ImageView(checkpointImage);
-                checkpointView.setFitWidth(SPACE_WIDTH);
-                checkpointView.setFitHeight(SPACE_HEIGHT);
-                checkpointView.setPreserveRatio(false);
-                this.getChildren().add(checkpointView);  // Add the checkpoint view as the second layer
-                break;
-            }
-        }
-
+        this.getChildren().add(emptyFieldView);
 
 
         // Check if the current space has a gear action and display the corresponding image
@@ -141,15 +139,14 @@ public class SpaceView extends StackPane implements ViewObserver {
                 gearImageView.setFitWidth(SPACE_WIDTH);
                 gearImageView.setFitHeight(SPACE_HEIGHT);
                 gearImageView.setPreserveRatio(false);
-                this.getChildren().add(gearImageView); // Added the gear image view as a layer
-                break; // There is only one gear per space, we can break the loop after adding it
+                this.getChildren().add(gearImageView);
+                break;
             }
         }
 
         // Check if the current space contains a ConveyorBeltCorner
         for (FieldAction action : space.getActions()) {
-            if (action instanceof ConveyorBeltCorner) {
-                ConveyorBeltCorner conveyorBeltCorner = (ConveyorBeltCorner) action;
+            if (action instanceof ConveyorBeltCorner conveyorBeltCorner) {
                 // Load the conveyor belt corner image
                 Image conveyorBeltCornerImage;
                 if (conveyorBeltCorner.getRotation() == Gears.LEFT_TURN) {
@@ -177,18 +174,19 @@ public class SpaceView extends StackPane implements ViewObserver {
                         break;
                 }
 
-                this.getChildren().add(conveyorBeltCornerView);  // Add the conveyor belt corner view as the second layer
+                this.getChildren().add(conveyorBeltCornerView);
                 break;
             }
         }
 
 
+
+
         // Check if the current space contains a conveyor belt
         for (FieldAction action : space.getActions()) {
-            if (action instanceof ConveyorBelt) {
-                ConveyorBelt conveyorBelt = (ConveyorBelt) action;
-                // Load the conveyor belt image
-                Image conveyorBeltImage = new Image("/assets/green.png"); // replace with the actual path to your conveyor belt image
+            if (action instanceof ConveyorBelt conveyorBelt) {
+                Image conveyorBeltImage;
+                conveyorBeltImage = new Image("/assets/green.png");
                 ImageView conveyorBeltView = new ImageView(conveyorBeltImage);
                 conveyorBeltView.setFitWidth(SPACE_WIDTH);
                 conveyorBeltView.setFitHeight(SPACE_HEIGHT);
@@ -209,13 +207,99 @@ public class SpaceView extends StackPane implements ViewObserver {
                         break;
                 }
 
-                this.getChildren().add(conveyorBeltView);  // Add the conveyor belt view as the second layer
+                this.getChildren().add(conveyorBeltView);
+                break;
+            }
+        }
+
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof DoubleConveyorBelt) {
+                DoubleConveyorBelt doubleConveyorBelt = (DoubleConveyorBelt) action;
+                Image doubleConveyorBeltImage = new Image("/assets/blue.png");
+                ImageView doubleConveyorBeltView = new ImageView(doubleConveyorBeltImage);
+                doubleConveyorBeltView.setFitWidth(SPACE_WIDTH);
+                doubleConveyorBeltView.setFitHeight(SPACE_HEIGHT);
+                doubleConveyorBeltView.setPreserveRatio(false);
+
+                // Rotate the image based on its heading
+                switch (doubleConveyorBelt.getHeading()) {
+                    case NORTH:
+                        doubleConveyorBeltView.setRotate(0);
+                        break;
+                    case EAST:
+                        doubleConveyorBeltView.setRotate(90);
+                        break;
+                    case SOUTH:
+                        doubleConveyorBeltView.setRotate(180);
+                        break;
+                    case WEST:
+                        doubleConveyorBeltView.setRotate(270);
+                        break;
+                }
+
+                this.getChildren().add(doubleConveyorBeltView);
+                break;
+            }
+        }
+
+        Image wallImage = new Image("/assets/wall.png");
+
+
+
+
+
+        // Check if the current space is a checkpoint
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof Checkpoint) {
+                Checkpoint checkpoint = (Checkpoint) action;
+                Image checkpointImage = new Image("/assets/" + checkpoint.getCheckpointNumber() + ".png");
+                ImageView checkpointView = new ImageView(checkpointImage);
+                checkpointView.setFitWidth(SPACE_WIDTH);
+                checkpointView.setFitHeight(SPACE_HEIGHT);
+                checkpointView.setPreserveRatio(false);
+                this.getChildren().add(checkpointView);
                 break;
             }
         }
 
 
-        Image wallImage = new Image("/assets/wall.png");
+        // Draw walls
+        for (Heading wall : space.getWalls()) {
+
+            ImageView wallView = new ImageView(wallImage);
+
+            switch (wall) {
+                case NORTH:
+                    wallView.setFitHeight(SPACE_HEIGHT);
+                    wallView.setFitWidth(15);  // Set the width for horizontal wall
+                    wallView.setRotate(90); // Rotate 90 degrees for North wall
+                    wallView.setTranslateY(-SPACE_HEIGHT / 2.4);
+                    StackPane.setAlignment(wallView, Pos.TOP_CENTER);
+                    break;
+                case EAST:
+                    wallView.setFitHeight(SPACE_HEIGHT);
+                    wallView.setFitWidth(15);
+                    // No rotation needed for East wall
+                    StackPane.setAlignment(wallView, Pos.CENTER_RIGHT);
+                    break;
+                case SOUTH:
+                    wallView.setFitHeight(SPACE_HEIGHT);
+                    wallView.setFitWidth(15);
+                    wallView.setRotate(270); // Rotate 270 degrees for South wall
+                    wallView.setTranslateY(SPACE_HEIGHT / 2.4);
+                    StackPane.setAlignment(wallView, Pos.BOTTOM_CENTER);
+                    break;
+                case WEST:
+                    wallView.setFitHeight(SPACE_HEIGHT);
+                    wallView.setFitWidth(15);
+                    wallView.setRotate(180); // Rotate 180 degrees for the West wall (if the image is top/bottom specific)
+                    StackPane.setAlignment(wallView, Pos.CENTER_LEFT);
+                    break;
+            }
+
+            wallView.setPreserveRatio(false);
+            this.getChildren().add(wallView);
+        }
 
         // Draw player
         Player player = space.getPlayer();
@@ -233,45 +317,6 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.getChildren().add(arrow);
         }
 
-        // Draw walls
-        for (Heading wall : space.getWalls()) {
-
-            ImageView wallView = new ImageView(wallImage);
-
-            switch (wall) {
-                case NORTH:
-                    wallView.setFitHeight(SPACE_HEIGHT);  // Set the height for horizontal wall
-                    wallView.setFitWidth(15);  // Set the width for horizontal wall
-                    wallView.setRotate(90); // Rotate 90 degrees for North wall
-                    // Adjust the translation to less than half the space height to position correctly
-                    wallView.setTranslateY(-SPACE_HEIGHT / 2.4);  // Adjust this value as needed
-                    StackPane.setAlignment(wallView, Pos.TOP_CENTER);
-                    break;
-                case EAST:
-                    wallView.setFitHeight(SPACE_HEIGHT); // Set the height for vertical wall
-                    wallView.setFitWidth(15);
-                    // No rotation needed for East wall
-                    StackPane.setAlignment(wallView, Pos.CENTER_RIGHT);
-                    break;
-                case SOUTH:
-                    wallView.setFitHeight(SPACE_HEIGHT);  // Set the height for horizontal wall
-                    wallView.setFitWidth(15);  // Set the width for horizontal wall
-                    wallView.setRotate(270); // Rotate 270 degrees for South wall
-                    // Translate the image view so that its top edge aligns with the bottom edge of the space
-                    wallView.setTranslateY(SPACE_HEIGHT / 2.4);
-                    StackPane.setAlignment(wallView, Pos.BOTTOM_CENTER);
-                    break;
-                case WEST:
-                    wallView.setFitHeight(SPACE_HEIGHT); // Set the height for vertical wall
-                    wallView.setFitWidth(15);
-                    wallView.setRotate(180); // Rotate 180 degrees for the West wall (if the image is top/bottom specific)
-                    StackPane.setAlignment(wallView, Pos.CENTER_LEFT);
-                    break;
-            }
-
-            wallView.setPreserveRatio(false); // Turn off preserve ratio to allow explicit sizing
-            this.getChildren().add(wallView);
-        }
     }
 
 }

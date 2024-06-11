@@ -28,17 +28,27 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 import javafx.scene.control.TabPane;
 
 /**
- * ...
+ * The view of the players of the game. The view is a tab pane with a tab for each player.
+ * The view is updated when the current player changes.
+ *
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class PlayersView extends TabPane implements ViewObserver {
-
+    /**
+     * The board of the game.
+     */
     private Board board;
-
+/**
+     * The player views for the players of the game.
+     */
     private PlayerView[] playerViews;
-
+/**
+     * The constructor of the players view. The view is created for the given game controller.
+     *
+     * @param gameController the game controller for the game.
+     */
     public PlayersView(GameController gameController) {
         board = gameController.board;
 
@@ -52,7 +62,11 @@ public class PlayersView extends TabPane implements ViewObserver {
         board.attach(this);
         update(board);
     }
-
+/**
+     * Update the view of the players. This method is called when the current player changes.
+     *
+     * @param subject the subject of the update.
+     */
     @Override
     public void updateView(Subject subject) {
         if (subject == board) {

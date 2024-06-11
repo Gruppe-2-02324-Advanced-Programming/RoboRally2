@@ -15,51 +15,78 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 
-
-
-//todo ligenu ændrer den også robottens heading skal laves om til ikke at den ikke skal ændre heading
+//todo Currently also changes the heading of the robot, which it should not do
 public class ConveyorBeltCorner extends FieldAction {
     Heading heading;
     private int rotation;
 
+    /**
+     * Constructor for the conveyor belt corner
+     * @autor Christoffer s205449
+     * @param heading the heading of the conveyor belt corner
+     * @param rotation the rotation of the conveyor belt corner
+     */
     public ConveyorBeltCorner(Heading heading, int rotation) {
         this.heading = heading;
         this.rotation = rotation;
     }
 
+    /**
+     * This method moves the player to the next space in the direction of the conveyor belt corner
+     * and changes the player's heading based on the conveyor belt corner's rotation
+     * @autor Christoffer s205449
+     * @param gameController the game controller
+     * @param space the space the player is on
+     * @return true if the player is moved to the next space in the direction of the conveyor belt corner
+     */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
         if (space != null) {
             Player player = space.getPlayer();
             if (player != null) {
-                // Determine the new heading
-                Heading newHeading = heading;
-                if (rotation == Gears.LEFT_TURN) {
-                    newHeading = heading.prev();
-                } else if (rotation == Gears.RIGHT_TURN) {
-                    newHeading = heading.next();
+                Heading newHeading = this.heading;
+                if (this.rotation == Gears.LEFT_TURN) {
+                    newHeading = this.heading.prev();
+                } else if (this.rotation == Gears.RIGHT_TURN) {
+                    newHeading = this.heading.next();
                 }
-                player.setHeading(newHeading);
 
-                // Move the player to the neighboring space
-                Space neighbor = gameController.board.getNeighbour(space, newHeading);
-                if (neighbor != null) {
+                Space nextSpace = gameController.board.getNeighbour(space, newHeading);
+                if (nextSpace != null && nextSpace.getPlayer() == null) {
                     try {
-                        gameController.movePlayerToSpace(player, neighbor, newHeading);
+                        player.setHeading(newHeading);
+                        gameController.movePlayerToSpace(player, nextSpace, newHeading);
+                        // Check for another conveyor action recursively
+                        FieldAction action = nextSpace.findAction(ConveyorBelt.class);
+                        if (action != null) {
+                            action.doAction(gameController, nextSpace);
+                        }
+                        return true;
                     } catch (GameController.moveNotPossibleException e) {
-                        return false; // Movement failure
+                        return false;
                     }
-                    return true;
                 }
             }
         }
         return false;
     }
 
+
+
+    /**
+     * Get the heading of the conveyor belt corner
+     * @autor Christoffer s205449
+     * @return the heading of the conveyor belt corner
+     */
     public Heading getHeading() {
         return heading;
     }
 
+    /**
+     * Get the rotation of the conveyor belt corner
+     * @autor Christoffer s205449
+     * @return the rotation of the conveyor belt corner
+     */
     public int getRotation() {
         return rotation;
     }

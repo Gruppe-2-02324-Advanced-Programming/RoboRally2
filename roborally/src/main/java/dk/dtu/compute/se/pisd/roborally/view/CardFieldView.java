@@ -32,41 +32,88 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ...
+ * A view for a field for a command card. This view is used to display a command card
+ * and to allow the user to drag and drop the card to another field.
+ * The view is also used to display the cards in the program registers of a player.
+ * The view is an observer of the field and updates the view when the field changes.
+ * The view also allows to drag and drop a card from one field to another.
+ *
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class CardFieldView extends GridPane implements ViewObserver {
 
-    // This data format helps avoiding transfers of e.g. Strings from other
-    // programs which can copy/paste Strings.
+ /**
+     * The data format for the drag and drop of a command card.
+     */
     final public static  DataFormat ROBO_RALLY_CARD = new DataFormat("games/roborally/cards");
-
+/**
+     * The width of the card field.
+     */
     final public static int CARDFIELD_WIDTH = 65;
+
+    /**
+     * The height of the card field.
+     */
     final public static int CARDFIELD_HEIGHT = 100;
+    /**
+     * The border for the card field.
+     */
 
     final public static Border BORDER = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
 
+    /**
+     * The background for the card field.
+     */
     final public static Background BG_DEFAULT = new Background(new BackgroundFill(Color.WHITE, null, null));
+
+    /**
+     * The background for the card field when it is dragged.
+     */
     final public static Background BG_DRAG = new Background(new BackgroundFill(Color.GRAY, null, null));
+
+    /**
+     * The background for the card field when a card is dropped on it.
+     */
     final public static Background BG_DROP = new Background(new BackgroundFill(Color.LIGHTGRAY, null, null));
-
+/**
+     * The background for the card field when it is active.
+     */
     final public static Background BG_ACTIVE = new Background(new BackgroundFill(Color.YELLOW, null, null));
+    /**
+     * The background for the card field when it is done.
+     */
     final public static Background BG_DONE = new Background(new BackgroundFill(Color.GREENYELLOW,  null, null));
-
-    private CommandCardField field;
-
-    private Label label;
-
-    private GameController gameController;
-
+/**
+     * The field for which this view is created.
+     */
+    private final CommandCardField field;
+    /**
+     * The label for the card field.
+     */
+    private final Label label;
+/**
+     * The image view for the card field.
+     */
+    private final ImageView imageView;
+/**
+     * The game controller for the game.
+     */
+    private final GameController gameController;
+/**
+     * The constructor for the view of a card field.
+     *
+     * @param gameController the game controller for the game.
+     * @param field the field for which this view is created.
+     */
     public CardFieldView(@NotNull GameController gameController, @NotNull CommandCardField field) {
         this.gameController = gameController;
         this.field = field;
@@ -89,6 +136,12 @@ public class CardFieldView extends GridPane implements ViewObserver {
         label.setMouseTransparent(true);
         this.add(label, 0, 0);
 
+        imageView = new ImageView();
+        imageView.setFitHeight(CARDFIELD_HEIGHT);
+        imageView.setFitWidth(CARDFIELD_WIDTH);
+        //this.getChildren().clear();
+        this.add(imageView, 0, 0);
+
         this.setOnDragDetected(new OnDragDetectedHandler());
         this.setOnDragOver(new OnDragOverHandler());
         this.setOnDragEntered(new OnDragEnteredHandler());
@@ -99,7 +152,9 @@ public class CardFieldView extends GridPane implements ViewObserver {
         field.attach(this);
         update(field);
     }
-
+/**
+     * This method updates the view of the card field.
+     */
     private String cardFieldRepresentation(CommandCardField cardField) {
         if (cardField.player != null) {
 
@@ -121,6 +176,9 @@ public class CardFieldView extends GridPane implements ViewObserver {
 
     }
 
+    /**
+     * This method updates the view of the card field.
+     */
     private CommandCardField cardFieldFromRepresentation(String rep) {
         if (rep != null && field.player != null) {
             String[] strings = rep.split(",");
@@ -140,54 +198,70 @@ public class CardFieldView extends GridPane implements ViewObserver {
         return null;
     }
 
+
+/**
+     * This method updates the view of the card field.
+     */
     @Override
     public void updateView(Subject subject) {
         if (subject == field && subject != null) {
             CommandCard card = field.getCard();
             if (card != null && field.isVisible()) {
-                label.setText(card.getName());
+                imageView.setImage(card.getImage());
             } else {
+                imageView.setImage(null);
                 label.setText("");
             }
+
         }
     }
-
+/**
+     * This method is called when the drag is detected.
+     */
     private class OnDragDetectedHandler implements EventHandler<MouseEvent> {
-
+    /**
+     * This method is called when the drag is detected.
+     * @param event the mouse event that triggered the drag.
+     */
         @Override
         public void handle(MouseEvent event) {
             Object t = event.getTarget();
-            if (t instanceof CardFieldView) {
-                CardFieldView source = (CardFieldView) t;
-                CommandCardField cardField = source.field;
+            if (t instanceof ImageView source) {
+                CommandCardField cardField = field;
                 if (cardField != null &&
                         cardField.getCard() != null &&
                         cardField.player != null &&
                         cardField.player.board != null &&
                         cardField.player.board.getPhase().equals(Phase.PROGRAMMING)) {
                     Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
-                    Image image = source.snapshot(null, null);
+                    Image image = source.getImage();
                     db.setDragView(image);
 
                     ClipboardContent content = new ClipboardContent();
                     content.put(ROBO_RALLY_CARD, cardFieldRepresentation(cardField));
 
                     db.setContent(content);
-                    source.setBackground(BG_DRAG);
+                    setBackground(BG_DRAG);
                 }
             }
             event.consume();
         }
 
     }
-
+/**
+     * This method is called when the drag is over.
+     */
     private class OnDragOverHandler implements EventHandler<DragEvent> {
 
+
+        /**
+         * This method is called when the drag is over.
+         * @param event the drag event.
+         */
         @Override
         public void handle(DragEvent event) {
             Object t = event.getTarget();
-            if (t instanceof CardFieldView) {
-                CardFieldView target = (CardFieldView) t;
+            if (t instanceof CardFieldView target) {
                 CommandCardField cardField = target.field;
                 if (cardField != null &&
                         (cardField.getCard() == null || event.getGestureSource() == target) &&
@@ -204,12 +278,14 @@ public class CardFieldView extends GridPane implements ViewObserver {
     }
 
     private class OnDragEnteredHandler implements EventHandler<DragEvent> {
-
+        /**
+         * This method is called when the drag enters the field.
+         * @param event the drag event.
+         */
         @Override
         public void handle(DragEvent event) {
             Object t = event.getTarget();
-            if (t instanceof CardFieldView) {
-                CardFieldView target = (CardFieldView) t;
+            if (t instanceof CardFieldView target) {
                 CommandCardField cardField = target.field;
                 if (cardField != null &&
                         cardField.getCard() == null &&
@@ -225,14 +301,18 @@ public class CardFieldView extends GridPane implements ViewObserver {
         }
 
     }
-
+/**
+     * This method is called when the drag exits the field.
+     */
     private class OnDragExitedHandler implements EventHandler<DragEvent> {
-
+    /**
+     * This method is called when the drag exits the field.
+     * @param event the drag event.
+     */
         @Override
         public void handle(DragEvent event) {
             Object t = event.getTarget();
-            if (t instanceof CardFieldView) {
-                CardFieldView target = (CardFieldView) t;
+            if (t instanceof CardFieldView target) {
                 CommandCardField cardField = target.field;
                 if (cardField != null &&
                         cardField.getCard() == null &&
@@ -249,13 +329,20 @@ public class CardFieldView extends GridPane implements ViewObserver {
 
     }
 
+    /**
+     * This method is called when the drag is dropped.
+     */
     private class OnDragDroppedHandler implements EventHandler<DragEvent> {
 
+
+        /**
+         * This method is called when the drag is dropped.
+         * @param event the drag event.
+         */
         @Override
         public void handle(DragEvent event) {
             Object t = event.getTarget();
-            if (t instanceof CardFieldView) {
-                CardFieldView target = (CardFieldView) t;
+            if (t instanceof CardFieldView target) {
                 CommandCardField cardField = target.field;
 
                 Dragboard db = event.getDragboard();
@@ -288,13 +375,20 @@ public class CardFieldView extends GridPane implements ViewObserver {
 
     }
 
+    /**
+     * This method is called when the drag is done.
+     */
     private class OnDragDoneHandler implements EventHandler<DragEvent> {
 
+
+        /**
+         * This method is called when the drag is done.
+         * @param event the drag event.
+         */
         @Override
         public void handle(DragEvent event) {
             Object t = event.getTarget();
-            if (t instanceof CardFieldView) {
-                CardFieldView source = (CardFieldView) t;
+            if (t instanceof CardFieldView source) {
                 source.setBackground(BG_DEFAULT);
             }
             event.consume();
@@ -303,7 +397,3 @@ public class CardFieldView extends GridPane implements ViewObserver {
     }
 
 }
-
-
-
-

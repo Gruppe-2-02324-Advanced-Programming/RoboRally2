@@ -83,7 +83,7 @@
       "actions": [
         {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner", "INSTANCE": {"heading": "EAST", "rotation": 90}}
       ],
-      "x": 6, "y": 1
+      "x": 6, "y": 6
     },
 
     {
@@ -157,8 +157,6 @@
       "x": 3, "y": 5
     },
 
-
-
     {
       "walls": [],
       "actions": [
@@ -172,9 +170,6 @@
       "x": 5,
       "y": 2
     },
-
-
-
 
     {
       "walls": [],
@@ -190,6 +185,22 @@
       "y": 2
     },
 
+
+
+
+    {
+      "walls": [],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.DoubleConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 3,
+      "y": 3
+    },
 
     {
       "walls": [],
@@ -229,16 +240,6 @@
       ],
       "x": 2, "y": 5
     },
-
-
-
-
-
-
-
-
-
-
 
 
 
