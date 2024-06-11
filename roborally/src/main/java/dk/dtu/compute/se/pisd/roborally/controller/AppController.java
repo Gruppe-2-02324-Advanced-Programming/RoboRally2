@@ -324,7 +324,7 @@ public class AppController implements Observer {
         if (result.isPresent()) {
             return LoadBoard.loadBoard(result.get());
         }
-        return new Board(8, 8);
+        return null;
     }
 
     /**
@@ -340,7 +340,6 @@ public class AppController implements Observer {
         if (gameController != null) {
 
             // here we save the game (without asking the user).
-            saveGame();
             gameController = null;
             roboRally.createBoardView(null);
             return true;
@@ -396,6 +395,9 @@ public class AppController implements Observer {
             if (board.isWon()) {
                 for (Player player : board.getPlayers()) {
                     if (player.getCheckpoints() == board.getTotalCheckpoints()) {
+                        for (Player p : board.getPlayers()) {
+                            p.setCheckpoints(0);
+                        }
                         ButtonType playAgainButton = new ButtonType("Play Again");
                         ButtonType closeButton = new ButtonType("Close Game");
                         Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by " + player.getName(),
@@ -409,7 +411,6 @@ public class AppController implements Observer {
                         } else {
                             stopGame();
                         }
-
                         board.setWon(false);
                         return;
                     }
