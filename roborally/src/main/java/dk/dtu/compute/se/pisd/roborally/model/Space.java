@@ -167,5 +167,17 @@ public class Space extends Subject {
         // notify the space of these changes by calling this method.
         notifyChange();
     }
+    /**
+     * This method finds the first action of a specified type on this space.
+     * @return the first action of the specified type, or null if no such action exists
+     */
+    public <T extends FieldAction> T findAction(Class<T> actionName) {
+        for (FieldAction action : actions) {
+            if (actionName.isInstance(action)) {
+                return actionName.cast(action);
+            }
+        }
+        return null; // No action of this type found
+    }
 
 }

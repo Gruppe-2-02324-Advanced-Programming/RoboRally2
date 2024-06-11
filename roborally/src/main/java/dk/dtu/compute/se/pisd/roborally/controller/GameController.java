@@ -43,7 +43,7 @@ import java.util.List;
  * }</pre>
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Emily, s191174
  */
 
 @RestController
@@ -197,6 +197,7 @@ public class GameController {
      * This method executes the next step of the current player. If the phase is ACTIVATION, the next
      * step of the current player is executed. If the phase is not ACTIVATION, the method does nothing.
      * If the step is the last step of the current player, the method starts the programming phase.
+     * @author Emily, s191174
      */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
@@ -206,7 +207,7 @@ public class GameController {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
                     Command command = card.command;
-                    if (command.isInteractive()) {
+                    if (command.isInteractive()){
                         board.setPhase(Phase.PLAYER_INTERACTION);
                         return;
                     }
@@ -217,10 +218,10 @@ public class GameController {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                 } else {
                     step++;
-                    for (Player player : board.getPlayers()) {
+                    for(Player player : board.getPlayers()){
                         List<FieldAction> actions = player.getSpace().getActions();
-                        if (actions != null) {
-                            for (FieldAction action : actions) {
+                        if(actions != null) {
+                            for (FieldAction action : actions){
                                 action.doAction(this, player.getSpace());
                             }
 
@@ -378,7 +379,7 @@ public class GameController {
      * Moves a player one space forward in the direction they are currently facing.
      * If the movement is not possible (e.g., due to a wall), the action is ignored.
      */
-    public void moveForward(Player player) {
+    public void moveForwardLogic(Player player) {
         if (board != null && player != null && player.board == board) {
             Heading heading = player.getHeading();
             Space space = player.getSpace();
@@ -392,6 +393,18 @@ public class GameController {
         }
     }
 
+    public void moveForward(Player player) {
+        moveForwardLogic(player);
+    }
+
+    /**
+     * @author Christoffer,  s205449
+     * Same function as moveForward, however the method is set two times to get the fastForward function
+     */
+    public void fastForward(@NotNull Player player) {
+        moveForwardLogic(player);
+        moveForwardLogic(player);
+    }
 
     /**
      * Moves a player three spaces forward in the direction they are currently facing.
@@ -401,9 +414,9 @@ public class GameController {
      * @author Setare Izadi, s232629@dtu.dk
      */
     public void moveThree(Player player) {
-        moveForward(player);
-        moveForward(player);
-        moveForward(player);
+        moveForwardLogic(player);
+        moveForwardLogic(player);
+        moveForwardLogic(player);
     }
 
 
@@ -458,14 +471,7 @@ public class GameController {
     }
 
 
-    /**
-     * @author Christoffer,  s205449
-     * Same function as moveForward, however the method is set two times to get the fastForward function
-     */
-    public void fastForward(@NotNull Player player) {
-        moveForward(player);
-        moveForward(player);
-    }
+    
 
     /**
      * Here the player's direction is set to turn right
@@ -506,7 +512,7 @@ public class GameController {
     public void backUp(@NotNull Player player) {
         if (player != null && player.board == board) {
             uTurn(player);
-            moveForward(player);
+            moveForwardLogic(player);
             uTurn(player);
         }
     }
