@@ -33,7 +33,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Ekkart Kindler, ekki@dtu.dk
  */
 
-
 public class StartRoboRally {
     /**
      * The main method to start the RoboRally application.
