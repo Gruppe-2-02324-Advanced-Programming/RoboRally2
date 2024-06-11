@@ -41,17 +41,16 @@ import java.util.List;
 public enum Command {
 
     // This is a very simplistic way of realizing different commands.
-    FORWARD("Fwd", new Image("assets/cardsMove1.png")),
-    RIGHT("Turn Right", new Image("assets/cardsRight.png")),
-    LEFT("Turn Left", new Image("assets/cardsLeft.png")),
-    FAST_FORWARD("Fast Fwd", new Image("assets/cardsMove2.png")),
-    FORWARD_THREE("Fwd Three", new Image("assets/cardsMove3.png")),
-    BACKUP("Back Up", new Image("assets/cardsMoveBack.png")),
-    UTURN("U-Turn", new Image("assets/cardsUTurn.png")),
-    AGAIN("Again", new Image("assets/cardsMove1.png")),
-    OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png"), LEFT, RIGHT),
-
-    POWER_UP("Power Up", new Image("assets/powerupcard.png"));
+    FORWARD("Fwd", new Image("assets/cardsMove1.png", 65, 100, true, true)),
+    RIGHT("Turn Right", new Image("assets/cardsRight.png", 65, 100, true, true)),
+    LEFT("Turn Left", new Image("assets/cardsLeft.png", 65, 100, true, true)),
+    FAST_FORWARD("Fast Fwd", new Image("assets/cardsMove2.png", 65, 100, true, true)),
+    FORWARD_THREE("Fwd Three", new Image("assets/cardsMove3.png", 65, 100, true, true)),
+    BACKUP("Back Up", new Image("assets/cardsMoveBack.png", 65, 100, true, true)),
+    UTURN("U-Turn", new Image("assets/cardsUTurn.png", 65, 100, true, true)),
+    AGAIN("Again", new Image("assets/cardsAgain.png", 65, 100, true, true)),
+    OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png", 65, 100, true, true), LEFT, RIGHT),
+    POWER_UP("Power Up", new Image("assets/powerupcard.png", 65, 100, true, true));
 
 
 
