@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
@@ -493,6 +494,21 @@ public class AppController implements Observer {
 
         Optional<String> result = dialog.showAndWait();
         return result.orElse(null);
+    }
+
+    public String saveCurrentGameAsString() {
+        GsonBuilder builder = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation() // This will only include fields marked with @Expose
+                .setPrettyPrinting();
+        Gson gson = builder.create();
+
+        String jsonString = "";
+        try {
+            jsonString = gson.toJson(gameController.getBoard(), Board.class);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return jsonString;
     }
 
 }

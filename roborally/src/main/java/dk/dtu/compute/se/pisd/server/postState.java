@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
+
 public class postState {
     public static void saveCurrentGameState(Board board, String name, String url) {
         GsonBuilder builder = new GsonBuilder()
