@@ -21,7 +21,6 @@
  */
 package dk.dtu.compute.se.pisd.roborally;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -35,7 +34,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 
-@SpringBootApplication
 public class StartRoboRally {
     /**
      * The main method to start the RoboRally application.
@@ -44,5 +42,5 @@ public class StartRoboRally {
     public static void main(String[] args) {
         RoboRally.main(args);
     }
-    SpringApplication.run(StartRoboRally.class, args);
+
 }
