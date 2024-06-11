@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
@@ -47,7 +48,6 @@ import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
  * @auhtor Jacob, s164958
  *
  */
-
 
 public class Board extends Subject {
     // @Expose
@@ -76,6 +76,16 @@ public class Board extends Subject {
     private int counter;
     // @Expose
     private boolean won = false;
+
+    public List<String> getProgramFields(int playerNumber) {
+        Player player = players.get(playerNumber);
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            System.out.println("asdasasas" + player.getProgramField(i).getCard().toString());
+            list.add(player.getProgramField(i).getCard().getName());
+        }
+        return list;
+    }
 
     public int getCounter() {
         return counter;
