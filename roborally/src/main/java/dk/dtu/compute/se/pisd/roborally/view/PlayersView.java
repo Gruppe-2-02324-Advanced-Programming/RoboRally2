@@ -28,7 +28,8 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 import javafx.scene.control.TabPane;
 
 /**
- * The view of the players of the game. The view is a tab pane with a tab for each player.
+ * The view of the players of the game. The view is a tab pane with a tab for
+ * each player.
  * The view is updated when the current player changes.
  *
  *
@@ -40,30 +41,44 @@ public class PlayersView extends TabPane implements ViewObserver {
      * The board of the game.
      */
     private Board board;
-/**
+    /**
      * The player views for the players of the game.
      */
     private PlayerView[] playerViews;
-/**
-     * The constructor of the players view. The view is created for the given game controller.
+    /**
+     * The controller of the game.
+     */
+    private GameController gameController;
+
+    /**
+     * The constructor of the players view. The view is created for the given game
+     * controller.
      *
      * @param gameController the game controller for the game.
      */
     public PlayersView(GameController gameController) {
+        this.gameController = gameController;
         board = gameController.board;
 
         this.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 
         playerViews = new PlayerView[board.getPlayersNumber()];
-        for (int i = 0; i < board.getPlayersNumber();  i++) {
+        for (int i = 0; i < board.getPlayersNumber(); i++) {
             playerViews[i] = new PlayerView(gameController, board.getPlayer(i));
             this.getTabs().add(playerViews[i]);
         }
         board.attach(this);
         update(board);
+
+        this.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            int newIndex = this.getSelectionModel().getSelectedIndex();
+            handleTabChange(newIndex);
+        });
     }
-/**
-     * Update the view of the players. This method is called when the current player changes.
+
+    /**
+     * Update the view of the players. This method is called when the current player
+     * changes.
      *
      * @param subject the subject of the update.
      */
@@ -72,7 +87,29 @@ public class PlayersView extends TabPane implements ViewObserver {
         if (subject == board) {
             Player current = board.getCurrentPlayer();
             this.getSelectionModel().select(board.getPlayerNumber(current));
+            gameController.changeCurrentTabIndex(getCurrentTabIndex());
         }
+    }
+
+    /**
+     * Returnerer nummeret på den aktuelt valgte fane.
+     * 
+     * @return nummeret på den aktuelt valgte fane.
+     * @author Marcus s214942
+     */
+    public int getCurrentTabIndex() {
+        return this.getSelectionModel().getSelectedIndex();
+    }
+
+    /**
+     * Handles actions to be performed when the tab is changed.
+     *
+     * @param newIndex the index of the newly selected tab
+     * @author Marcus s214942
+     */
+    private void handleTabChange(int newIndex) {
+        System.out.println("Current Tab Index: " + newIndex);
+        gameController.changeCurrentTabIndex(newIndex);
     }
 
 }

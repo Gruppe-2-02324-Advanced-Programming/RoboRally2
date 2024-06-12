@@ -55,7 +55,7 @@ import java.util.Objects;
  * to show the player on the space. Also, if there is a wall on the space, the view should update to show the wall. etc
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Christoffer s205449
  */
 public class SpaceView extends StackPane implements ViewObserver {
 /**

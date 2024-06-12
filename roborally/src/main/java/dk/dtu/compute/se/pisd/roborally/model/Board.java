@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
@@ -47,7 +48,6 @@ import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
  * @auhtor Jacob, s164958
  *
  */
-
 
 public class Board extends Subject {
     // @Expose
@@ -76,6 +76,20 @@ public class Board extends Subject {
     private int counter;
     // @Expose
     private boolean won = false;
+
+    /**
+     * Returns the program fields of the given player on the board.
+     *  @param playerNumber the number of the player
+     * @author Marcus s214942
+     */
+    public List<String> getProgramFields(int playerNumber) {
+        Player player = players.get(playerNumber);
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            list.add(player.getProgramField(i).getCard().getName());
+        }
+        return list;
+    }
 
     public int getCounter() {
         return counter;
@@ -200,11 +214,7 @@ public class Board extends Subject {
             notifyChange();
         }
     }
-
-    public int getNumPlayers() {
-        return players.size();
-    }
-
+    
     /**
      * Returns the phase of the game. Setters and getters for phase and step
      *
