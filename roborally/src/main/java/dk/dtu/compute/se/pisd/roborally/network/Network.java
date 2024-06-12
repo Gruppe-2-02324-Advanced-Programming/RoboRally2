@@ -12,6 +12,7 @@ public class Network {
      * Returns the IPv4 address of this computer.
      *
      * @return the IPv4 address as a String, or null if not found
+     * @author Marcus s214942
      */
     public static String getIPv4Address() {
         try {

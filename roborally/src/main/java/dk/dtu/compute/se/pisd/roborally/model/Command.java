@@ -78,6 +78,12 @@ public enum Command {
         return options;
     }
 
+
+
+    /**
+     * Method to get the command from the display name
+     * @author Marcus s214942
+     */
     public static Command fromDisplayName(String displayName) {
         for (Command command : Command.values()) {
             if (command.displayName.equalsIgnoreCase(displayName)) {

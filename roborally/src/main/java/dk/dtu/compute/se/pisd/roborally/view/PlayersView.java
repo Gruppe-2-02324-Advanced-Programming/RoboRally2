@@ -95,6 +95,7 @@ public class PlayersView extends TabPane implements ViewObserver {
      * Returnerer nummeret på den aktuelt valgte fane.
      * 
      * @return nummeret på den aktuelt valgte fane.
+     * @author Marcus s214942
      */
     public int getCurrentTabIndex() {
         return this.getSelectionModel().getSelectedIndex();
@@ -104,6 +105,7 @@ public class PlayersView extends TabPane implements ViewObserver {
      * Handles actions to be performed when the tab is changed.
      *
      * @param newIndex the index of the newly selected tab
+     * @author Marcus s214942
      */
     private void handleTabChange(int newIndex) {
         System.out.println("Current Tab Index: " + newIndex);

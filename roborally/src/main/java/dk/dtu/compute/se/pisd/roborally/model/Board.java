@@ -77,11 +77,15 @@ public class Board extends Subject {
     // @Expose
     private boolean won = false;
 
+    /**
+     * Returns the program fields of the given player on the board.
+     *  @param playerNumber the number of the player
+     * @author Marcus s214942
+     */
     public List<String> getProgramFields(int playerNumber) {
         Player player = players.get(playerNumber);
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            System.out.println("asdasasas" + player.getProgramField(i).getCard().toString());
             list.add(player.getProgramField(i).getCard().getName());
         }
         return list;
@@ -210,11 +214,7 @@ public class Board extends Subject {
             notifyChange();
         }
     }
-
-    public int getNumPlayers() {
-        return players.size();
-    }
-
+    
     /**
      * Returns the phase of the game. Setters and getters for phase and step
      *

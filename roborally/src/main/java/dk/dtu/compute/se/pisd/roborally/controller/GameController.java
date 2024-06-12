@@ -636,10 +636,20 @@ public class GameController {
         }
     }
 
+
+    /**
+     * Changes the current tab index to the new index
+     * @author Marcus s214942
+     */
     public void changeCurrentTabIndex(int newIndex) {
         currentTabIndex = newIndex;
     }
 
+
+    /**
+     * Pushes the cards of the player to the server and gets the cards of the other
+     * @author Marcus s214942
+     */
     public void getOtherPlayersCards() {
         int playersListLength = board.getPlayersNumber();
         for (int i = 0; i < playersListLength; i++) {
@@ -658,6 +668,10 @@ public class GameController {
 
     }
 
+    /**
+     * Pushes the cards of the player to the server
+     * @author Marcus s214942
+     */
     public void pushYourCards() {
         Long playerID = (long) playerNumber;
         List<String> cards = board.getProgramFields(playerNumber - 1);
