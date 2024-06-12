@@ -1,10 +1,10 @@
 package dk.dtu.compute.se.pisd.server.model;
-import jakarta.persistence.Entity;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Board {
 
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Integer gameId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer gameId;
 
     @Column(nullable = false)
     private int width;
@@ -44,5 +44,4 @@ private Integer gameId;
     private int totalCheckpoints = 0;
     private int counter;
     private boolean won = false;
-
 }

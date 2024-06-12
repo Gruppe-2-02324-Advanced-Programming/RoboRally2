@@ -108,7 +108,6 @@ public class Board extends Subject {
      * Creates a new board with the given width and height and the given name.
      *
      */
-
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
         this.width = width;
