@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
+import static dk.dtu.compute.se.pisd.roborally.model.Phase.Initialisation;
 
 /**
  *
@@ -65,7 +65,7 @@ public class Board extends Subject {
     @Expose
     private Player current;
     @Expose
-    private Phase phase = INITIALISATION;
+    private Phase phase = Initialisation;
     @Expose
     private int step = 0;
     // @Expose
@@ -342,9 +342,9 @@ public class Board extends Subject {
      *
      */
     public String getStatusMessage() {
-        return "Phase: " + getPhase().name() +
-                ", Player = " + getCurrentPlayer().getName() +
-                ", Counter " + counter;
+        return  getPhase().name() + " Phase, " +
+                getCurrentPlayer().getName() +
+                ", Turn Counter " + counter;
     }
 
 }

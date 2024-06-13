@@ -112,7 +112,7 @@ public class GameController {
      * @author Ekkart Kindler
      */
     public void startProgrammingPhase() {
-        board.setPhase(Phase.PROGRAMMING);
+        board.setPhase(Phase.Programming);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);
 
@@ -154,7 +154,7 @@ public class GameController {
     public void finishProgrammingPhase() {
         makeProgramFieldsInvisible();
         makeProgramFieldsVisible(0);
-        board.setPhase(Phase.ACTIVATION);
+        board.setPhase(Phase.Activation);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);
     }
@@ -218,7 +218,7 @@ public class GameController {
     private void continuePrograms() {
         do {
             executeNextStep();
-        } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
+        } while (board.getPhase() == Phase.Activation && !board.isStepMode());
     }
 
     /**
@@ -233,14 +233,14 @@ public class GameController {
      */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
-        if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
+        if (board.getPhase() == Phase.Activation && currentPlayer != null) {
             int step = board.getStep();
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
                     Command command = card.command;
                     if (command.isInteractive()) {
-                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        board.setPhase(Phase.Player_interaction);
                         return;
                     }
                     executeCommand(currentPlayer, command);
@@ -286,10 +286,10 @@ public class GameController {
     public void executeCommandOptionAndContinue(@NotNull Command option) {
         Player currentPlayer = board.getCurrentPlayer();
         if (currentPlayer != null &&
-                board.getPhase() == Phase.PLAYER_INTERACTION &&
+                board.getPhase() == Phase.Player_interaction &&
                 option != null)
             ;
-        board.setPhase(Phase.ACTIVATION);
+        board.setPhase(Phase.Activation);
         executeCommand(currentPlayer, option);
 
         int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
@@ -572,7 +572,7 @@ public class GameController {
      * should eventually be removed.
      */
     public void leftOrRight(Player player, Command option) {
-        if (player != null && option != null && player.board.getPhase() == Phase.PLAYER_INTERACTION) {
+        if (player != null && option != null && player.board.getPhase() == Phase.Player_interaction) {
             switch (option) {
                 case LEFT:
                     executeCommandOptionAndContinue(Command.LEFT);
@@ -622,7 +622,7 @@ public class GameController {
                 if (card != null && card.command != Command.AGAIN) {
                     Command command = card.command;
                     if (command.isInteractive()) {
-                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        board.setPhase(Phase.Player_interaction);
                         return;
                     }
                     executeCommand(player, command);
