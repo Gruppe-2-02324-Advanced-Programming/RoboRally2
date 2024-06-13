@@ -22,26 +22,19 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
-import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
-import dk.dtu.compute.se.pisd.roborally.controller.DoubleConveyorBelt;
-import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner;
-import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
-import dk.dtu.compute.se.pisd.roborally.controller.Gears;
+import dk.dtu.compute.se.pisd.roborally.controller.fields.Checkpoint;
+import dk.dtu.compute.se.pisd.roborally.controller.fields.ConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.fields.DoubleConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.fields.ConveyorBeltCorner;
+import dk.dtu.compute.se.pisd.roborally.controller.fields.FieldAction;
+import dk.dtu.compute.se.pisd.roborally.controller.fields.Gears;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.geometry.Pos;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import javafx.scene.image.Image;

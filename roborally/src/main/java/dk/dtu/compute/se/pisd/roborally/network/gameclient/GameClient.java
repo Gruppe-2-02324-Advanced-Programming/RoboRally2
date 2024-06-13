@@ -1,4 +1,4 @@
-package dk.dtu.compute.se.pisd.roborally.gameclient;
+package dk.dtu.compute.se.pisd.roborally.network.gameclient;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +16,9 @@ import java.util.Arrays;
 import java.util.List;
 
 
-
 /**
  * This class represents a game client that can update and retrieve player cards
+ *
  * @author Marcus s214942
  */
 @Component
@@ -30,14 +30,17 @@ public class GameClient extends JFrame {
 
     /**
      * Constructor for the game client
+     *
      * @author Marcus s214942
      */
     public GameClient() {
         this.restTemplate = new RestTemplate();
         initializeUI();
     }
+
     /**
      * Method to update the base url of the game client
+     *
      * @param ip the ip address of the server
      * @author Marcus s214942
      */
@@ -56,22 +59,21 @@ public class GameClient extends JFrame {
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.PUT, request, Void.class);
 
 
-
-
-
-        //udkommenteret kode virker ikke på min (Christoffer) og er ikke nødvendig for at programmet kører
 /*
+        //udkommenteret kode virker ikke på min (Christoffer) og er ikke nødvendig for at programmet kører
         if (response.getStatusCode().is2xxSuccessful()) {
             JOptionPane.showMessageDialog(this, "Player's cards updated successfully.");
         } else {
             JOptionPane.showMessageDialog(this,
                     "Failed to update player's cards. Status code: " + response.getStatusCode());
-        }*/
+        }
+ */
     }
 
 
     /**
      * Method to retrieve the cards of a player in a game
+     *
      * @author Marcus s214942
      */
     public List<String> getPlayerCards(Long gameId, Long playerId) {
@@ -83,6 +85,7 @@ public class GameClient extends JFrame {
 
     /**
      * Method to initialize the user interface of the game client
+     *
      * @author Marcus s214942
      */
     private void initializeUI() {
@@ -127,6 +130,7 @@ public class GameClient extends JFrame {
 
     /**
      * Main method to test the game client
+     *
      * @author Marcus s214942
      */
     public static void main(String[] args) {

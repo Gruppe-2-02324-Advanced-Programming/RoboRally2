@@ -21,12 +21,12 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import dk.dtu.compute.se.pisd.roborally.gameclient.GameClient;
+import dk.dtu.compute.se.pisd.roborally.controller.fields.FieldAction;
+import dk.dtu.compute.se.pisd.roborally.network.gameclient.GameClient;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

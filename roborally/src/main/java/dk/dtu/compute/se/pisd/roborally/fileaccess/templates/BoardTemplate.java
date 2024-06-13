@@ -19,33 +19,26 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package dk.dtu.compute.se.pisd.roborally.fileaccess.model;
-
-import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
+package dk.dtu.compute.se.pisd.roborally.fileaccess.templates;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * A template for a space. This template is used to create a space with a specific
- * position and a specific number of walls and actions. The space is created
- * by creating a number of walls and actions according to the template.
+ * A template for a board. This template is used to create a board with a
+ * specific size and a specific number of checkpoints. The board is created
+ * by creating a number of spaces according to the template.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- * @auhtor Christoffer, s205449
- * @auhtor Setare, s232629
- * @auhtor Phillip, s224278
- * @auhtor Emily, s191174
- * @auhtor Jacob, s164958
  *
  */
-public class SpaceTemplate {
+public class BoardTemplate {
 
-    public List<Heading> walls = new ArrayList<>();
-    public List<FieldAction> actions = new ArrayList<>();
+    public int width;
+    public int height;
+    public int totalCheckpoints;
 
-    public int x;
-    public int y;
+    public List<SpaceTemplate> spaces = new ArrayList<>();
 
 }
