@@ -55,7 +55,7 @@ import java.util.Objects;
  * to show the player on the space. Also, if there is a wall on the space, the view should update to show the wall. etc
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Emily, s191174
  */
 public class SpaceView extends StackPane implements ViewObserver {
 /**
@@ -147,14 +147,9 @@ public class SpaceView extends StackPane implements ViewObserver {
         // Check if the current space contains a ConveyorBeltCorner
         for (FieldAction action : space.getActions()) {
             if (action instanceof ConveyorBeltCorner conveyorBeltCorner) {
+
                 // Load the conveyor belt corner image
-                Image conveyorBeltCornerImage;
-                if (conveyorBeltCorner.getRotation() == Gears.LEFT_TURN) {
-                    conveyorBeltCornerImage = new Image("/assets/greenTurnLeft.png");
-                } else {
-                    conveyorBeltCornerImage = new Image("/assets/greenTurnRight.png");
-                }
-                ImageView conveyorBeltCornerView = new ImageView(conveyorBeltCornerImage);
+                ImageView conveyorBeltCornerView = new ImageView("/assets/greenTurnRight.png");
                 conveyorBeltCornerView.setFitWidth(SPACE_WIDTH);
                 conveyorBeltCornerView.setFitHeight(SPACE_HEIGHT);
                 conveyorBeltCornerView.setPreserveRatio(false);
