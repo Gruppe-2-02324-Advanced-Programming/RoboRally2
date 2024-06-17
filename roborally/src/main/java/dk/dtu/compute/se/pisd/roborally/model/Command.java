@@ -53,15 +53,12 @@ public enum Command {
 
     POWER_UP("Power Up", new Image("assets/powerupcard.png"));
 
-
-
-    @Expose
+    // @Expose
     final public String displayName;
 
     final private List<Command> options;
 
     final public Image cardImage;
-
 
     /**
      * The constructor for a command with a given display name and an image
@@ -79,6 +76,21 @@ public enum Command {
 
     public List<Command> getOptions() {
         return options;
+    }
+
+
+
+    /**
+     * Method to get the command from the display name
+     * @author Marcus s214942
+     */
+    public static Command fromDisplayName(String displayName) {
+        for (Command command : Command.values()) {
+            if (command.displayName.equalsIgnoreCase(displayName)) {
+                return command;
+            }
+        }
+        return FORWARD; // skal måske ændres..burde ikke komme her til return forward
     }
 
 }

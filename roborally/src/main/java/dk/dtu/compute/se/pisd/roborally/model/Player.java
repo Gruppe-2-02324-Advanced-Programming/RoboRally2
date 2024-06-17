@@ -28,7 +28,8 @@ import org.jetbrains.annotations.NotNull;
 import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
 
 /**
- * Class for the player in the game. This class is a subject of the observer pattern and can be observed by the GUI.
+ * Class for the player in the game. This class is a subject of the observer
+ * pattern and can be observed by the GUI.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Setare, s232629
@@ -44,7 +45,8 @@ public class Player extends Subject {
     final public static int NO_CARDS = 8;
 
     final public Board board;
-
+    @Expose
+    private int checkpoints = 0;
     @Expose
     private String name;
     @Expose
@@ -63,7 +65,6 @@ public class Player extends Subject {
     public String getRobotImage() {
         return robotImage;
     }
-
 
     /**
      * Constructor for the Player class.
@@ -87,7 +88,6 @@ public class Player extends Subject {
         }
     }
 
-
     /**
      * Method to get the name of the player.
      *
@@ -95,7 +95,6 @@ public class Player extends Subject {
     public String getName() {
         return name;
     }
-
 
     /**
      * Method to set the name of the player.
@@ -141,7 +140,6 @@ public class Player extends Subject {
         }
     }
 
-
     /**
      * Method to get the program of the player.
      *
@@ -159,10 +157,10 @@ public class Player extends Subject {
     public void setRobotImage(String robotImage) {
         this.robotImage = robotImage;
     }
+
     public Space getSpace() {
         return space;
     }
-
 
     /**
      * Method to set the space of the player.
@@ -182,7 +180,6 @@ public class Player extends Subject {
             notifyChange();
         }
     }
-
 
     /**
      * Method to get the heading of the player.
@@ -206,7 +203,8 @@ public class Player extends Subject {
     }
 
     /**
-     * Getters and setters for the program and cards of the player. Also the checkpoints.
+     * Getters and setters for the program and cards of the player. Also the
+     * checkpoints.
      *
      */
     public CommandCardField getProgramField(int i) {
@@ -228,7 +226,8 @@ public class Player extends Subject {
     private int energyCubes = 0; // Field to store energy cubes
 
     /**
-     * Adds one energy cube to the player's current count. This method should be called
+     * Adds one energy cube to the player's current count. This method should be
+     * called
      * when a Power Up card is played.
      *
      * @author Emily, s191174
@@ -245,17 +244,5 @@ public class Player extends Subject {
     public int getEnergyCubes() {
         return energyCubes;
     }
-    private int checkpoints = 0;
-
-    /**
-     * Get the total number of checkpoints collected by the player.
-     * @return the number of checkpoints
-     */
-    public int getTotalCheckpoints() {
-        return checkpoints;  // Assuming 'checkpoints' is the variable storing the checkpoint count.
-    }
-
-
-
 
 }

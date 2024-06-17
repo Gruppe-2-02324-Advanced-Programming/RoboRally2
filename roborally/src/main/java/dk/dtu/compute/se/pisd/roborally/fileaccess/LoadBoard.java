@@ -35,9 +35,13 @@ import dk.dtu.compute.se.pisd.roborally.model.Space;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.json.JSONObject;
+import java.nio.file.Files;
 
 /**
  * A class to load a board from a file. The board is stored in a JSON file.
@@ -47,18 +51,19 @@ import java.util.List;
 public class LoadBoard {
     /**
      * @author Christoffer s205449
-     * <p>
-     *     This class is used to load a board from a file. The board is stored in a JSON file.
-     *     The class also contains methods to save the current game and load a saved game still in todo.
+     *         <p>
+     *         This class is used to load a board from a file. The board is stored
+     *         in a JSON file.
+     *         The class also contains methods to save the current game and load a
+     *         saved game still in todo.
      */
     private static final String BOARDSFOLDER = "boards";
     private static final String DEFAULTBOARD = "defaultboard";
-    private static final String[] BOARDS = new String[]{"defaultboard", "circleJerk", "Wooooow"};
+    private static final String[] BOARDS = new String[] { "defaultboard", "circleJerk", "Wooooow" };
     public static final String JSON_EXT = "json";
     public static final int BOARD_WIDTH = 16;
     public static final int BOARD_HEIGHT = 8;
     public static final String SAVED_GAMES_FOLDER = "roborally/src/main/resources/savedGames";
-
 
     public static List<String> getBoards() {
         List<String> boards = new ArrayList<>();
@@ -78,14 +83,12 @@ public class LoadBoard {
         Gson gson = builder.create();
 
         try (FileWriter fileWriter = new FileWriter(filename);
-             JsonWriter writer = gson.newJsonWriter(fileWriter)) {
+                JsonWriter writer = gson.newJsonWriter(fileWriter)) {
             gson.toJson(board, Board.class, writer);
         } catch (IOException e) {
             System.out.println(e);
         }
-
     }
-
 
     /**
      * Loads a board from a file. The board is stored in a JSON file.
@@ -103,8 +106,8 @@ public class LoadBoard {
         }
 
         // In simple cases, we can create a Gson object with new Gson():
-        GsonBuilder simpleBuilder = new GsonBuilder().
-                registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
+        GsonBuilder simpleBuilder = new GsonBuilder().registerTypeAdapter(FieldAction.class,
+                new Adapter<FieldAction>());
         Gson gson = simpleBuilder.create();
 
         Board result;
@@ -143,8 +146,8 @@ public class LoadBoard {
         }
         return null;
 
-
     }
+
     public static Board loadGame(String gameName) {
         String filename = SAVED_GAMES_FOLDER + File.separator + gameName + "." + JSON_EXT;
 
@@ -155,7 +158,7 @@ public class LoadBoard {
         Gson gson = builder.create();
 
         try (FileReader fileReader = new FileReader(filename);
-             JsonReader reader = gson.newJsonReader(fileReader)) {
+                JsonReader reader = gson.newJsonReader(fileReader)) {
             return gson.fromJson(reader, Board.class);
         } catch (IOException e) {
             System.out.println(e);
@@ -163,9 +166,35 @@ public class LoadBoard {
         }
     }
 
+    public static JSONObject loadJSON(String gameName) {
+        String filePath = SAVED_GAMES_FOLDER + File.separator + gameName + "." + JSON_EXT;
+        File file = new File(filePath);
+
+        // Check if the file exists
+        if (!file.exists()) {
+            System.err.println("File not found: " + filePath);
+            return null;
+        }
+
+        // Read the file content
+        String content;
+        try {
+            content = new String(Files.readAllBytes(Paths.get(filePath)));
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + filePath);
+            e.printStackTrace();
+            return null;
+        }
+
+        // Parse the JSON content
+        try {
+            JSONObject jsonObject = new JSONObject(content);
+            return jsonObject;
+        } catch (org.json.JSONException e) {
+            System.err.println("Error parsing JSON content from the file: " + filePath);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
-
-
-
-
-

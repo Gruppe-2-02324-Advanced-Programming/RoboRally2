@@ -37,17 +37,21 @@ import java.util.List;
  */
 public class Space extends Subject {
     /**
-     * The player that is on this space (or null, if there is no player on this space).
+     * The player that is on this space (or null, if there is no player on this
+     * space).
      */
+
     private Player player;
     /**
      * The walls around this space.
      */
+    // @Expose
     private List<Heading> walls = new ArrayList<>();
 
     /**
      * The actions that can be performed on this space.
      */
+    // @Expose
     private List<FieldAction> actions = new ArrayList<>();
     /**
      * The board to which this space belongs.
@@ -65,12 +69,13 @@ public class Space extends Subject {
      */
     @Expose
     public final int y;
-/**
+
+    /**
      * The constructor of the space.
      *
      * @param board the board to which this space belongs.
-     * @param x the x-coordinate of this space on the board.
-     * @param y the y-coordinate of this space on the board.
+     * @param x     the x-coordinate of this space on the board.
+     * @param y     the y-coordinate of this space on the board.
      */
 
     public Space(Board board, int x, int y) {
@@ -79,10 +84,12 @@ public class Space extends Subject {
         this.y = y;
         player = null;
     }
-/**
+
+    /**
      * Get the player that is on this space.
      *
-     * @return the player that is on this space (or null, if there is no player on this space).
+     * @return the player that is on this space (or null, if there is no player on
+     *         this space).
      */
     public Player getPlayer() {
         return player;
@@ -91,7 +98,8 @@ public class Space extends Subject {
     /**
      * Set the player that is on this space.
      *
-     * @param player the player that is on this space (or null, if there is no player on this space).
+     * @param player the player that is on this space (or null, if there is no
+     *               player on this space).
      */
     public void setPlayer(Player player) {
         Player oldPlayer = this.player;
@@ -111,6 +119,7 @@ public class Space extends Subject {
 
     /**
      * This method adds walls as field action
+     * 
      * @author Christoffer Fink s205449
      * @return the walls around this space.
      */
@@ -120,6 +129,7 @@ public class Space extends Subject {
 
     /**
      * This method adds actions as field action
+     * 
      * @return the actions that can be performed on this space.
      */
 
@@ -129,24 +139,28 @@ public class Space extends Subject {
 
     /**
      * This method adds walls as field action
+     * 
      * @param wall the wall to be added to this space.
      */
 
     public void addWall(Heading wall) {
-        if(!walls.contains(wall))
+        if (!walls.contains(wall))
             walls.add(wall);
     }
-/**
+
+    /**
      * This method adds actions as field action
+     * 
      * @param action the action to be added to this space.
      */
     public void addAction(FieldAction action) {
-        if(!actions.contains(action))
+        if (!actions.contains(action))
             actions.add(action);
     }
-/**
+
+    /**
      * This method removes walls as field action
- */
+     */
     void playerChanged() {
         // This is a minor hack; since some views that are registered with the space
         // also need to update when some player attributes change, the player can
