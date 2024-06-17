@@ -180,26 +180,39 @@ public class PlayerView extends Tab implements ViewObserver {
 
         playerNo = new Label("Player " + gameController.getPlayerNumber());
 
+
+        /*
         pull = new Button("pull");
         pull.setOnAction(e -> {
             gameController.getOtherPlayersCards();
         });
-
+         */
+/*
         push = new Button("push");
         push.setOnAction(e -> {
             gameController.pushYourCards();
         });
 
-        finishButton = new Button("Finish Programming");
-        finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
+        */
 
+
+        finishButton = new Button("Finish Programming");
+        finishButton.setOnAction(e -> {
+            gameController.finishProgrammingPhase();
+            gameController.pushYourCards();
+        });
         executeButton = new Button("Execute Program");
-        executeButton.setOnAction(e -> gameController.executePrograms());
+        executeButton.setOnAction(e -> {
+            gameController.getOtherPlayersCards();
+            gameController.executePrograms();
+        });
+
 
         stepButton = new Button("Execute Current Register");
         stepButton.setOnAction(e -> gameController.executeStep());
 
-        buttonPanel = new VBox(finishButton, executeButton, stepButton, pull, push, playerNo);
+        buttonPanel = new VBox(finishButton, executeButton, stepButton, playerNo);
+
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
         buttonPanel.setSpacing(3.0);
         // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now
@@ -232,7 +245,6 @@ public class PlayerView extends Tab implements ViewObserver {
             update(player.board);
         }
     }
-
     /**
      * This method is called when the observed subject changes.
      *

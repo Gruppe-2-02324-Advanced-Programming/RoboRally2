@@ -54,6 +54,7 @@ import java.util.List;
 @RestController
 public class GameController {
 
+
     public Board board;
 
     public GameClient gameClient;
@@ -651,6 +652,7 @@ public class GameController {
      * @author Marcus s214942
      */
     public void getOtherPlayersCards() {
+        System.out.println("Getting cards...");
         int playersListLength = board.getPlayersNumber();
         for (int i = 0; i < playersListLength; i++) {
             Long ID = (long) (i + 1);
@@ -662,6 +664,7 @@ public class GameController {
                 Command command = Command.fromDisplayName(cards.get(j));
                 to.setCard(new CommandCard(command));
                 moveCards(from, to);
+                System.out.println("Cards gotten");
             }
 
         }
@@ -673,9 +676,12 @@ public class GameController {
      * @author Marcus s214942
      */
     public void pushYourCards() {
+        System.out.println("Pushing cards...");
         Long playerID = (long) playerNumber;
         List<String> cards = board.getProgramFields(playerNumber - 1);
         gameClient.updatePlayerCards(1L, playerID, cards);
+        System.out.println("Cards pushed");
+
     }
 
     public void updateBaseUrl(String ip) {
