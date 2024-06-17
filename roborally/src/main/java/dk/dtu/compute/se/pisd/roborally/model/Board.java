@@ -77,6 +77,8 @@ public class Board extends Subject {
     // @Expose
     private boolean won = false;
 
+    private Long gameID;
+
     public List<String> getProgramFields(int playerNumber) {
         Player player = players.get(playerNumber);
         List<String> list = new ArrayList<>();
@@ -123,6 +125,7 @@ public class Board extends Subject {
         this.boardName = boardName;
         this.width = width;
         this.height = height;
+        this.gameID = 1L;
         spaces = new Space[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -136,6 +139,14 @@ public class Board extends Subject {
 
     public Board(int width, int height) {
         this(width, height, "defaultboard");
+    }
+
+    public void setGameID(Long gameID) {
+        this.gameID = gameID;
+    }
+
+    public Long getGameID() {
+        return this.gameID;
     }
 
     public Integer getGameId() {

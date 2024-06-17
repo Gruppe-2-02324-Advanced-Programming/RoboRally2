@@ -38,6 +38,7 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import dk.dtu.compute.se.pisd.roborally.network.Network;
+import dk.dtu.compute.se.pisd.roborally.view.GameDialogs;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -86,7 +87,7 @@ public class AppController implements Observer {
     @GetMapping("/test")
     public String testEndpoint() {
         return "Hello, this is a test endpoint from AppController!";
-    }
+    } // fjern dden her...
 
     private GameController gameController;
 
@@ -108,12 +109,10 @@ public class AppController implements Observer {
      *
      * @author Ekkart Kindler, ekki@dtu.dk
      * @author Christoffer s205449
+     * @author Marcus s214962
      */
     public void newGame() {
-        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
-        dialog.setTitle("Player number");
-        dialog.setHeaderText("Select number of players");
-        Optional<Integer> result = dialog.showAndWait();
+        Optional<Integer> result = GameDialogs.showPlayerNumberDialog(PLAYER_NUMBER_OPTIONS);
 
         if (result.isPresent()) {
             if (gameController != null) {
@@ -139,41 +138,46 @@ public class AppController implements Observer {
             }
             board.setCurrentPlayer(board.getPlayer(0));
 
-            // Opret en TextInputDialog
-            TextInputDialog dialogip = new TextInputDialog(Network.getIPv4Address());
-            dialog.setTitle("Insert ip");
-            dialog.setHeaderText("Enter the server IP");
-            dialog.setContentText("URL:");
-
-            // Vis dialogboksen og vent på brugerinput
-            Optional<String> ip = dialogip.showAndWait();
+            Optional<String> ip = GameDialogs.showIpInputDialog(Network.getIPv4Address());
 
             ip.ifPresent(url -> {
                 gameController.updateBaseUrl(url);
             });
 
-            List<Integer> choices = new ArrayList<>();
-            for (int i = 1; i <= no; i++) {
-                choices.add(i);
+            /*
+             * Optional<Integer> playerNumber = GameDialogs.showPlayerSelectionDialog(no);
+             * 
+             * playerNumber.ifPresent(number -> {
+             * gameController.setPlayerNumber(number);
+             * });
+             */
+
+            Optional<String> hostOrJoin = GameDialogs.showHostOrJoinDialog();
+
+            Long gameID;
+            if (hostOrJoin.isPresent() && hostOrJoin.get().equals("Host Game")) {
+                gameID = gameController.gameClient.createGame();
+            } else {
+                Optional<Integer> joingameID = GameDialogs.showIntegerInputDialog("Join game with ID",
+                        "Join game with ID", "Join game with ID:");
+                if (joingameID.isPresent()) {
+                    gameID = (long) joingameID.get();
+                } else {
+                    gameID = 1L;
+                }
             }
 
-            // Create the ChoiceDialog with default choice as 1
-            ChoiceDialog<Integer> playerNo = new ChoiceDialog<>(choices.get(0), choices);
-            playerNo.setTitle("Select Number");
-            playerNo.setHeaderText("Choose a number between 1 and max players");
-            playerNo.setContentText("Number:");
+            String nickName = GameDialogs.showNameInputDialog("Name", "name", "Name");
 
-            // Show dialog and wait for user input
-            Optional<Integer> playerNumber = playerNo.showAndWait();
+            Long playerID = gameController.gameClient.addPlayer(gameID, nickName);
 
-            playerNumber.ifPresent(number -> {
-                gameController.setPlayerNumber(number);
-            });
+            gameController.setPlayerNumber(playerID.intValue());
+
+            gameController.board.setGameID(gameID);
 
             gameController.startProgrammingPhase();
 
             roboRally.createBoardView(gameController);
-
         }
     }
 

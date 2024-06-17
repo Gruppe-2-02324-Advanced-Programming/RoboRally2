@@ -110,6 +110,8 @@ public class PlayerView extends Tab implements ViewObserver {
 
     private Label playerNo;
 
+    private Label gameID;
+
     /**
      * The button to pull opponents cards from the server.
      */
@@ -177,6 +179,7 @@ public class PlayerView extends Tab implements ViewObserver {
         // refactored.
 
         playerNo = new Label("Player " + gameController.getPlayerNumber());
+        gameID = new Label("GameID: " + gameController.board.getGameID().intValue());
 
         pull = new Button("pull");
         pull.setOnAction(e -> {
@@ -197,7 +200,7 @@ public class PlayerView extends Tab implements ViewObserver {
         stepButton = new Button("Execute Current Register");
         stepButton.setOnAction(e -> gameController.executeStep());
 
-        buttonPanel = new VBox(finishButton, executeButton, stepButton, pull, push, playerNo);
+        buttonPanel = new VBox(finishButton, executeButton, stepButton, pull, push, playerNo, gameID);
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
         buttonPanel.setSpacing(3.0);
         // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now

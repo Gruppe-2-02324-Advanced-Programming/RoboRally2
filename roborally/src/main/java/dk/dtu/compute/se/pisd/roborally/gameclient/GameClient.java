@@ -88,6 +88,27 @@ public class GameClient extends JFrame {
         add(getButton);
     }
 
+    public Long createGame() {
+        String url = baseUrl + "/createGame";
+        ResponseEntity<Long> response = restTemplate.postForEntity(url, null, Long.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Failed to create game. Status code: " + response.getStatusCode());
+            return null;
+        }
+    }
+
+    public Long addPlayer(Long gameId, String playerName) {
+        String url = baseUrl + "/" + gameId + "/addPlayer?playerName=" + playerName;
+        ResponseEntity<Long> response = restTemplate.postForEntity(url, null, Long.class);
+
+        return response.getBody();
+
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
