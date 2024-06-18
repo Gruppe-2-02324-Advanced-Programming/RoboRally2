@@ -48,6 +48,8 @@ public class Space extends Subject {
     // @Expose
     private List<Heading> walls = new ArrayList<>();
 
+    private List<Heading> lasers = new ArrayList<>();
+
     /**
      * The actions that can be performed on this space.
      */
@@ -127,6 +129,10 @@ public class Space extends Subject {
         return walls;
     }
 
+    public List<Heading> getLasers() {
+        return lasers;
+    }
+
     /**
      * This method adds actions as field action
      * 
@@ -146,6 +152,11 @@ public class Space extends Subject {
     public void addWall(Heading wall) {
         if (!walls.contains(wall))
             walls.add(wall);
+    }
+
+    public void addLaser(Heading laser) {
+        if (!lasers.contains(laser) && walls.contains(laser))
+            lasers.add(laser);
     }
 
     /**

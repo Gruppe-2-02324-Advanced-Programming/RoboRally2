@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.function.ToDoubleBiFunction;
 
 /**
  * Controller for managing the game logic of RoboRally. It handles player
@@ -38,7 +39,7 @@ import java.util.List;
  * and moving players on the board based on their chosen command cards.
  * <p>
  * Usage:
- * 
+ *
  * <pre>{@code
  * Board board = new Board(8, 8);
  * GameController controller = new GameController(board);
@@ -48,6 +49,8 @@ import java.util.List;
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Emily, s191174
+ * @author Jacob, s164958
+ * @author Setare, s232629
  */
 
 @RestController
@@ -63,9 +66,9 @@ public class GameController {
 
     /**
      * Constructor for the GameController.
-     * 
-     * @author Ekkart Kindler
+     *
      * @param board the board to which the controller is connected
+     * @author Ekkart Kindler
      */
     public GameController(@NotNull Board board) {
         this.board = board;
@@ -78,9 +81,9 @@ public class GameController {
      * This is just some dummy controller operation to make a simple move to see
      * something
      * happening on the board. This method should eventually be deleted!
-     * 
-     * @author Ekkart Kindler
+     *
      * @param space the space to which the current player should move
+     * @author Ekkart Kindler
      */
     public void moveCurrentPlayerToSpace(@NotNull Space space) {
         Player currentPlayer = board.getCurrentPlayer();
@@ -134,9 +137,9 @@ public class GameController {
 
     /**
      * This method generates a random command card.
-     * 
-     * @author Ekkart Kindler
+     *
      * @return a random command card
+     * @author Ekkart Kindler
      */
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
@@ -147,7 +150,7 @@ public class GameController {
     /**
      * This method ends the programming phase, which makes the execute button active
      * to press.
-     * 
+     *
      * @author Ekkart Kindler
      */
     public void finishProgrammingPhase() {
@@ -161,10 +164,10 @@ public class GameController {
     /**
      * This method makes the program fields of the players visible for the given
      * register.
-     * 
-     * @author Ekkart Kindler
+     *
      * @param register the register for which the program fields should be made
      *                 visible
+     * @author Ekkart Kindler
      */
     private void makeProgramFieldsVisible(int register) {
         if (register >= 0 && register < Player.NO_REGISTERS) {
@@ -180,7 +183,6 @@ public class GameController {
      * This method makes the program fields of the players invisible. This is used
      * to hide the program
      * fields after the programming phase has ended.
-     *
      */
     private void makeProgramFieldsInvisible() {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
@@ -227,7 +229,7 @@ public class GameController {
      * method does nothing.
      * If the step is the last step of the current player, the method starts the
      * programming phase.
-     * 
+     *
      * @author Emily, s191174
      */
     private void executeNextStep() {
@@ -244,6 +246,7 @@ public class GameController {
                     }
                     executeCommand(currentPlayer, command);
                 }
+                // shootLaser();
                 int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
@@ -279,7 +282,7 @@ public class GameController {
 
     /**
      * This method executes the given command for the specified player.
-     * 
+     *
      * @author Christoffer, s205449
      */
     public void executeCommandOptionAndContinue(@NotNull Command option) {
@@ -320,9 +323,11 @@ public class GameController {
      * POWER_UP,
      * the player will receive one energy cube.
      *
-     * @author Emily, s191174
      * @param player  the player to whom the command will apply
      * @param command the command to be executed
+     * @author Emily, s191174
+     * @author Jacob, s164958
+     * @author Setare, s232629
      */
     // XXX: V2
     private void executeCommand(@NotNull Player player, Command command) {
@@ -361,6 +366,9 @@ public class GameController {
                     break;
                 case POWER_UP:
                     player.addEnergyCube();
+                    break;
+                case SPAM:
+                    this.spam(player);
                     break;
                 default:
                     // DO NOTHING (for now)
@@ -402,18 +410,17 @@ public class GameController {
     }
 
     /**
-     *
      * @param player the player to move forward
      * @author Christoffer, s205449
-     *         <p>
-     *         <p>
-     *         The moveForward has been slightly modified with a catch statement at
-     *         the bottom, however it has been set to be ignored since it doesn't do
-     *         anything
-     *         Moves a player one space forward in the direction they are currently
-     *         facing.
-     *         If the movement is not possible (e.g., due to a wall), the action is
-     *         ignored.
+     * <p>
+     * <p>
+     * The moveForward has been slightly modified with a catch statement at
+     * the bottom, however it has been set to be ignored since it doesn't do
+     * anything
+     * Moves a player one space forward in the direction they are currently
+     * facing.
+     * If the movement is not possible (e.g., due to a wall), the action is
+     * ignored.
      */
     public void moveForwardLogic(Player player) {
         if (board != null && player != null && player.board == board) {
@@ -435,8 +442,8 @@ public class GameController {
 
     /**
      * @author Christoffer, s205449
-     *         Same function as moveForward, however the method is set two times to
-     *         get the fastForward function
+     * Same function as moveForward, however the method is set two times to
+     * get the fastForward function
      */
     public void fastForward(@NotNull Player player) {
         moveForwardLogic(player);
@@ -449,7 +456,7 @@ public class GameController {
      * This is done by calling {@code moveForward} method three times.
      *
      * @param player the player to move three spaces forward
-     * @author Setare Izadi, s232629@dtu.dk
+     * @author Setare Izadi, s232629
      */
     public void moveThree(Player player) {
         moveForwardLogic(player);
@@ -463,11 +470,11 @@ public class GameController {
      * @param heading
      * @throws moveNotPossibleException
      * @author Christoffer, s205449
-     *         <p>
-     *         The movePlayerToSpace which relocates the pushed player to the next
-     *         space which the pushing player is heading.
-     *         If none of the criteria met the moveNotPossibleException will be
-     *         thrown.
+     * <p>
+     * The movePlayerToSpace which relocates the pushed player to the next
+     * space which the pushing player is heading.
+     * If none of the criteria met the moveNotPossibleException will be
+     * thrown.
      */
     public void movePlayerToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading)
             throws moveNotPossibleException {
@@ -487,7 +494,7 @@ public class GameController {
         }
         /**
          * @author Christoffer Fink 205449
-         *         Does so the player can't wall through the walls
+         * Does so the player can't wall through the walls
          */
         if (player.getSpace() != null) {
             if (player.getSpace().getWalls() != null) {
@@ -588,8 +595,25 @@ public class GameController {
     }
 
     /**
+     * @author Setare, s232629
+     * @author Jacob, s164958
+     * We've created spam method, not fully done yet
+     */
+    public void spam(Player player) {
+        if (player != null && player.board == board) {
+            System.out.println("SPAM");
+            /*
+            commandCard card = player.getProgramField(board.getStep()).setCard(player.deck.draw(1));
+             */
+        }
+    }
+/** ToDo Jacob: Implement cleanup to discard
+ *
+ */
+
+    /**
      * Sets the board of the controller.
-     * 
+     *
      * @param board the board to be set
      */
     public void setBoard(Board board) {
@@ -598,7 +622,7 @@ public class GameController {
 
     /**
      * Gets the board of the controller.
-     * 
+     *
      * @return the board of the controller
      */
     public Board getBoard() {
@@ -609,9 +633,9 @@ public class GameController {
      * Repeats the command card in the previous register of the player. If it is the
      * first card it does nothing,
      * if the previous card is an again card it will repeat the card before that.
-     * 
-     * @author Jacob, s164958
+     *
      * @param player the player to repeat the command card for
+     * @author Jacob, s164958
      */
     public void again(Player player) {
         if (player != null && player.board == board) {
@@ -635,9 +659,20 @@ public class GameController {
         }
     }
 
+    /**
+     * @author Jacob, s164958
+     * @author Setare, s232629
+     * @param player
+     *
+     * This method is used to shoot the laser at the player
+     */
+    public void shootLaser(Player player) {
+        // player.getSpace();
+    }
 
     /**
      * Changes the current tab index to the new index
+     *
      * @author Marcus s214942
      */
     public void changeCurrentTabIndex(int newIndex) {
@@ -647,6 +682,7 @@ public class GameController {
 
     /**
      * Pushes the cards of the player to the server and gets the cards of the other
+     *
      * @author Marcus s214942
      */
     public void getOtherPlayersCards() {
@@ -669,6 +705,7 @@ public class GameController {
 
     /**
      * Pushes the cards of the player to the server
+     *
      * @author Marcus s214942
      */
     public void pushYourCards() {
