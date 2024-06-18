@@ -595,41 +595,6 @@ public class GameController {
     }
 
     /**
-     * @author Setare, s232629
-     * @author Jacob, s164958
-     * We've created spam method, not fully done yet
-     */
-    public void spam(Player player) {
-        if (player != null && player.board == board) {
-            System.out.println("SPAM");
-            /*
-            commandCard card = player.getProgramField(board.getStep()).setCard(player.deck.draw(1));
-             */
-        }
-    }
-/** ToDo Jacob: Implement cleanup to discard
- *
- */
-
-    /**
-     * Sets the board of the controller.
-     *
-     * @param board the board to be set
-     */
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
-    /**
-     * Gets the board of the controller.
-     *
-     * @return the board of the controller
-     */
-    public Board getBoard() {
-        return this.board;
-    }
-
-    /**
      * Repeats the command card in the previous register of the player. If it is the
      * first card it does nothing,
      * if the previous card is an again card it will repeat the card before that.
@@ -658,6 +623,59 @@ public class GameController {
             }
         }
     }
+
+    /**
+     * @author Setare, s232629
+     * @author Jacob, s164958
+     * We've created spam method, not fully done yet
+     */
+    public void spam(Player player) {
+        if (player != null && player.board == board) {
+            System.out.println("SPAM");
+            CommandCardField currentRegister = player.getProgramField(board.getStep());
+            currentRegister.setCard(player.getDrawpile().draw(player.getDrawpile(), player.getDiscardpile()));
+            executeCommand(player, currentRegister.getCard().command);
+        }
+    }
+/**
+ * @author Jacob, s164958
+ * @author Setare, s232629
+ * This method is used to clean up the program fields of the players
+ */
+    public void cleanup() {
+        for (Player player : board.getPlayers()) {
+            for (int i = 0; i < Player.NO_REGISTERS; i++) {
+                CommandCardField field = player.getProgramField(i);
+                CommandCard card = field.getCard();
+                if (card != null) {
+                    player.getDiscardpile().getCards()[player.getDiscardpile().size()] = card;
+                    player.getDiscardpile().size();
+                    field.setCard(null);
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets the board of the controller.
+     *
+     * @param board the board to be set
+     */
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    /**
+     * Gets the board of the controller.
+     *
+     * @return the board of the controller
+     */
+    public Board getBoard() {
+        return this.board;
+    }
+
+
+
 
     /**
      * @author Jacob, s164958

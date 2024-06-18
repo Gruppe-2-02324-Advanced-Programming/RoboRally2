@@ -1,6 +1,8 @@
 package dk.dtu.compute.se.pisd.roborally.model;
 
- /**
+import org.jetbrains.annotations.NotNull;
+
+/**
   * A class for the decks in the game
   * @author jacob, s164958
   */
@@ -23,6 +25,9 @@ public class Deck {
         return cards.length;
     }
 
+    public void empty() {
+        cards = new CommandCard[0];
+    }
     public void shuffle() {
         for (int i = 0; i < cards.length; i++) {
             int j = (int) (Math.random() * cards.length);
@@ -32,25 +37,22 @@ public class Deck {
         }
     }
 
-    public void resuffle(Deck deck) {
-        CommandCard[] newCards = new CommandCard[cards.length + deck.size()];
-        for (int i = 0; i < cards.length; i++) {
-            newCards[i] = cards[i];
-        }
-        for (int i = 0; i < deck.size(); i++) {
-            newCards[i + cards.length] = deck.getCard(i);
-        }
-        cards = newCards;
-        shuffle();
+    public Deck resuffle(Deck deck) {
+        Deck newDeck = new Deck(deck.getCards());
+        newDeck.shuffle();
+        deck.empty();
+        return newDeck;
     }
 
-    public CommandCard drawCard(int index) {
-        CommandCard card = cards[index];
-        CommandCard[] newCards = new CommandCard[cards.length - 1];
-        for (int i = 0; i < newCards.length; i++) {
-            newCards[i] = cards[i + 1];
+    public CommandCard draw(Deck deck, Deck feedDeck) {
+        if (deck.size() == 0) {
+            deck = resuffle(feedDeck);
         }
-        cards = newCards;
+        CommandCard card = deck.getCard(0);
+        CommandCard[] newDeck = new CommandCard[deck.size() - 1];
+        for (int i = 0; i < newDeck.length; i++) {
+            newDeck[i] = deck.getCard(i + 1);
+        }
         return card;
     }
 }

@@ -249,4 +249,19 @@ public class Player extends Subject {
         return energyCubes;
     }
 
+    public Deck getDrawpile() {
+        return drawpile;
+    }
+
+    public void setDrawpile(Deck drawpile) {
+        this.drawpile = drawpile;
+    }
+
+    public Deck getDiscardpile() {
+        return discardpile;
+    }
+
+    public void setDiscardpile(Deck discardpile) {
+        this.discardpile = discardpile;
+    }
 }
