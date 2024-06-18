@@ -55,4 +55,34 @@ public class Deck {
         }
         return card;
     }
+
+    /**
+     * This method creates a default deck for the game.
+     *
+     * @return A deck
+     */
+    public Deck getDefaultDeck() {
+        CommandCard[] cards = new CommandCard[20];
+        cards[0] = new CommandCard(Command.FORWARD);
+        cards[1] = new CommandCard(Command.FORWARD);
+        cards[2] = new CommandCard(Command.FORWARD);
+        cards[3] = new CommandCard(Command.RIGHT);
+        cards[4] = new CommandCard(Command.RIGHT);
+        cards[5] = new CommandCard(Command.LEFT);
+        cards[6] = new CommandCard(Command.LEFT);
+        cards[7] = new CommandCard(Command.FAST_FORWARD);
+        cards[8] = new CommandCard(Command.FAST_FORWARD);
+        cards[9] = new CommandCard(Command.FORWARD_THREE);
+        cards[10] = new CommandCard(Command.FORWARD_THREE);
+        cards[11] = new CommandCard(Command.BACKUP);
+        cards[12] = new CommandCard(Command.BACKUP);
+        cards[13] = new CommandCard(Command.LEFT);
+        cards[14] = new CommandCard(Command.UTURN);
+        cards[15] = new CommandCard(Command.OPTION_LEFT_RIGHT);
+        cards[16] = new CommandCard(Command.FORWARD);
+        cards[17] = new CommandCard(Command.RIGHT);
+        cards[18] = new CommandCard(Command.AGAIN);
+        cards[19] = new CommandCard(Command.POWER_UP);
+        return new Deck(cards);
+    }
 }

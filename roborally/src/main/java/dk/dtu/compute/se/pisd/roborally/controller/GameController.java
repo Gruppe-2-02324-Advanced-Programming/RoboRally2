@@ -128,6 +128,7 @@ public class GameController {
                 }
                 for (int j = 0; j < Player.NO_CARDS; j++) {
                     CommandCardField field = player.getCardField(j);
+                    //field.setCard(player.getDrawpile().draw(player.getDrawpile(), player.getDiscardpile()));
                     field.setCard(generateRandomCommandCard());
                     field.setVisible(true);
                 }
@@ -267,6 +268,7 @@ public class GameController {
                         board.setCurrentPlayer(board.getPlayer(0));
 
                     } else {
+                        //cleanup();
                         startProgrammingPhase();
                     }
                 }

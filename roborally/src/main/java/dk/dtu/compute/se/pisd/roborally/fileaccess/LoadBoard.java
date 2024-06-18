@@ -28,7 +28,9 @@ import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.templates.BoardTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.templates.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.Deck;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -191,6 +193,51 @@ public class LoadBoard {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Loads a deck from a file. The deck is stored in a JSON file, doesn't work
+     *
+     */
+    public static Deck loadDeck(String deckName) {
+        if (deckName == null) {
+            deckName = "defaultDeck";
+        }
+
+        ClassLoader classLoader = LoadBoard.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("decks/" + deckName + "." + JSON_EXT);
+        if (inputStream == null) {
+            return new Deck(new CommandCard[0]);
+        }
+
+        GsonBuilder simpleBuilder = new GsonBuilder().registerTypeAdapter(CommandCard.class, new Adapter<CommandCard>());
+        Gson gson = simpleBuilder.create();
+
+        Deck result;
+
+        JsonReader reader = null;
+        try {
+            reader = gson.newJsonReader(new InputStreamReader(inputStream));
+            CommandCard[] cards = gson.fromJson(reader, CommandCard[].class);
+            result = new Deck(cards);
+            reader.close();
+            return result;
+        } catch (IOException e1) {
+            if (reader != null) {
+                try {
+                    reader.close();
+                    inputStream = null;
+                } catch (IOException e2) {
+                }
+            }
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e2) {
+                }
+            }
+        }
+    return null;
     }
 
 }
