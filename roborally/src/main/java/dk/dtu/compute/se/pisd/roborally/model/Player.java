@@ -60,6 +60,10 @@ public class Player extends Subject {
     @Expose
     private CommandCardField[] cards;
 
+    private Deck drawpile;
+
+    private Deck discardpile;
+
     private String robotImage;
 
     public String getRobotImage() {
