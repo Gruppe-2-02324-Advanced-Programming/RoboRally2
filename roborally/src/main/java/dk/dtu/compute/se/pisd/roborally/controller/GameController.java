@@ -245,8 +245,8 @@ public class GameController {
                         return;
                     }
                     executeCommand(currentPlayer, command);
+                    shootLaser(currentPlayer); // This shoots the laser after executing the command
                 }
-                // shootLaser();
                 int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));

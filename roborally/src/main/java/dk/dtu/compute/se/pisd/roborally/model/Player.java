@@ -36,7 +36,7 @@ import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
  * @author Christoffer, s205449
  * @author Jacob, s164958
  * @author Emily, s191174
- * @auhtor Phillip, s224278
+ * @author Phillip, s224278
  *
  */
 public class Player extends Subject {
@@ -239,6 +239,15 @@ public class Player extends Subject {
     public void addEnergyCube() {
         this.energyCubes++;
         notifyChange(); // Notify observers of the change
+    }
+
+    /**
+     * @author Setare, s232629
+     * Method to add spam card to the player's discard pile. Not fully done yet
+     */
+    public void addSpamCard() {
+        CommandCard spamCard = new CommandCard(Command.SPAM);
+        //this.discardpile.addCard(spamCard);
     }
 
     /**
