@@ -21,7 +21,6 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import dk.dtu.compute.se.pisd.roborally.controller.fields.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.network.gameclient.GameClient;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -374,7 +373,7 @@ public class GameController {
      * possible to move to.
      */
 
-    class moveNotPossibleException extends Exception {
+    public class moveNotPossibleException extends Exception {
 
         private Space space;
 

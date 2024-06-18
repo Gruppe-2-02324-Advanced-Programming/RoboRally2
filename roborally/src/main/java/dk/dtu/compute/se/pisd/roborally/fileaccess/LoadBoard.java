@@ -24,7 +24,7 @@ package dk.dtu.compute.se.pisd.roborally.fileaccess;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import dk.dtu.compute.se.pisd.roborally.controller.fields.FieldAction;
+import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.templates.BoardTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.templates.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
