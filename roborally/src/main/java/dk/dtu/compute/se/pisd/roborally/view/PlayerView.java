@@ -199,11 +199,23 @@ public class PlayerView extends Tab implements ViewObserver {
         finishButton = new Button("Finish Programming");
         finishButton.setOnAction(e -> {
             gameController.finishProgrammingPhase();
-            gameController.pushYourCards();
+            try {
+                gameController.pushYourCards();
+            } catch (Exception ex) {
+                System.out.println("Failed to push cards. Continuing to play locally.");
+            }
         });
+
+
+
+
         executeButton = new Button("Execute Program");
         executeButton.setOnAction(e -> {
-            gameController.getOtherPlayersCards();
+            try {
+                gameController.getOtherPlayersCards();
+            } catch (Exception ex) {
+                System.out.println("Failed to get other players' cards. Continuing to execute programs locally.");
+            }
             gameController.executePrograms();
         });
 

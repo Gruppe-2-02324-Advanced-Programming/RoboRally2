@@ -124,6 +124,13 @@ public class AppController implements Observer {
                 }
             }
 
+
+
+
+
+
+
+
             // XXX the board should eventually be created programmatically or loaded from a
             // file
             // here we just create an empty board with the required number of players.
@@ -446,5 +453,15 @@ public class AppController implements Observer {
                 }
             }
         }
+    }
+
+    public void continueGame() {
+
+        System.out.println("Continue game");
+    }
+
+    public void showRules() {
+
+        System.out.println("Show rules");
     }
 }

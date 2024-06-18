@@ -281,7 +281,6 @@ public class GameController {
 
     /**
      * This method executes the given command for the specified player.
-     * 
      * @author Christoffer, s205449
      */
     public void executeCommandOptionAndContinue(@NotNull Command option) {
@@ -375,13 +374,13 @@ public class GameController {
      * possible to move to.
      */
 
-    class moveNotPossibleException extends Exception {
+    public static class moveNotPossibleException extends Exception {
 
-        private Space space;
+        public Space space;
 
-        private Heading heading;
+        public Heading heading;
 
-        private Player player;
+        public Player player;
 
         /**
          * Here we create the Exception moveIsNotPossible, but for now, nothing happens
@@ -591,7 +590,7 @@ public class GameController {
 
     /**
      * Sets the board of the controller.
-     * 
+     *
      * @param board the board to be set
      */
     public void setBoard(Board board) {
@@ -600,7 +599,7 @@ public class GameController {
 
     /**
      * Gets the board of the controller.
-     * 
+     *
      * @return the board of the controller
      */
     public Board getBoard() {
