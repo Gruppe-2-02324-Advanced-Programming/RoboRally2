@@ -140,9 +140,14 @@ public class SpaceView extends StackPane implements ViewObserver {
         // Check if the current space contains a ConveyorBeltCorner
         for (FieldAction action : space.getActions()) {
             if (action instanceof ConveyorBeltCorner conveyorBeltCorner) {
-
                 // Load the conveyor belt corner image
-                ImageView conveyorBeltCornerView = new ImageView("/assets/greenTurnRight.png");
+                Image conveyorBeltCornerImage;
+                if (conveyorBeltCorner.getRotation() == Gears.LEFT_TURN) {
+                    conveyorBeltCornerImage = new Image("/assets/greenTurnLeft.png");
+                } else {
+                    conveyorBeltCornerImage = new Image("/assets/greenTurnRight.png");
+                }
+                ImageView conveyorBeltCornerView = new ImageView(conveyorBeltCornerImage);
                 conveyorBeltCornerView.setFitWidth(SPACE_WIDTH);
                 conveyorBeltCornerView.setFitHeight(SPACE_HEIGHT);
                 conveyorBeltCornerView.setPreserveRatio(false);
