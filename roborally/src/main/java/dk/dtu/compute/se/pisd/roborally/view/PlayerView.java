@@ -78,6 +78,7 @@ public class PlayerView extends Tab implements ViewObserver {
      */
     private Button finishButton;
 
+    private Button readyButton;
     /**
      * The button to execute the program.
      */
@@ -89,8 +90,6 @@ public class PlayerView extends Tab implements ViewObserver {
      * The button to push your cards to the server.
      */
     private Button push;
-
-    private Label playerNo;
 
     /**
      * The button to pull opponents cards from the server.
@@ -151,8 +150,6 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         }
 
-        playerNo = new Label("Player " + gameController.getPlayerNumber());
-
         pull = new Button("pull");
         pull.setOnAction(e -> {
             gameController.getOtherPlayersCards();
@@ -163,10 +160,15 @@ public class PlayerView extends Tab implements ViewObserver {
             gameController.pushYourCards();
         });
 
+        // Ready Button klar til at blive programmeret
+
+        readyButton = new Button("Ready Up");
+
         finishButton = new Button("Finish Programming");
         finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
 
-        buttonPanel = new VBox(finishButton, pull, push, playerNo);
+
+        buttonPanel = new VBox(readyButton, finishButton, pull, push);
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
         buttonPanel.setSpacing(3.0);
         // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now
