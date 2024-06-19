@@ -56,11 +56,15 @@ public class RoboRally extends Application {
             appController.exit();
         });
         stage.setResizable(true);
-        stage.setMaximized(true);
-        stage.setFullScreen(true);
+        // Remove or comment out these lines
+        // stage.setMaximized(true);
+        // stage.setFullScreen(true);
+        // Optionally, set a default window size
+        stage.setWidth(800);
+        stage.setHeight(600);
         stage.setX((double) (Toolkit.getDefaultToolkit().getScreenSize().width / 2) - (double) MIN_APP_WIDTH / 2);
         stage.setY(0.0);
-        stage.getIcons().add(new Image("file:src/main/resources/assets/default.png"));
+        stage.getIcons().add(new Image("/assets/default.png"));
 
         stage.show();
     }
@@ -74,8 +78,16 @@ public class RoboRally extends Application {
         stage.sizeToScene();
     }
 
+    public void createMainMenuView() {
+        MainMenuView mainMenuView = new MainMenuView(new AppController(this));
+        boardRoot.getChildren().clear();
+        boardRoot.setCenter(mainMenuView);
+    }
+
     @Override
     public void stop() throws Exception {
+        // Clear the current view and set the main menu view
+        createMainMenuView();
         super.stop();
     }
 

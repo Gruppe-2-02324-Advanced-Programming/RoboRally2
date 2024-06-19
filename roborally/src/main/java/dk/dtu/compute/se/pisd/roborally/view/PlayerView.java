@@ -105,6 +105,8 @@ public class PlayerView extends Tab implements ViewObserver {
      */
     private Button executeButton;
 
+    private Label timerLabel;
+
     /**
      * The button to push your cards to the server.
      */
@@ -130,6 +132,9 @@ public class PlayerView extends Tab implements ViewObserver {
      */
 
     private GameController gameController;
+
+    private Label readyStatusLabel;
+
 
     /**
      * Label to display the checkpoint count.
@@ -158,8 +163,16 @@ public class PlayerView extends Tab implements ViewObserver {
 
         checkpointLabel = new Label("Checkpoints: " + player.getCheckpoints());
         top.getChildren().add(checkpointLabel); // Add the label to the layout
+        timerLabel = new Label("Timer: ");
+        top.getChildren().add(timerLabel);
+
+
 
         programLabel = new Label("Program");
+        programLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
+        timerLabel = new Label("Timer: ");
+        readyStatusLabel = new Label("Ready: ");
+        top.getChildren().addAll(timerLabel, readyStatusLabel); // Add to top layout
 
         programPane = new GridPane();
         programPane.setVgap(2.0);
@@ -173,30 +186,20 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         }
 
-        // XXX the following buttons should actually not be on the tabs of the
-        // individual
-        // players, but on the PlayersView (view for all players). This should be
-        // refactored.
-
         playerNo = new Label("Player " + gameController.getPlayerNumber());
 
-
-        /*
-        pull = new Button("pull");
-        pull.setOnAction(e -> {
-            gameController.getOtherPlayersCards();
-        });
-         */
-/*
-        push = new Button("push");
-        push.setOnAction(e -> {
-            gameController.pushYourCards();
-        });
-
-        */
-
-
         finishButton = new Button("Finish Programming");
+        finishButton.setStyle(
+                "-fx-background-color: linear-gradient(#FF0000, #8B0000);" +
+                        "-fx-text-fill: #FFFFFF;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 10px 20px;" +
+                        "-fx-background-radius: 5;" +
+                        "-fx-border-color: yellow;" +
+                        "-fx-border-width: 3px;" +
+                        "-fx-cursor: hand;"
+        );
         finishButton.setOnAction(e -> {
             gameController.finishProgrammingPhase();
             try {
@@ -206,10 +209,18 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         });
 
-
-
-
         executeButton = new Button("Execute Program");
+        executeButton.setStyle(
+                "-fx-background-color: linear-gradient(#FF0000, #8B0000);" +
+                        "-fx-text-fill: #FFFFFF;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 10px 20px;" +
+                        "-fx-background-radius: 5;" +
+                        "-fx-border-color: yellow;" +
+                        "-fx-border-width: 3px;" +
+                        "-fx-cursor: hand;"
+        );
         executeButton.setOnAction(e -> {
             try {
                 gameController.getOtherPlayersCards();
@@ -219,19 +230,27 @@ public class PlayerView extends Tab implements ViewObserver {
             gameController.executePrograms();
         });
 
-
         stepButton = new Button("Execute Current Register");
+        stepButton.setStyle(
+                "-fx-background-color: linear-gradient(#FF0000, #8B0000);" +
+                        "-fx-text-fill: #FFFFFF;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 10px 20px;" +
+                        "-fx-background-radius: 5;" +
+                        "-fx-border-color: yellow;" +
+                        "-fx-border-width: 3px;" +
+                        "-fx-cursor: hand;"
+        );
         stepButton.setOnAction(e -> gameController.executeStep());
 
         buttonPanel = new VBox(finishButton, executeButton, stepButton, playerNo);
-
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
-        buttonPanel.setSpacing(3.0);
-        // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now
+        buttonPanel.setSpacing(10.0);
 
         playerInteractionPanel = new VBox();
         playerInteractionPanel.setAlignment(Pos.CENTER_LEFT);
-        playerInteractionPanel.setSpacing(3.0);
+        playerInteractionPanel.setSpacing(10.0);
 
         cardsLabel = new Label("Command Cards");
         cardsPane = new GridPane();
@@ -246,17 +265,14 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         }
 
-        top.getChildren().add(programLabel);
-        top.getChildren().add(programPane);
-        top.getChildren().add(cardsLabel);
-        top.getChildren().add(cardsPane);
-        top.getChildren().add(energyCubesLabel);
+        top.getChildren().addAll(programLabel, programPane, cardsLabel, cardsPane, energyCubesLabel);
 
         if (player.board != null) {
             player.board.attach(this);
-            update(player.board);
+            updateView(player.board);
         }
     }
+
     /**
      * This method is called when the observed subject changes.
      *
@@ -265,6 +281,7 @@ public class PlayerView extends Tab implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         if (subject == player.board) {
+            //timerLabel.setText("Timer: " + player.board.getTimer());
             energyCubesLabel.setText("Energy Cubes: " + player.getEnergyCubes());
             checkpointLabel.setText("Checkpoints: " + player.getCheckpoints());
             for (int i = 0; i < Player.NO_REGISTERS; i++) {

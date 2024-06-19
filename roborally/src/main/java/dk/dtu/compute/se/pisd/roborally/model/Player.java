@@ -41,6 +41,9 @@ import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
  */
 public class Player extends Subject {
 
+    private boolean ready = false; // Indicates if the player is ready
+    private long remainingProgrammingTime = 0; // Remaining time for programming phase in seconds
+
     final public static int NO_REGISTERS = 5;
     final public static int NO_CARDS = 8;
 
@@ -60,6 +63,24 @@ public class Player extends Subject {
     @Expose
     private CommandCardField[] cards;
 
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+        notifyChange(); // Notify observers of the change
+    }
+
+    public long getRemainingProgrammingTime() {
+        return remainingProgrammingTime;
+    }
+
+    public void setRemainingProgrammingTime(long remainingProgrammingTime) {
+        this.remainingProgrammingTime = remainingProgrammingTime;
+        notifyChange(); // Notify observers of the change
+    }
     private String robotImage;
 
     public String getRobotImage() {

@@ -39,17 +39,17 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import dk.dtu.compute.se.pisd.roborally.network.Network;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -195,7 +195,6 @@ public class AppController implements Observer {
 
     public void saveGame() {
         if (gameController != null && gameController.board != null) {
-            // Prompt the user to enter the name of the game they want to save
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Save Game");
             dialog.setHeaderText("Enter the name of the game you want to save:");
@@ -210,7 +209,6 @@ public class AppController implements Observer {
             System.out.println("No game is currently active.");
         }
     }
-    // todo doesnt work
 
     private List<String> getFilesInDirectory(String directoryPath) {
         File directory = new File(directoryPath);
@@ -374,15 +372,33 @@ public class AppController implements Observer {
      */
     public boolean stopGame() {
         if (gameController != null) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Save Game");
+            alert.setHeaderText("Do you want to save the current game?");
+            alert.setContentText("Choose your option.");
 
-            // here we save the game (without asking the user).
-            gameController = null;
-            roboRally.createBoardView(null);
-            return true;
+            ButtonType buttonTypeSave = new ButtonType("Save");
+            ButtonType buttonTypeDontSave = new ButtonType("Don't Save");
+            ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            alert.getButtonTypes().setAll(buttonTypeSave, buttonTypeDontSave, buttonTypeCancel);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == buttonTypeSave) {
+                saveGame();
+                gameController = null;
+                return true;
+            } else if (result.isPresent() && result.get() == buttonTypeDontSave) {
+                gameController = null;
+                // Return to main menu
+                roboRally.createMainMenuView();
+                return true;
+            } else {
+                return false;
+            }
         }
-        return false;
+        return true;
     }
-
     /**
      * Exit the application, giving the user the option to save the game
      * before exiting. If the user cancels the exit operation, the method
@@ -461,7 +477,11 @@ public class AppController implements Observer {
     }
 
     public void showRules() {
-
-        System.out.println("Show rules");
+        try {
+            URI rulesUri = new URI("https://renegadegamestudios.com/content/File%20Storage%20for%20site/Rulebooks/Robo%20Rally/RoboRally_Rulebook_WEB.pdf");
+            Desktop.getDesktop().browse(rulesUri);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }

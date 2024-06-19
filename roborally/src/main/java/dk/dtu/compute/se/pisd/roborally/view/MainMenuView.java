@@ -4,23 +4,17 @@ import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 public class MainMenuView extends StackPane {
 
     public MainMenuView(AppController appController) {
 
-        // Set the background image for the StackPane
-        Image backgroundImage = new Image("/assets/gearLeft.png");
-        BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false);
-        BackgroundImage backgroundImg = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-        this.setBackground(new Background(backgroundImg));
-
         // Create a VBox to hold the buttons
         VBox buttonBox = new VBox();
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setSpacing(10);
+        buttonBox.setSpacing(20);
         buttonBox.setPadding(new Insets(200, 0, 0, 0)); // Add padding at the top
 
         // Create buttons
@@ -29,7 +23,7 @@ public class MainMenuView extends StackPane {
         Button loadGameButton = new Button("Load Game");
         Button rulesButton = new Button("Rules");
 
-        // Apply inline styles to buttons
+        // Apply styles to buttons
         styleButton(continueButton);
         styleButton(newGameButton);
         styleButton(loadGameButton);
@@ -46,66 +40,75 @@ public class MainMenuView extends StackPane {
 
         // Add the VBox to the StackPane
         this.getChildren().add(buttonBox);
+
+        // Style the background of the main menu
+        this.setStyle(
+                "-fx-background-color: #2C2C2C; " + // Dark background
+                        "-fx-border-color: #FF0000; " + // Red border
+                        "-fx-border-width: 5px; " +
+                        "-fx-border-style: solid; " +
+                        "-fx-padding: 20px;"
+        );
     }
 
     private void styleButton(Button button) {
         button.setStyle(
-                "-fx-background-color: #4CAF50; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 16px; " +
-                        "-fx-padding: 10 20 10 20; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-border-radius: 10; " +
-                        "-fx-border-color: #4CAF50; " +
-                        "-fx-border-width: 2px; " +
+                "-fx-background-color: linear-gradient(#FF0000, #8B0000); " + // Red gradient background
+                        "-fx-text-fill: #FFFFFF; " + // White text
+                        "-fx-font-size: 18px; " + // Slightly larger font size
+                        "-fx-font-weight: bold; " + // Bold text
+                        "-fx-padding: 15 30 15 30; " + // Padding inside the button
+                        "-fx-background-radius: 5; " + // Rounded corners
+                        "-fx-border-color: yellow; " + // Yellow border for warning stripe effect
+                        "-fx-border-width: 3px; " +
                         "-fx-cursor: hand;"
         );
 
         button.setOnMouseEntered(e -> button.setStyle(
-                "-fx-background-color: #45a049; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 16px; " +
-                        "-fx-padding: 10 20 10 20; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-border-radius: 10; " +
-                        "-fx-border-color: #4CAF50; " +
-                        "-fx-border-width: 2px; " +
+                "-fx-background-color: linear-gradient(#FF4500, #8B0000); " + // Lighter red gradient on hover
+                        "-fx-text-fill: #FFFFFF; " +
+                        "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 15 30 15 30; " +
+                        "-fx-background-radius: 5; " +
+                        "-fx-border-color: yellow; " +
+                        "-fx-border-width: 3px; " +
                         "-fx-cursor: hand;"
         ));
 
         button.setOnMouseExited(e -> button.setStyle(
-                "-fx-background-color: #4CAF50; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 16px; " +
-                        "-fx-padding: 10 20 10 20; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-border-radius: 10; " +
-                        "-fx-border-color: #4CAF50; " +
-                        "-fx-border-width: 2px; " +
+                "-fx-background-color: linear-gradient(#FF0000, #8B0000); " +
+                        "-fx-text-fill: #FFFFFF; " +
+                        "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 15 30 15 30; " +
+                        "-fx-background-radius: 5; " +
+                        "-fx-border-color: yellow; " +
+                        "-fx-border-width: 3px; " +
                         "-fx-cursor: hand;"
         ));
 
         button.setOnMousePressed(e -> button.setStyle(
-                "-fx-background-color: #3e8e41; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 16px; " +
-                        "-fx-padding: 10 20 10 20; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-border-radius: 10; " +
-                        "-fx-border-color: #4CAF50; " +
-                        "-fx-border-width: 2px; " +
+                "-fx-background-color: linear-gradient(#8B0000, #FF0000); " + // Inverted gradient on press
+                        "-fx-text-fill: #FFFFFF; " +
+                        "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 15 30 15 30; " +
+                        "-fx-background-radius: 5; " +
+                        "-fx-border-color: yellow; " +
+                        "-fx-border-width: 3px; " +
                         "-fx-cursor: hand;"
         ));
 
         button.setOnMouseReleased(e -> button.setStyle(
-                "-fx-background-color: #45a049; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-size: 16px; " +
-                        "-fx-padding: 10 20 10 20; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-border-radius: 10; " +
-                        "-fx-border-color: #4CAF50; " +
-                        "-fx-border-width: 2px; " +
+                "-fx-background-color: linear-gradient(#FF4500, #8B0000); " +
+                        "-fx-text-fill: #FFFFFF; " +
+                        "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 15 30 15 30; " +
+                        "-fx-background-radius: 5; " +
+                        "-fx-border-color: yellow; " +
+                        "-fx-border-width: 3px; " +
                         "-fx-cursor: hand;"
         ));
     }

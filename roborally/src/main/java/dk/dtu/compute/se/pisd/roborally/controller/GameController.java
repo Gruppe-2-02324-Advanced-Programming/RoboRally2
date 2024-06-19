@@ -28,6 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Controller for managing the game logic of RoboRally. It handles player
@@ -55,6 +58,8 @@ import java.util.List;
 public class GameController {
 
 
+
+
     public Board board;
 
     public GameClient gameClient;
@@ -62,6 +67,10 @@ public class GameController {
     public int currentTabIndex;
 
     public int playerNumber;
+
+    private int timer;
+    private boolean[] playersReady;
+
 
     /**
      * Constructor for the GameController.
@@ -74,8 +83,8 @@ public class GameController {
         gameClient = new GameClient();
         currentTabIndex = 0;
         playerNumber = 1;
+        playersReady = new boolean[board.getPlayersNumber()];
     }
-
     /**
      * This is just some dummy controller operation to make a simple move to see
      * something
@@ -96,6 +105,16 @@ public class GameController {
         board.setCurrentPlayer(nextPlayer);
 
         board.setCounter(board.getCounter() + 1);
+    }
+
+
+    public int getTimer() {
+        return timer;
+    }
+
+
+    public void setTimer(int timer) {
+        this.timer = timer;
     }
 
     /**
@@ -132,6 +151,11 @@ public class GameController {
                 }
             }
         }
+
+        // Schedule a timer to finish programming phase after a delay
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.schedule(this::finishProgrammingPhase, 60, TimeUnit.SECONDS); // Adjust delay as needed
+        scheduler.shutdown();
     }
 
     /**
@@ -147,17 +171,48 @@ public class GameController {
     }
 
     /**
+     * Method to set a player as ready.
+     * @param playerId the ID of the player (index in playersReady array)
+     * @author Christoffer s205449
+     */
+    public synchronized void setPlayerReady(int playerId) {
+        if (playerId >= 0 && playerId < playersReady.length) {
+            playersReady[playerId] = true;
+        }
+    }
+
+    public synchronized void resetPlayersReady() {
+        Arrays.fill(playersReady, false);
+    }
+
+    /**
      * This method ends the programming phase, which makes the execute button active
      * to press.
      * 
      * @author Ekkart Kindler
+     * @author Christoffer s205449
      */
-    public void finishProgrammingPhase() {
-        makeProgramFieldsInvisible();
-        makeProgramFieldsVisible(0);
-        board.setPhase(Phase.ACTIVATION);
-        board.setCurrentPlayer(board.getPlayer(0));
-        board.setStep(0);
+    public synchronized void finishProgrammingPhase() {
+        boolean allPlayersReady = true;
+        for (boolean ready : playersReady) {
+            if (!ready) {
+                allPlayersReady = false;
+                break;
+            }
+        }
+
+        if (allPlayersReady) {
+            makeProgramFieldsInvisible();
+            makeProgramFieldsVisible(0);
+            board.setPhase(Phase.ACTIVATION);
+            board.setCurrentPlayer(board.getPlayer(0));
+            board.setStep(0);
+
+            // Optionally, you can call executePrograms() here to start the execution phase immediately
+            executePrograms();
+        } else {
+            // Optionally, you can notify or handle that not all players are ready
+        }
     }
 
     /**
@@ -197,9 +252,22 @@ public class GameController {
     /**
      * This method executes the moves which the player has requested
      */
+
+
+
     public void executePrograms() {
         board.setStepMode(false);
-        continuePrograms();
+        executeNextStepWithDelay();
+    }
+
+    private void executeNextStepWithDelay() {
+        if (board.getPhase() == Phase.ACTIVATION && !board.isStepMode()) {
+            executeNextStep();
+            // Schedule the next step after a delay (e.g., 1 second)
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.schedule(() -> executeNextStepWithDelay(), 1, TimeUnit.SECONDS);
+            executor.shutdown();
+        }
     }
 
     /**
