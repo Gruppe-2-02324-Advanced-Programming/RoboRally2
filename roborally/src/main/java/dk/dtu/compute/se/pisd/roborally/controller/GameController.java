@@ -1,24 +1,3 @@
-/*
- *  This file is part of the initial project provided for the
- *  course "Project in Software Development (02362)" held at
- *  DTU Compute at the Technical University of Denmark.
- *
- *  Copyright (C) 2019, 2020: Ekkart Kindler, ekki@dtu.dk
- *
- *  This software is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; version 2 of the License.
- *
- *  This project is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this project; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.gameclient.GameClient;
@@ -42,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * and moving players on the board based on their chosen command cards.
  * <p>
  * Usage:
- * 
+ *
  * <pre>{@code
  * Board board = new Board(8, 8);
  * GameController controller = new GameController(board);
@@ -57,9 +36,6 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class GameController {
 
-
-
-
     public Board board;
 
     public GameClient gameClient;
@@ -70,11 +46,12 @@ public class GameController {
 
     private int timer;
     private boolean[] playersReady;
-
+    private int remainingTime;
+    private ScheduledExecutorService scheduler;
 
     /**
      * Constructor for the GameController.
-     * 
+     *
      * @author Ekkart Kindler
      * @param board the board to which the controller is connected
      */
@@ -84,12 +61,43 @@ public class GameController {
         currentTabIndex = 0;
         playerNumber = 1;
         playersReady = new boolean[board.getPlayersNumber()];
+        timer = 60; // Default value for timer
+        remainingTime = timer;
     }
+
+    /**
+     * Getter for the timer.
+     *
+     * @return the timer value
+     */
+    public int getTimer() {
+        return timer;
+    }
+
+    /**
+     * Setter for the timer.
+     *
+     * @param timer the new timer value
+     */
+    public void setTimer(int timer) {
+        this.timer = timer;
+        this.remainingTime = timer;
+    }
+
+    /**
+     * Getter for the remaining time.
+     *
+     * @return the remaining time value
+     */
+    public int getRemainingTime() {
+        return remainingTime;
+    }
+
     /**
      * This is just some dummy controller operation to make a simple move to see
      * something
      * happening on the board. This method should eventually be deleted!
-     * 
+     *
      * @author Ekkart Kindler
      * @param space the space to which the current player should move
      */
@@ -107,16 +115,6 @@ public class GameController {
         board.setCounter(board.getCounter() + 1);
     }
 
-
-    public int getTimer() {
-        return timer;
-    }
-
-
-    public void setTimer(int timer) {
-        this.timer = timer;
-    }
-
     /**
      * This method starts the programming phase of the game. It sets the phase to
      * PROGRAMMING,
@@ -130,6 +128,7 @@ public class GameController {
      * phase.
      *
      * @author Ekkart Kindler
+     * @author Christoffer, s205449
      */
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
@@ -152,15 +151,14 @@ public class GameController {
             }
         }
 
-        // Schedule a timer to finish programming phase after a delay
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(this::finishProgrammingPhase, 60, TimeUnit.SECONDS); // Adjust delay as needed
-        scheduler.shutdown();
+        remainingTime = timer;
+        scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(this::updateTimer, 0, 1, TimeUnit.SECONDS);
     }
 
     /**
      * This method generates a random command card.
-     * 
+     *
      * @author Ekkart Kindler
      * @return a random command card
      */
@@ -171,54 +169,26 @@ public class GameController {
     }
 
     /**
-     * Method to set a player as ready.
-     * @param playerId the ID of the player (index in playersReady array)
-     * @author Christoffer s205449
-     */
-    public synchronized void setPlayerReady(int playerId) {
-        if (playerId >= 0 && playerId < playersReady.length) {
-            playersReady[playerId] = true;
-        }
-    }
-
-    public synchronized void resetPlayersReady() {
-        Arrays.fill(playersReady, false);
-    }
-
-    /**
      * This method ends the programming phase, which makes the execute button active
      * to press.
-     * 
+     *
      * @author Ekkart Kindler
      * @author Christoffer s205449
      */
     public synchronized void finishProgrammingPhase() {
-        boolean allPlayersReady = true;
-        for (boolean ready : playersReady) {
-            if (!ready) {
-                allPlayersReady = false;
-                break;
-            }
-        }
+        makeProgramFieldsInvisible();
+        makeProgramFieldsVisible(0);
+        board.setPhase(Phase.ACTIVATION);
+        board.setCurrentPlayer(board.getPlayer(0));
+        board.setStep(0);
 
-        if (allPlayersReady) {
-            makeProgramFieldsInvisible();
-            makeProgramFieldsVisible(0);
-            board.setPhase(Phase.ACTIVATION);
-            board.setCurrentPlayer(board.getPlayer(0));
-            board.setStep(0);
-
-            // Optionally, you can call executePrograms() here to start the execution phase immediately
-            executePrograms();
-        } else {
-            // Optionally, you can notify or handle that not all players are ready
-        }
+        executePrograms();
     }
 
     /**
      * This method makes the program fields of the players visible for the given
      * register.
-     * 
+     *
      * @author Ekkart Kindler
      * @param register the register for which the program fields should be made
      *                 visible
@@ -252,9 +222,6 @@ public class GameController {
     /**
      * This method executes the moves which the player has requested
      */
-
-
-
     public void executePrograms() {
         board.setStepMode(false);
         executeNextStepWithDelay();
@@ -297,7 +264,7 @@ public class GameController {
      * method does nothing.
      * If the step is the last step of the current player, the method starts the
      * programming phase.
-     * 
+     *
      * @author Emily, s191174
      */
     private void executeNextStep() {
@@ -325,14 +292,12 @@ public class GameController {
                             for (FieldAction action : actions) {
                                 action.doAction(this, player.getSpace());
                             }
-
                         }
                     }
                     if (step < Player.NO_REGISTERS) {
                         makeProgramFieldsVisible(step);
                         board.setStep(step);
                         board.setCurrentPlayer(board.getPlayer(0));
-
                     } else {
                         startProgrammingPhase();
                     }
@@ -372,7 +337,6 @@ public class GameController {
                         action.doAction(this, player.getSpace());
                     }
                 }
-
             }
             if (step < Player.NO_REGISTERS) {
                 makeProgramFieldsVisible(step);
@@ -422,6 +386,7 @@ public class GameController {
                     break;
                 case BACKUP:
                     this.backUp(player);
+                    break;
                 case AGAIN:
                     this.again(player);
                     break;
@@ -542,16 +507,11 @@ public class GameController {
             throws moveNotPossibleException {
         Player other = space.getPlayer();
         if (other != null) {
-            Space target = board.getNeighbour(space,
-                    heading);
+            Space target = board.getNeighbour(space, heading);
             if (target != null) {
-                movePlayerToSpace(other,
-                        target,
-                        heading);
+                movePlayerToSpace(other, target, heading);
             } else {
-                throw new moveNotPossibleException(player,
-                        space,
-                        heading);
+                throw new moveNotPossibleException(player, space, heading);
             }
         }
         /**
@@ -678,7 +638,7 @@ public class GameController {
      * Repeats the command card in the previous register of the player. If it is the
      * first card it does nothing,
      * if the previous card is an again card it will repeat the card before that.
-     * 
+     *
      * @author Jacob, s164958
      * @param player the player to repeat the command card for
      */
@@ -704,18 +664,18 @@ public class GameController {
         }
     }
 
-
     /**
      * Changes the current tab index to the new index
+     *
      * @author Marcus s214942
      */
     public void changeCurrentTabIndex(int newIndex) {
         currentTabIndex = newIndex;
     }
 
-
     /**
      * Pushes the cards of the player to the server and gets the cards of the other
+     *
      * @author Marcus s214942
      */
     public void getOtherPlayersCards() {
@@ -740,6 +700,7 @@ public class GameController {
 
     /**
      * Pushes the cards of the player to the server
+     *
      * @author Marcus s214942
      */
     public void pushYourCards() {
@@ -763,4 +724,15 @@ public class GameController {
         return playerNumber;
     }
 
+    /**
+     * Updates the remaining time and finishes the programming phase if time is up.
+     */
+    private void updateTimer() {
+        if (remainingTime > 0) {
+            remainingTime--;
+        } else {
+            scheduler.shutdown();
+            finishProgrammingPhase();
+        }
+    }
 }

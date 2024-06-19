@@ -4,8 +4,9 @@ import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 
 public class MainMenuView extends StackPane {
 
@@ -15,7 +16,7 @@ public class MainMenuView extends StackPane {
         VBox buttonBox = new VBox();
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(20);
-        buttonBox.setPadding(new Insets(200, 0, 0, 0)); // Add padding at the top
+        buttonBox.setPadding(new Insets(20, 0, 20, 0)); // Add padding at the top and bottom
 
         // Create buttons
         Button continueButton = new Button("Continue");
@@ -38,17 +39,46 @@ public class MainMenuView extends StackPane {
         // Add buttons to the VBox
         buttonBox.getChildren().addAll(continueButton, newGameButton, loadGameButton, rulesButton);
 
-        // Add the VBox to the StackPane
-        this.getChildren().add(buttonBox);
+        // Load the top image
+        try {
+            Image topImage = new Image("assets/forside.png");
+            ImageView imageView = new ImageView(topImage);
+            imageView.setFitWidth(300);
+            imageView.setPreserveRatio(true);
 
-        // Style the background of the main menu
-        this.setStyle(
-                "-fx-background-color: #2C2C2C; " + // Dark background
-                        "-fx-border-color: #FF0000; " + // Red border
-                        "-fx-border-width: 5px; " +
-                        "-fx-border-style: solid; " +
-                        "-fx-padding: 20px;"
-        );
+            // Create a VBox to hold the image and buttons
+            VBox mainBox = new VBox();
+            mainBox.setAlignment(Pos.TOP_CENTER);
+            mainBox.setSpacing(20);
+            mainBox.setPadding(new Insets(50, 0, 0, 0)); // Add padding at the top
+
+            // Add image and buttonBox to the mainBox
+            mainBox.getChildren().addAll(imageView, buttonBox);
+
+            // Add the mainBox to the StackPane
+            this.getChildren().add(mainBox);
+
+        } catch (NullPointerException e) {
+            System.err.println("Top image not found: " + e.getMessage());
+        }
+
+        // Load the background image for the whole window
+        try {
+            Image backgroundImage = new Image("assets/forsidebaggrund.jpg");
+            BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true);
+            BackgroundImage background = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    backgroundSize
+            );
+            this.setBackground(new Background(background));
+            this.prefWidthProperty().bind(this.getScene().widthProperty());
+            this.prefHeightProperty().bind(this.getScene().heightProperty());
+        } catch (NullPointerException e) {
+            System.err.println("Background image not found: " + e.getMessage());
+        }
     }
 
     private void styleButton(Button button) {

@@ -1,24 +1,3 @@
-/*
- *  This file is part of the initial project provided for the
- *  course "Project in Software Development (02362)" held at
- *  DTU Compute at the Technical University of Denmark.
- *
- *  Copyright (C) 2019, 2020: Ekkart Kindler, ekki@dtu.dk
- *
- *  This software is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; version 2 of the License.
- *
- *  This project is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this project; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- */
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
@@ -26,15 +5,15 @@ import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-
-import javax.swing.JComboBox;
-
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The view of a player of the game. The view shows the program of the player
@@ -97,7 +76,6 @@ public class PlayerView extends Tab implements ViewObserver {
     /**
      * The button to finish the programming phase.
      */
-
     private Button finishButton;
 
     /**
@@ -135,7 +113,6 @@ public class PlayerView extends Tab implements ViewObserver {
 
     private Label readyStatusLabel;
 
-
     /**
      * Label to display the checkpoint count.
      */
@@ -147,7 +124,6 @@ public class PlayerView extends Tab implements ViewObserver {
      * @param gameController the controller for the game
      * @param player         the player for which this view is created
      */
-
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
         super(player.getName());
         this.setStyle("-fx-text-base-color: " + player.getColor() + ";");
@@ -163,16 +139,11 @@ public class PlayerView extends Tab implements ViewObserver {
 
         checkpointLabel = new Label("Checkpoints: " + player.getCheckpoints());
         top.getChildren().add(checkpointLabel); // Add the label to the layout
-        timerLabel = new Label("Timer: ");
-        top.getChildren().add(timerLabel);
-
-
 
         programLabel = new Label("Program");
         programLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
-        timerLabel = new Label("Timer: ");
         readyStatusLabel = new Label("Ready: ");
-        top.getChildren().addAll(timerLabel, readyStatusLabel); // Add to top layout
+        top.getChildren().addAll(readyStatusLabel); // Add to top layout
 
         programPane = new GridPane();
         programPane.setVgap(2.0);
@@ -188,65 +159,8 @@ public class PlayerView extends Tab implements ViewObserver {
 
         playerNo = new Label("Player " + gameController.getPlayerNumber());
 
-        finishButton = new Button("Finish Programming");
-        finishButton.setStyle(
-                "-fx-background-color: linear-gradient(#FF0000, #8B0000);" +
-                        "-fx-text-fill: #FFFFFF;" +
-                        "-fx-font-size: 14px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-padding: 10px 20px;" +
-                        "-fx-background-radius: 5;" +
-                        "-fx-border-color: yellow;" +
-                        "-fx-border-width: 3px;" +
-                        "-fx-cursor: hand;"
-        );
-        finishButton.setOnAction(e -> {
-            gameController.finishProgrammingPhase();
-            try {
-                gameController.pushYourCards();
-            } catch (Exception ex) {
-                System.out.println("Failed to push cards. Continuing to play locally.");
-            }
-        });
-
-        executeButton = new Button("Execute Program");
-        executeButton.setStyle(
-                "-fx-background-color: linear-gradient(#FF0000, #8B0000);" +
-                        "-fx-text-fill: #FFFFFF;" +
-                        "-fx-font-size: 14px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-padding: 10px 20px;" +
-                        "-fx-background-radius: 5;" +
-                        "-fx-border-color: yellow;" +
-                        "-fx-border-width: 3px;" +
-                        "-fx-cursor: hand;"
-        );
-        executeButton.setOnAction(e -> {
-            try {
-                gameController.getOtherPlayersCards();
-            } catch (Exception ex) {
-                System.out.println("Failed to get other players' cards. Continuing to execute programs locally.");
-            }
-            gameController.executePrograms();
-        });
-
-        stepButton = new Button("Execute Current Register");
-        stepButton.setStyle(
-                "-fx-background-color: linear-gradient(#FF0000, #8B0000);" +
-                        "-fx-text-fill: #FFFFFF;" +
-                        "-fx-font-size: 14px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-padding: 10px 20px;" +
-                        "-fx-background-radius: 5;" +
-                        "-fx-border-color: yellow;" +
-                        "-fx-border-width: 3px;" +
-                        "-fx-cursor: hand;"
-        );
-        stepButton.setOnAction(e -> gameController.executeStep());
-
-        buttonPanel = new VBox(finishButton, executeButton, stepButton, playerNo);
-        buttonPanel.setAlignment(Pos.CENTER_LEFT);
-        buttonPanel.setSpacing(10.0);
+        timerLabel = new Label("Time left: " + gameController.getRemainingTime() + "s");
+        top.getChildren().add(timerLabel);
 
         playerInteractionPanel = new VBox();
         playerInteractionPanel.setAlignment(Pos.CENTER_LEFT);
@@ -271,6 +185,14 @@ public class PlayerView extends Tab implements ViewObserver {
             player.board.attach(this);
             updateView(player.board);
         }
+
+        // Update the timer label periodically
+        ScheduledExecutorService timerScheduler = Executors.newScheduledThreadPool(1);
+        timerScheduler.scheduleAtFixedRate(() -> {
+            javafx.application.Platform.runLater(() -> {
+                timerLabel.setText("Time left: " + gameController.getRemainingTime() + "s");
+            });
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
     /**
@@ -281,7 +203,6 @@ public class PlayerView extends Tab implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         if (subject == player.board) {
-            //timerLabel.setText("Timer: " + player.board.getTimer());
             energyCubesLabel.setText("Energy Cubes: " + player.getEnergyCubes());
             checkpointLabel.setText("Checkpoints: " + player.getCheckpoints());
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
@@ -309,35 +230,17 @@ public class PlayerView extends Tab implements ViewObserver {
             }
 
             if (player.board.getPhase() != Phase.PLAYER_INTERACTION) {
-                if (!programPane.getChildren().contains(buttonPanel)) {
-                    programPane.getChildren().remove(playerInteractionPanel);
-                    programPane.add(buttonPanel, Player.NO_REGISTERS, 0);
-                }
                 switch (player.board.getPhase()) {
                     case INITIALISATION:
-                        finishButton.setDisable(true);
-                        // XXX just to make sure that there is a way for the player to get
-                        // from the initialization phase to the programming phase somehow!
-                        executeButton.setDisable(false);
-                        stepButton.setDisable(true);
                         break;
 
                     case PROGRAMMING:
-                        finishButton.setDisable(false);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
                         break;
 
                     case ACTIVATION:
-                        finishButton.setDisable(true);
-                        executeButton.setDisable(false);
-                        stepButton.setDisable(false);
                         break;
 
                     default:
-                        finishButton.setDisable(true);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
                 }
 
             } else {
