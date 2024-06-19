@@ -61,7 +61,7 @@ public class GameController {
         currentTabIndex = 0;
         playerNumber = 1;
         playersReady = new boolean[board.getPlayersNumber()];
-        timer = 60; // Default value for timer
+        timer = 180; // Default value for timer
         remainingTime = timer;
     }
 
@@ -181,7 +181,7 @@ public class GameController {
         board.setPhase(Phase.ACTIVATION);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);
-
+        setTimer(180);
         executePrograms();
     }
 
@@ -253,7 +253,8 @@ public class GameController {
      */
     private void continuePrograms() {
         do {
-            executeNextStep();
+            //executeNextStep();
+            executeNextStepWithDelay();
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
 
@@ -604,11 +605,11 @@ public class GameController {
             switch (option) {
                 case LEFT:
                     executeCommandOptionAndContinue(Command.LEFT);
-                    continuePrograms();
+                    executeNextStepWithDelay();
                     break;
                 case RIGHT:
                     executeCommandOptionAndContinue(Command.RIGHT);
-                    continuePrograms();
+                    executeNextStepWithDelay();
                     break;
                 default:
                     break;
@@ -729,10 +730,15 @@ public class GameController {
      */
     private void updateTimer() {
         if (remainingTime > 0) {
-            remainingTime--;
+            if(board.getPhase() == Phase.PROGRAMMING){
+                remainingTime--;
+            }
+            else {
+            }
         } else {
             scheduler.shutdown();
             finishProgrammingPhase();
+            setTimer(180);
         }
     }
 }

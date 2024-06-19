@@ -96,13 +96,7 @@ public class PlayerView extends Tab implements ViewObserver {
      * The button to pull opponents cards from the server.
      */
     private Button pull;
-    /**
-     * The button to execute the current register.
-     */
-    private Button stepButton;
-    /**
-     * The panel with the buttons for the player interaction phase.
-     */
+
     private VBox playerInteractionPanel;
 
     /**
@@ -159,8 +153,23 @@ public class PlayerView extends Tab implements ViewObserver {
 
         playerNo = new Label("Player " + gameController.getPlayerNumber());
 
-        timerLabel = new Label("Time left: " + gameController.getRemainingTime() + "s");
-        top.getChildren().add(timerLabel);
+        pull = new Button("pull");
+        pull.setOnAction(e -> {
+            gameController.getOtherPlayersCards();
+        });
+
+        push = new Button("push");
+        push.setOnAction(e -> {
+            gameController.pushYourCards();
+        });
+
+        finishButton = new Button("Finish Programming");
+        finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
+
+        buttonPanel = new VBox(finishButton, pull, push, playerNo);
+        buttonPanel.setAlignment(Pos.CENTER_LEFT);
+        buttonPanel.setSpacing(3.0);
+        // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now
 
         playerInteractionPanel = new VBox();
         playerInteractionPanel.setAlignment(Pos.CENTER_LEFT);
@@ -179,12 +188,9 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         }
 
-        top.getChildren().addAll(programLabel, programPane, cardsLabel, cardsPane, energyCubesLabel);
+        timerLabel = new Label("Time left: " + gameController.getRemainingTime() + "s");
+        top.getChildren().add(timerLabel);
 
-        if (player.board != null) {
-            player.board.attach(this);
-            updateView(player.board);
-        }
 
         // Update the timer label periodically
         ScheduledExecutorService timerScheduler = Executors.newScheduledThreadPool(1);
@@ -193,6 +199,14 @@ public class PlayerView extends Tab implements ViewObserver {
                 timerLabel.setText("Time left: " + gameController.getRemainingTime() + "s");
             });
         }, 0, 1, TimeUnit.SECONDS);
+
+        top.getChildren().addAll(programLabel, programPane, cardsLabel, cardsPane, energyCubesLabel);
+
+        if (player.board != null) {
+            player.board.attach(this);
+            updateView(player.board);
+        }
+
     }
 
     /**
@@ -228,19 +242,26 @@ public class PlayerView extends Tab implements ViewObserver {
                     }
                 }
             }
-
             if (player.board.getPhase() != Phase.PLAYER_INTERACTION) {
+                if (!programPane.getChildren().contains(buttonPanel)) {
+                    programPane.getChildren().remove(playerInteractionPanel);
+                    programPane.add(buttonPanel, Player.NO_REGISTERS, 0);
+                }
                 switch (player.board.getPhase()) {
                     case INITIALISATION:
+                        finishButton.setDisable(true);
                         break;
 
                     case PROGRAMMING:
+                        finishButton.setDisable(false);
                         break;
 
                     case ACTIVATION:
+                        finishButton.setDisable(true);
                         break;
 
                     default:
+                        finishButton.setDisable(true);
                 }
 
             } else {
