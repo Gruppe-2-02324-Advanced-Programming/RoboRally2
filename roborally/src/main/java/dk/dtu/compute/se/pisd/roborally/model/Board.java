@@ -23,6 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.model;
 
 import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.StartGear;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 
@@ -342,6 +343,22 @@ public class Board extends Subject {
         }
         return won;
     }
+
+    public List<Space> getGearSpawnPoints() {
+        List<Space> spawnPoints = new ArrayList<>();
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Space space = spaces[x][y];
+                if (space.getActions().stream().anyMatch(action -> action instanceof StartGear)) {
+                    spawnPoints.add(space);
+                }
+            }
+        }
+        return spawnPoints;
+    }
+
+
+
 
     public void setWon(boolean won) {
         this.won = won;
