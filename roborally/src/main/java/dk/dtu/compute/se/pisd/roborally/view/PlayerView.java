@@ -1,3 +1,24 @@
+/*
+ *  This file is part of the initial project provided for the
+ *  course "Project in Software Development (02362)" held at
+ *  DTU Compute at the Technical University of Denmark.
+ *
+ *  Copyright (C) 2019, 2020: Ekkart Kindler, ekki@dtu.dk
+ *
+ *  This software is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; version 2 of the License.
+ *
+ *  This project is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this project; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
@@ -91,12 +112,18 @@ public class PlayerView extends Tab implements ViewObserver {
      */
     private Button push;
 
+    private Label playerNo;
+
+    private Label gameID;
+
     /**
      * The button to pull opponents cards from the server.
      */
     private Button pull;
 
     private VBox playerInteractionPanel;
+
+    private Button stepButton;
 
     /**
      * The controller for the game.
@@ -150,6 +177,14 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         }
 
+        // XXX the following buttons should actually not be on the tabs of the
+        // individual
+        // players, but on the PlayersView (view for all players). This should be
+        // refactored.
+
+        playerNo = new Label("Player " + gameController.getPlayerNumber());
+        gameID = new Label("GameID: " + gameController.board.getGameID().intValue());
+
         pull = new Button("pull");
         pull.setOnAction(e -> {
             gameController.getOtherPlayersCards();
@@ -169,6 +204,10 @@ public class PlayerView extends Tab implements ViewObserver {
 
 
         buttonPanel = new VBox(readyButton, finishButton, pull, push);
+        stepButton = new Button("Execute Current Register");
+        stepButton.setOnAction(e -> gameController.executeStep());
+
+        buttonPanel = new VBox(finishButton, executeButton, stepButton, pull, push, playerNo, gameID);
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
         buttonPanel.setSpacing(3.0);
         // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now
