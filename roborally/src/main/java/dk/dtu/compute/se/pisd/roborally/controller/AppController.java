@@ -50,8 +50,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import org.springframework.web.bind.annotation.GetMapping;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -461,10 +459,17 @@ public class AppController implements Observer {
         }
     }
 
-    public void continueGame() {
+    public void newGame() {
 
         System.out.println("Continue game");
     }
+
+    public void startServer() {
+    System.out.println("Start server");
+    }
+
+
+
 
     public void showRules() {
         try {

@@ -19,25 +19,28 @@ public class MainMenuView extends StackPane {
         buttonBox.setPadding(new Insets(20, 0, 20, 0)); // Add padding at the top and bottom
 
         // Create buttons
-        Button continueButton = new Button("Continue");
+        Button newGameButton = new Button("New Game");
         Button multiplayerButton = new Button("Multiplayer");
         Button loadGameButton = new Button("Load Game");
+        Button startServerButton = new Button("Start Server");
         Button rulesButton = new Button("Rules");
 
         // Apply styles to buttons
-        styleButton(continueButton);
+        styleButton(newGameButton);
         styleButton(multiplayerButton);
         styleButton(loadGameButton);
         styleButton(rulesButton);
+        styleButton(startServerButton);
 
         // Set button actions
-        continueButton.setOnAction(e -> appController.continueGame());
+        newGameButton.setOnAction(e -> appController.newGame());
         multiplayerButton.setOnAction(e -> appController.multiplayer());
         loadGameButton.setOnAction(e -> appController.loadGame());
+        startServerButton.setOnAction(e -> appController.startServer());
         rulesButton.setOnAction(e -> appController.showRules());
 
         // Add buttons to the VBox
-        buttonBox.getChildren().addAll(continueButton, multiplayerButton, loadGameButton, rulesButton);
+        buttonBox.getChildren().addAll(newGameButton, multiplayerButton, loadGameButton, startServerButton, rulesButton);
 
         // Load the top image
         try {
