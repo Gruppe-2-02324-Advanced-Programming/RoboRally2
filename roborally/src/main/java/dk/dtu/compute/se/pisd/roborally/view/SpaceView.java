@@ -36,6 +36,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -125,6 +127,10 @@ public class SpaceView extends StackPane implements ViewObserver {
             emptyFieldView.setPreserveRatio(false);
             this.getChildren().add(emptyFieldView);
         }
+
+
+
+
 
         // Check if the current space has a pit
         for (FieldAction action : space.getActions()) {
