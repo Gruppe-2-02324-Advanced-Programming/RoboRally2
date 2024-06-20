@@ -259,7 +259,7 @@ public class PlayerView extends Tab implements ViewObserver {
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {
-                    if (player.board.getPhase() == Phase.PROGRAMMING) {
+                    if (player.board.getPhase() == Phase.Programming) {
                         cardFieldView.setBackground(CardFieldView.BG_DEFAULT);
                     } else {
                         if (i < player.board.getStep()) {
@@ -279,21 +279,21 @@ public class PlayerView extends Tab implements ViewObserver {
                     }
                 }
             }
-            if (player.board.getPhase() != Phase.PLAYER_INTERACTION) {
+            if (player.board.getPhase() != Phase.Player_interaction) {
                 if (!programPane.getChildren().contains(buttonPanel)) {
                     programPane.getChildren().remove(playerInteractionPanel);
                     programPane.add(buttonPanel, Player.NO_REGISTERS, 0);
                 }
                 switch (player.board.getPhase()) {
-                    case INITIALISATION:
+                    case Initialisation:
                         finishButton.setDisable(true);
                         break;
 
-                    case PROGRAMMING:
+                    case Programming:
                         finishButton.setDisable(false);
                         break;
 
-                    case ACTIVATION:
+                    case Activation:
                         finishButton.setDisable(true);
                         break;
 

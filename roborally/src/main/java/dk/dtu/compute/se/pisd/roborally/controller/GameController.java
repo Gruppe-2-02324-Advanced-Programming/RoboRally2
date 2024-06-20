@@ -94,10 +94,11 @@ public class GameController {
         return timer;
     }
 
+
     /**
-     * Setter for the timer.
      *
-     * @param timer the new timer value
+     * @author Christoffer s205449
+     * @param timer
      */
     public void setTimer(int timer) {
         this.timer = timer;
@@ -106,7 +107,7 @@ public class GameController {
 
     /**
      * Getter for the remaining time.
-     *
+     * @author Christoffer s205449
      * @return the remaining time value
      */
     public int getRemainingTime() {
@@ -198,7 +199,7 @@ public class GameController {
     public synchronized void finishProgrammingPhase() {
         makeProgramFieldsInvisible();
         makeProgramFieldsVisible(0);
-        board.setPhase(Phase.ACTIVATION);
+        board.setPhase(Phase.Activation);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);
         setTimer(180);
@@ -247,8 +248,13 @@ public class GameController {
         executeNextStepWithDelay();
     }
 
+
+    /**
+     * This method executes the moves which the player has requested in step mode
+     * @author Christoffer, s205449
+     */
     private void executeNextStepWithDelay() {
-        if (board.getPhase() == Phase.ACTIVATION && !board.isStepMode()) {
+        if (board.getPhase() == Phase.Activation && !board.isStepMode()) {
             executeNextStep();
             // Schedule the next step after a delay (e.g., 1 second)
             ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -275,7 +281,7 @@ public class GameController {
         do {
             //executeNextStep();
             executeNextStepWithDelay();
-        } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
+        } while (board.getPhase() == Phase.Activation && !board.isStepMode());
     }
 
     /**
@@ -340,10 +346,10 @@ public class GameController {
     public void executeCommandOptionAndContinue(@NotNull Command option) {
         Player currentPlayer = board.getCurrentPlayer();
         if (currentPlayer != null &&
-                board.getPhase() == Phase.PLAYER_INTERACTION &&
+                board.getPhase() == Phase.Player_interaction &&
                 option != null)
             ;
-        board.setPhase(Phase.ACTIVATION);
+        board.setPhase(Phase.Activation);
         executeCommand(currentPlayer, option);
 
         int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
@@ -427,6 +433,7 @@ public class GameController {
     /**
      * This exception is thrown when a player tries to move to a space that is not
      * possible to move to.
+     *
      */
 
     public static class moveNotPossibleException extends Exception {
@@ -672,7 +679,7 @@ public class GameController {
                 if (card != null && card.command != Command.AGAIN) {
                     Command command = card.command;
                     if (command.isInteractive()) {
-                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        board.setPhase(Phase.Player_interaction);
                         return;
                     }
                     executeCommand(player, command);
@@ -751,7 +758,7 @@ public class GameController {
      */
     private void updateTimer() {
         if (remainingTime > 0) {
-            if(board.getPhase() == Phase.PROGRAMMING){
+            if(board.getPhase() == Phase.Programming){
                 remainingTime--;
             }
             else {

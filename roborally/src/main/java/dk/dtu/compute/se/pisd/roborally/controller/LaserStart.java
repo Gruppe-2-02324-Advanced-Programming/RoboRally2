@@ -6,8 +6,7 @@ import dk.dtu.compute.se.pisd.roborally.model.Space;
 import org.jetbrains.annotations.NotNull;
 import javax.swing.JOptionPane;
 
-/** This class represents the pit field action.
- *  When a player lands on a pit, it shows a popup message.
+/** This class represents the laser start field action.
  *  @author Christoffer s205449
  *
  */

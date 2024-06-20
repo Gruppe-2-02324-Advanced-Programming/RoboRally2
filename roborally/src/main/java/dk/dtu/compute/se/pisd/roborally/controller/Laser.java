@@ -47,7 +47,7 @@ public class Laser extends FieldAction {
     }
 
     /**
-     * This method shows a popup message when a player lands on a laser.
+     * This method shows a popup message when a player lands on a laser - for now.
      * @param gameController the game controller
      * @param space the space the player is on
      * @return true always, as the action is simply to show a popup
