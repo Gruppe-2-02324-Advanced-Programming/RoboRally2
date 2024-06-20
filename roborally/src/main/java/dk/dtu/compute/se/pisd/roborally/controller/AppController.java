@@ -460,8 +460,32 @@ public class AppController implements Observer {
     }
 
     public void newGame() {
+        Optional<Integer> result = GameDialogs.showPlayerNumberDialog(PLAYER_NUMBER_OPTIONS);
 
-        System.out.println("Continue game");
+        if (result.isPresent()) {
+            if (gameController != null) {
+                // The UI should not allow this, but in case this happens anyway.
+                // give the user the option to save the game or abort this operation!
+                if (!stopGame()) {
+                    return;
+                }
+            }
+
+            gameController = new GameController(initializeBoard());
+            int no = result.get();
+            Board board = gameController.board;
+            board.attach(this);
+            for (int i = 0; i < no; i++) {
+                Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
+                board.addPlayer(player);
+                player.setSpace(board.getSpace(i % board.width, i));
+            }
+            board.setCurrentPlayer(board.getPlayer(0));
+
+            gameController.startProgrammingPhase();
+
+            roboRally.createBoardView(gameController);
+        }
     }
 
     public void startServer() {
