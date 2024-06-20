@@ -23,6 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.model;
 
 import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.StartGear;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 
@@ -33,20 +34,18 @@ import java.util.List;
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.Initialisation;
 
 /**
- *
  * The class of the game board. The board is a rectangular grid of spaces. The
  * board
  * keeps track of the players on the board and the current player. It also keeps
  * track of the phase of the game.
- * 
- * @Expose is used to serialize the field for saving the board.
+ *
  * @author Ekkart Kindler, ekki@dtu.dk
+ * @Expose is used to serialize the field for saving the board.
  * @auhtor Christoffer, s205449
  * @auhtor Setare, s232629
  * @auhtor Phillip, s224278
  * @auhtor Emily, s191174
  * @auhtor Jacob, s164958
- *
  */
 
 public class Board extends Subject {
@@ -77,9 +76,13 @@ public class Board extends Subject {
     // @Expose
     private boolean won = false;
 
+
+
+
     /**
      * Returns the program fields of the given player on the board.
-     *  @param playerNumber the number of the player
+     *
+     * @param playerNumber the number of the player
      * @author Marcus s214942
      */
     public List<String> getProgramFields(int playerNumber) {
@@ -120,7 +123,6 @@ public class Board extends Subject {
 
     /**
      * Creates a new board with the given width and height and the given name.
-     *
      */
 
     public Board(int width, int height, @NotNull String boardName) {
@@ -158,7 +160,6 @@ public class Board extends Subject {
 
     /**
      * Returns the space at the given position on the board.
-     *
      */
     public Space getSpace(int x, int y) {
         if (x >= 0 && x < width &&
@@ -175,7 +176,6 @@ public class Board extends Subject {
 
     /**
      * Returns the number of players on the board.
-     *
      */
     public int getPlayersNumber() {
         return players.size();
@@ -190,7 +190,6 @@ public class Board extends Subject {
 
     /**
      * Returns the player with the given index on the board.
-     *
      */
     public Player getPlayer(int i) {
         if (i >= 0 && i < players.size()) {
@@ -202,7 +201,6 @@ public class Board extends Subject {
 
     /**
      * Returns the current player on the board.
-     *
      */
     public Player getCurrentPlayer() {
         return current;
@@ -214,10 +212,9 @@ public class Board extends Subject {
             notifyChange();
         }
     }
-    
+
     /**
      * Returns the phase of the game. Setters and getters for phase and step
-     *
      */
     public Phase getPhase() {
         return phase;
@@ -243,7 +240,6 @@ public class Board extends Subject {
 
     /**
      * Returns whether the board is in step mode.
-     *
      */
     public boolean isStepMode() {
         return stepMode;
@@ -258,7 +254,6 @@ public class Board extends Subject {
 
     /**
      * Returns the number of the given player on the board. If the player is not
-     *
      */
     public int getPlayerNumber(@NotNull Player player) {
         if (player.board == this) {
@@ -277,7 +272,7 @@ public class Board extends Subject {
      * @param space   the space for which the neighbour should be computed
      * @param heading the heading of the neighbour
      * @return the space in the given direction; null if there is no (reachable)
-     *         neighbour
+     * neighbour
      */
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
         int x = space.x;
@@ -303,7 +298,6 @@ public class Board extends Subject {
     /**
      * Returns the number of checkpoints on the board. Getters and setters for
      * totalCheckpoints and won
-     *
      */
     public int getTotalCheckpoints() {
         return totalCheckpoints;
@@ -319,7 +313,6 @@ public class Board extends Subject {
 
     /**
      * Returns whether the game is won. The game is won, if one of the players
-     *
      */
     public boolean isWon() {
         for (Player p : players) {
@@ -339,12 +332,24 @@ public class Board extends Subject {
 
     /**
      * Returns the status message of the board. The status message contains
-     *
      */
     public String getStatusMessage() {
-        return  getPhase().name() + " Phase, " +
+        return getPhase().name() + " Phase, " +
                 getCurrentPlayer().getName() +
                 ", Turn Counter " + counter;
     }
+    public List<Space> getGearSpawnPoints() {
+        List<Space> spawnPoints = new ArrayList<>();
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Space space = spaces[x][y];
+                if (space.getActions().stream().anyMatch(action -> action instanceof StartGear)) {
+                    spawnPoints.add(space);
+                }
+            }
+        }
+        return spawnPoints;
+    }
+
 
 }

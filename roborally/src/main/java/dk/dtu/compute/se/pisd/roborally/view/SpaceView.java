@@ -22,12 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
-import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
-import dk.dtu.compute.se.pisd.roborally.controller.DoubleConveyorBelt;
-import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner;
-import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
-import dk.dtu.compute.se.pisd.roborally.controller.Gears;
+import dk.dtu.compute.se.pisd.roborally.controller.*;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
@@ -113,6 +108,17 @@ public class SpaceView extends StackPane implements ViewObserver {
         emptyFieldView.setFitHeight(SPACE_HEIGHT);
         emptyFieldView.setPreserveRatio(false);
         this.getChildren().add(emptyFieldView);
+
+        // Handling GearSpawn
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof StartGear) {
+                Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/white_Gear.png")));
+                ImageView gearImageView = new ImageView(gearImage);
+                gearImageView.setFitWidth(SPACE_WIDTH);
+                gearImageView.setFitHeight(SPACE_HEIGHT);
+                gearImageView.setPreserveRatio(true);  // Keeping aspect ratio might be visually pleasing
+                this.getChildren().add(gearImageView);
+            }}
 
 
         // Check if the current space has a gear action and display the corresponding image
