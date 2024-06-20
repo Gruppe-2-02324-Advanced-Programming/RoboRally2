@@ -75,10 +75,6 @@ public class AppController implements Observer {
 
     final private RoboRally roboRally;
 
-    @GetMapping("/test")
-    public String testEndpoint() {
-        return "Hello, this is a test endpoint from AppController!";
-    } // fjern dden her...
 
     private GameController gameController;
 
