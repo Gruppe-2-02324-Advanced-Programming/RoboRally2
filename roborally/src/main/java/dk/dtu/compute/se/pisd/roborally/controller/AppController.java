@@ -21,7 +21,6 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import com.google.gson.Gson;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
@@ -36,13 +35,11 @@ import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
-import dk.dtu.compute.se.pisd.roborally.model.Space;
 import dk.dtu.compute.se.pisd.roborally.network.Network;
 import dk.dtu.compute.se.pisd.roborally.view.GameDialogs;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -51,16 +48,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -84,10 +75,6 @@ public class AppController implements Observer {
 
     final private RoboRally roboRally;
 
-    @GetMapping("/test")
-    public String testEndpoint() {
-        return "Hello, this is a test endpoint from AppController!";
-    } // fjern dden her...
 
     private GameController gameController;
 
@@ -111,7 +98,7 @@ public class AppController implements Observer {
      * @author Christoffer s205449
      * @author Marcus s214962
      */
-    public void newGame() {
+    public void multiplayer() {
         Optional<Integer> result = GameDialogs.showPlayerNumberDialog(PLAYER_NUMBER_OPTIONS);
 
         if (result.isPresent()) {
@@ -121,18 +108,9 @@ public class AppController implements Observer {
                 if (!stopGame()) {
                     return;
                 }
+
+
             }
-
-
-
-
-
-
-
-
-            // XXX the board should eventually be created programmatically or loaded from a
-            // file
-            // here we just create an empty board with the required number of players.
 
             gameController = new GameController(initializeBoard());
             int no = result.get();
@@ -197,6 +175,10 @@ public class AppController implements Observer {
      * @author Christoffer s205449
      */
 
+
+
+
+
     public void saveGame() {
         if (gameController != null && gameController.board != null) {
             TextInputDialog dialog = new TextInputDialog();
@@ -213,6 +195,10 @@ public class AppController implements Observer {
             System.out.println("No game is currently active.");
         }
     }
+
+
+
+
 
     private List<String> getFilesInDirectory(String directoryPath) {
         File directory = new File(directoryPath);
@@ -461,7 +447,7 @@ public class AppController implements Observer {
                         Optional<ButtonType> result = alert.showAndWait();
 
                         if (result.isPresent() && result.get() == playAgainButton) {
-                            newGame();
+                            multiplayer();
                         } else if (result.isPresent() && result.get() == closeButton) {
                             exit();
                         } else {

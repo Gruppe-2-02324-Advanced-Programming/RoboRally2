@@ -20,24 +20,24 @@ public class MainMenuView extends StackPane {
 
         // Create buttons
         Button continueButton = new Button("Continue");
-        Button newGameButton = new Button("New Game");
+        Button multiplayerButton = new Button("Multiplayer");
         Button loadGameButton = new Button("Load Game");
         Button rulesButton = new Button("Rules");
 
         // Apply styles to buttons
         styleButton(continueButton);
-        styleButton(newGameButton);
+        styleButton(multiplayerButton);
         styleButton(loadGameButton);
         styleButton(rulesButton);
 
         // Set button actions
         continueButton.setOnAction(e -> appController.continueGame());
-        newGameButton.setOnAction(e -> appController.newGame());
+        multiplayerButton.setOnAction(e -> appController.multiplayer());
         loadGameButton.setOnAction(e -> appController.loadGame());
         rulesButton.setOnAction(e -> appController.showRules());
 
         // Add buttons to the VBox
-        buttonBox.getChildren().addAll(continueButton, newGameButton, loadGameButton, rulesButton);
+        buttonBox.getChildren().addAll(continueButton, multiplayerButton, loadGameButton, rulesButton);
 
         // Load the top image
         try {
