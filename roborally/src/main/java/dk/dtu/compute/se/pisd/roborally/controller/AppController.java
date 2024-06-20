@@ -468,31 +468,6 @@ public class AppController implements Observer {
                 }
             }
 
-            /**
-             * Initializes players and assigns them to starting positions.
-             *
-             * @param board the game board
-             * @param numberOfPlayers the number of players selected to play
-             */
-            private void initializePlayers(Board board, int numberOfPlayers) {
-                List<Space> spawnPoints = board.getGearSpawnPoints();
-                if (spawnPoints.size() < numberOfPlayers) {
-                    throw new IllegalStateException("Not enough start points for the number of players.");
-                }
-
-                Collections.shuffle(spawnPoints); // Shuffle to assign starting positions randomly
-
-                for (int i = 0; i < numberOfPlayers; i++) {
-                    String playerName = "Player " + (i + 1);
-                    String color = PLAYER_COLORS.get(i % PLAYER_COLORS.size());
-                    Player player = new Player(board, color, playerName);
-                    board.addPlayer(player);
-                    player.setSpace(spawnPoints.get(i)); // Assign each player to a start point
-                }
-                board.setCurrentPlayer(board.getPlayer(0)); // Optionally set the first player as the current player
-            }
-
-
             gameController = new GameController(initializeBoard());
             Board board = gameController.board;
             board.attach(this);
@@ -502,6 +477,29 @@ public class AppController implements Observer {
             gameController.startProgrammingPhase();
             roboRally.createBoardView(gameController);
         }
+    }
+    /**
+     * Initializes players and assigns them to starting positions.
+     *
+     * @param board the game board
+     * @param numberOfPlayers the number of players selected to play
+     */
+    private void initializePlayers(Board board, int numberOfPlayers) {
+        List<Space> spawnPoints = board.getGearSpawnPoints();
+        if (spawnPoints.size() < numberOfPlayers) {
+            throw new IllegalStateException("Not enough start points for the number of players.");
+        }
+
+        Collections.shuffle(spawnPoints); // Shuffle to assign starting positions randomly
+
+        for (int i = 0; i < numberOfPlayers; i++) {
+            String playerName = "Player " + (i + 1);
+            String color = PLAYER_COLORS.get(i % PLAYER_COLORS.size());
+            Player player = new Player(board, color, playerName);
+            board.addPlayer(player);
+            player.setSpace(spawnPoints.get(i)); // Assign each player to a start point
+        }
+        board.setCurrentPlayer(board.getPlayer(0)); // Optionally set the first player as the current player
     }
 
     public void startServer() {
