@@ -2,58 +2,60 @@ package dk.dtu.compute.se.pisd.roborally.model;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 /**
   * A class for the decks in the game
   * @author jacob, s164958
   */
 public class Deck {
-    private CommandCard[] cards;
+    private List<CommandCard> cards;
 
-    public Deck(CommandCard[] cards) {
-        this.cards = cards;
+    public Deck() {
+        cards = new ArrayList<>();
     }
 
-    public CommandCard[] getCards() {
+    public List<CommandCard> getCards() {
         return cards;
     }
 
-    public CommandCard getCard(int index) {
-        return cards[index];
+    public void setCards(List<CommandCard> cards) {
+        this.cards = cards;
     }
 
-    public int size() {
-        return cards.length;
+    public void addCard(CommandCard card) {
+        cards.add(card);
     }
 
-    public void empty() {
-        cards = new CommandCard[0];
+    public void removeCard(CommandCard card) {
+        cards.remove(card);
     }
-    public void shuffle() {
-        for (int i = 0; i < cards.length; i++) {
-            int j = (int) (Math.random() * cards.length);
-            CommandCard temp = cards[i];
-            cards[i] = cards[j];
-            cards[j] = temp;
+
+    public void shuffleCards() {
+        Collections.shuffle(cards, new Random());
+    }
+
+    public CommandCard drawCard(Deck feed) {
+        if (cards.isEmpty()) {
+            cards = feed.getCards();
+            feed.setCards(new ArrayList<>());
+            shuffleCards();
         }
-    }
-
-    public Deck resuffle(Deck deck) {
-        Deck newDeck = new Deck(deck.getCards());
-        newDeck.shuffle();
-        deck.empty();
-        return newDeck;
-    }
-
-    public CommandCard draw(Deck deck, Deck feedDeck) {
-        if (deck.size() == 0) {
-            deck = resuffle(feedDeck);
-        }
-        CommandCard card = deck.getCard(0);
-        CommandCard[] newDeck = new CommandCard[deck.size() - 1];
-        for (int i = 0; i < newDeck.length; i++) {
-            newDeck[i] = deck.getCard(i + 1);
-        }
+        CommandCard card = cards.get(0);
+        cards.remove(0);
         return card;
+    }
+
+    public boolean isEmpty() {
+        return cards.isEmpty();
+    }
+
+    public void initializeDeck(List<CommandCard> deck) {
+        cards.clear();
+        cards.addAll(deck);
     }
 
     /**
@@ -61,28 +63,32 @@ public class Deck {
      *
      * @return A deck
      */
-    public Deck getDefaultDeck() {
-        CommandCard[] cards = new CommandCard[20];
-        cards[0] = new CommandCard(Command.FORWARD);
-        cards[1] = new CommandCard(Command.FORWARD);
-        cards[2] = new CommandCard(Command.FORWARD);
-        cards[3] = new CommandCard(Command.RIGHT);
-        cards[4] = new CommandCard(Command.RIGHT);
-        cards[5] = new CommandCard(Command.LEFT);
-        cards[6] = new CommandCard(Command.LEFT);
-        cards[7] = new CommandCard(Command.FAST_FORWARD);
-        cards[8] = new CommandCard(Command.FAST_FORWARD);
-        cards[9] = new CommandCard(Command.FORWARD_THREE);
-        cards[10] = new CommandCard(Command.FORWARD_THREE);
-        cards[11] = new CommandCard(Command.BACKUP);
-        cards[12] = new CommandCard(Command.BACKUP);
-        cards[13] = new CommandCard(Command.LEFT);
-        cards[14] = new CommandCard(Command.UTURN);
-        cards[15] = new CommandCard(Command.OPTION_LEFT_RIGHT);
-        cards[16] = new CommandCard(Command.FORWARD);
-        cards[17] = new CommandCard(Command.RIGHT);
-        cards[18] = new CommandCard(Command.AGAIN);
-        cards[19] = new CommandCard(Command.POWER_UP);
-        return new Deck(cards);
+
+    public static Deck createDefaultDeck() {
+        Deck deck = new Deck();
+        List<CommandCard> cards = new ArrayList<>();
+        cards.add(new CommandCard(Command.FORWARD));
+        cards.add(new CommandCard(Command.FORWARD));
+        cards.add(new CommandCard(Command.FORWARD));
+        cards.add(new CommandCard(Command.RIGHT));
+        cards.add(new CommandCard(Command.RIGHT));
+        cards.add(new CommandCard(Command.LEFT));
+        cards.add(new CommandCard(Command.LEFT));
+        cards.add(new CommandCard(Command.FAST_FORWARD));
+        cards.add(new CommandCard(Command.FAST_FORWARD));
+        cards.add(new CommandCard(Command.FORWARD_THREE));
+        cards.add(new CommandCard(Command.FORWARD_THREE));
+        cards.add(new CommandCard(Command.BACKUP));
+        cards.add(new CommandCard(Command.BACKUP));
+        cards.add(new CommandCard(Command.LEFT));
+        cards.add(new CommandCard(Command.UTURN));
+        cards.add(new CommandCard(Command.OPTION_LEFT_RIGHT));
+        cards.add(new CommandCard(Command.FORWARD));
+        cards.add(new CommandCard(Command.RIGHT));
+        cards.add(new CommandCard(Command.AGAIN));
+        cards.add(new CommandCard(Command.POWER_UP));
+        deck.initializeDeck(cards);
+        deck.shuffleCards();
+        return deck;
     }
 }

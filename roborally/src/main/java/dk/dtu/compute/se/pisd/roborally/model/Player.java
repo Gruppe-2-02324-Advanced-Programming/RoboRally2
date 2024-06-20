@@ -91,8 +91,8 @@ public class Player extends Subject {
             cards[i] = new CommandCardField(this);
         }
 
-        this.drawpile = new Deck(new CommandCard[0]);
-        this.discardpile = new Deck(new CommandCard[0]);
+        this.drawpile = Deck.createDefaultDeck();
+        this.discardpile = new Deck();
     }
 
     /**
