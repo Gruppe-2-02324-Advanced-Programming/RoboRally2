@@ -1,0 +1,24 @@
+{"commmandCards":
+  [
+    {"command": "FORWARD"},
+    {"command": "FORWARD"},
+    {"command": "FORWARD"},
+    {"command": "RIGHT"},
+    {"command": "RIGHT"},
+    {"command": "LEFT"},
+    {"command": "LEFT"},
+    {"command": "FAST_FORWARD"},
+    {"command": "FAST_FORWARD"},
+    {"command": "FORWARD_THREE"},
+    {"command": "FORWARD_THREE"},
+    {"command": "BACKUP"},
+    {"command": "BACKUP"},
+    {"command": "LEFT"},
+    {"command": "UTURN"},
+    {"command": "OPTION_LEFT_RIGHT"},
+    {"command": "FORWARD"},
+    {"command": "RIGHT"},
+    {"command": "AGAIN"},
+    {"command": "POWER_UP"}
+  ]
+}
