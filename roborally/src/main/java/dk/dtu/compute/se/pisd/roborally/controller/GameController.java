@@ -632,7 +632,7 @@ public class GameController {
      * We've created spam method, not fully done yet
      */
     public void spam(Player player) {
-
+        player.getProgramField(board.getStep()).setCard(player.getDrawpile().drawCard(player.getDiscardpile()));
     }
 /**
  * @author Jacob, s164958
