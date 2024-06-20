@@ -27,7 +27,7 @@ public class Laser {
 
             Player targetPlayer = nextSpace.getPlayer();
             if (targetPlayer != null) {
-                discardCards(targetPlayer);
+                addSpam(targetPlayer);
                 break;
             }
 
@@ -39,16 +39,7 @@ public class Laser {
         return space.getWalls().contains(heading);
     }
 
-    private void discardCards(Player player) {
-        // Use spam card logic to discard the cards
-        for (int i = 0; i < Player.NO_REGISTERS; i++) {
-            CommandCardField field = player.getProgramField(i);
-            CommandCard card = field.getCard();
-            if (card != null) {
-                player.getDiscardpile().getCards()[player.getDiscardpile().size()] = card;
-                player.getDiscardpile().size();
-                field.setCard(null);
-            }
-        }
+    private void addSpam(Player player) {
+        player.getDiscardpile().addCard(new CommandCard(Command.SPAM));
     }
 }
