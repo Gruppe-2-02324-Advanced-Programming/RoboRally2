@@ -90,6 +90,9 @@ public class Player extends Subject {
         for (int i = 0; i < cards.length; i++) {
             cards[i] = new CommandCardField(this);
         }
+
+        this.drawpile = Deck.createDefaultDeck();
+        this.discardpile = new Deck();
     }
 
     /**
@@ -273,4 +276,6 @@ public class Player extends Subject {
     public void setDiscardpile(Deck discardpile) {
         this.discardpile = discardpile;
     }
+
+
 }

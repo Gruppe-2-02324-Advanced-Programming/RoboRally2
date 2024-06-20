@@ -128,7 +128,8 @@ public class GameController {
                 }
                 for (int j = 0; j < Player.NO_CARDS; j++) {
                     CommandCardField field = player.getCardField(j);
-                    field.setCard(generateRandomCommandCard());
+                    field.setCard(player.getDrawpile().drawCard(player.getDiscardpile()));
+                    //field.setCard(generateRandomCommandCard());
                     field.setVisible(true);
                 }
             }
@@ -267,6 +268,7 @@ public class GameController {
                         board.setCurrentPlayer(board.getPlayer(0));
 
                     } else {
+                        cleanup();
                         startProgrammingPhase();
                     }
                 }
@@ -629,12 +631,7 @@ public class GameController {
      * We've created spam method, not fully done yet
      */
     public void spam(Player player) {
-        if (player != null && player.board == board) {
-            System.out.println("SPAM");
-            CommandCardField currentRegister = player.getProgramField(board.getStep());
-            currentRegister.setCard(player.getDrawpile().draw(player.getDrawpile(), player.getDiscardpile()));
-            executeCommand(player, currentRegister.getCard().command);
-        }
+        player.getProgramField(board.getStep()).setCard(player.getDrawpile().drawCard(player.getDiscardpile()));
     }
 /**
  * @author Jacob, s164958
@@ -642,14 +639,24 @@ public class GameController {
  * This method is used to clean up the program fields of the players
  */
     public void cleanup() {
-        for (Player player : board.getPlayers()) {
-            for (int i = 0; i < Player.NO_REGISTERS; i++) {
-                CommandCardField field = player.getProgramField(i);
-                CommandCard card = field.getCard();
-                if (card != null) {
-                    player.getDiscardpile().getCards()[player.getDiscardpile().size()] = card;
-                    player.getDiscardpile().size();
+        for (int i = 0; i < board.getPlayersNumber(); i++) {
+            Player player = board.getPlayer(i);
+            if (player != null) {
+                for (int j = 0; j < Player.NO_REGISTERS; j++) {
+                    CommandCardField field = player.getProgramField(j);
+                    if (field.getCard() != null) {
+                        player.getDiscardpile().addCard(field.getCard());
+                    }
                     field.setCard(null);
+                    field.setVisible(true);
+                }
+                for (int j = 0; j < Player.NO_CARDS; j++) {
+                    CommandCardField field = player.getCardField(j);
+                    if (field.getCard() != null) {
+                        player.getDiscardpile().addCard(field.getCard());
+                    }
+                    field.setCard(null);
+                    field.setVisible(true);
                 }
             }
         }

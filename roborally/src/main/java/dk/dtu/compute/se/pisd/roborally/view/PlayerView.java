@@ -65,6 +65,16 @@ public class PlayerView extends Tab implements ViewObserver {
     private Label energyCubesLabel;
 
     /**
+     * The label showing the number of cards in the player's drawpile.
+     */
+    private Label drawpileLabel;
+
+    /**
+     * The label showing the number of cards in the player's discardpile.
+     */
+    private Label discardpileLabel;
+
+    /**
      * The pane showing the program of the player.
      */
     private GridPane programPane;
@@ -156,8 +166,15 @@ public class PlayerView extends Tab implements ViewObserver {
         energyCubesLabel = new Label("Energy Cubes: " + player.getEnergyCubes());
         energyCubesLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
 
+        drawpileLabel = new Label("Drawpile: " + player.getDrawpile().getCards().size());
+        drawpileLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
+
+        discardpileLabel = new Label("Discardpile: " + player.getDiscardpile().getCards().size());
+        discardpileLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
+
         checkpointLabel = new Label("Checkpoints: " + player.getCheckpoints());
         top.getChildren().add(checkpointLabel); // Add the label to the layout
+
 
         programLabel = new Label("Program");
 
@@ -225,6 +242,8 @@ public class PlayerView extends Tab implements ViewObserver {
         top.getChildren().add(programPane);
         top.getChildren().add(cardsLabel);
         top.getChildren().add(cardsPane);
+        top.getChildren().add(drawpileLabel);
+        top.getChildren().add(discardpileLabel);
         top.getChildren().add(energyCubesLabel);
 
         if (player.board != null) {
@@ -243,6 +262,8 @@ public class PlayerView extends Tab implements ViewObserver {
         if (subject == player.board) {
             energyCubesLabel.setText("Energy Cubes: " + player.getEnergyCubes());
             checkpointLabel.setText("Checkpoints: " + player.getCheckpoints());
+            drawpileLabel.setText("Drawpile: " + player.getDrawpile().getCards().size());
+            discardpileLabel.setText("Discardpile: " + player.getDiscardpile().getCards().size());
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {

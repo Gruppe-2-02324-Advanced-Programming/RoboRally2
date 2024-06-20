@@ -51,7 +51,7 @@ public enum Command {
     AGAIN("Again", new Image("assets/cardsAgain.png", 65, 100, true, true)),
     OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png", 65, 100, true, true), LEFT, RIGHT),
     POWER_UP("Power Up", new Image("assets/powerupcard.png", 65, 100, true, true)),
-    SPAM("Spam", new Image("assets/SPAMcard.png", 65, 100, true, true));
+    SPAM("Spam", new Image("assets/cardsSpam.png", 65, 100, true, true));
 
     // @Expose
     final public String displayName;

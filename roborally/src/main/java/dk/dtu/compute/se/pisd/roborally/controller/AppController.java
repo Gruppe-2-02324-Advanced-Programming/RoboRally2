@@ -28,15 +28,8 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Command;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 
-import dk.dtu.compute.se.pisd.roborally.model.Space;
 import dk.dtu.compute.se.pisd.roborally.network.Network;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -337,6 +330,8 @@ public class AppController implements Observer {
             roboRally.createBoardView(gameController);
         });
     }
+
+
 
     /**
      * @return the board that the user has selected

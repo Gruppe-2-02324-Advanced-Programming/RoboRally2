@@ -28,7 +28,9 @@ import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.templates.BoardTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.templates.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.Deck;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -192,5 +194,4 @@ public class LoadBoard {
             return null;
         }
     }
-
 }
