@@ -23,8 +23,6 @@ package dk.dtu.compute.se.pisd.roborally.model;
 
 import javafx.scene.image.Image;
 
-import com.google.gson.annotations.Expose;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

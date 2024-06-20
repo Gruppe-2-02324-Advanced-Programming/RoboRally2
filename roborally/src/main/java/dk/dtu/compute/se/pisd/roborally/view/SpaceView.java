@@ -32,16 +32,9 @@ import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.geometry.Pos;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import javafx.scene.image.Image;
@@ -50,15 +43,18 @@ import javafx.scene.image.ImageView;
 import java.util.Objects;
 
 /**
- * SpaceView is a view of a space on the board. It is responsible for drawing the spaces on the board.
- * and updating the view when the space changes. For example if there is a player on the space, the view should update
- * to show the player on the space. Also, if there is a wall on the space, the view should update to show the wall. etc
+ * SpaceView is a view of a space on the board. It is responsible for drawing
+ * the spaces on the board.
+ * and updating the view when the space changes. For example if there is a
+ * player on the space, the view should update
+ * to show the player on the space. Also, if there is a wall on the space, the
+ * view should update to show the wall. etc
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
 public class SpaceView extends StackPane implements ViewObserver {
-/**
+    /**
      * The height and width of the space
      */
 
@@ -68,7 +64,7 @@ public class SpaceView extends StackPane implements ViewObserver {
      */
 
     final public static int SPACE_WIDTH = 50; // 75;
-/**
+    /**
      * The space that this view represents
      */
 
@@ -76,6 +72,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     /**
      * Constructor for the SpaceView class
+     * 
      * @param space the space that this view should represent
      */
     public SpaceView(@NotNull Space space) {
@@ -96,12 +93,10 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.setStyle("-fx-background-color: purple;");
         }
 
-
         // This space view should listen to changes of the space
         space.attach(this);
         update(space);
     }
-
 
     /**
      * Draws the walls possibly other stuff
@@ -121,16 +116,18 @@ public class SpaceView extends StackPane implements ViewObserver {
         emptyFieldView.setPreserveRatio(false);
         this.getChildren().add(emptyFieldView);
 
-
-        // Check if the current space has a gear action and display the corresponding image
+        // Check if the current space has a gear action and display the corresponding
+        // image
         for (FieldAction action : space.getActions()) {
             if (action instanceof Gears gears) {
                 ImageView gearImageView;
                 if (gears.rotation == Gears.LEFT_TURN) {
-                    Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearLeft.png")));
+                    Image gearImage = new Image(
+                            Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearLeft.png")));
                     gearImageView = new ImageView(gearImage);
                 } else if (gears.rotation == Gears.RIGHT_TURN) {
-                    Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearRight.png")));
+                    Image gearImage = new Image(
+                            Objects.requireNonNull(getClass().getResourceAsStream("/assets/gearRight.png")));
                     gearImageView = new ImageView(gearImage);
                 } else {
                     continue; // If it's not left or right, we'll skip this action
@@ -178,9 +175,6 @@ public class SpaceView extends StackPane implements ViewObserver {
                 break;
             }
         }
-
-
-
 
         // Check if the current space contains a conveyor belt
         for (FieldAction action : space.getActions()) {
@@ -244,10 +238,6 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         Image wallImage = new Image("/assets/wall.png");
 
-
-
-
-
         // Check if the current space is a checkpoint
         for (FieldAction action : space.getActions()) {
             if (action instanceof Checkpoint) {
@@ -262,7 +252,6 @@ public class SpaceView extends StackPane implements ViewObserver {
             }
         }
 
-
         // Draw walls
         for (Heading wall : space.getWalls()) {
 
@@ -271,7 +260,7 @@ public class SpaceView extends StackPane implements ViewObserver {
             switch (wall) {
                 case NORTH:
                     wallView.setFitHeight(SPACE_HEIGHT);
-                    wallView.setFitWidth(15);  // Set the width for horizontal wall
+                    wallView.setFitWidth(15); // Set the width for horizontal wall
                     wallView.setRotate(90); // Rotate 90 degrees for North wall
                     wallView.setTranslateY(-SPACE_HEIGHT / 2.4);
                     StackPane.setAlignment(wallView, Pos.TOP_CENTER);
@@ -292,7 +281,8 @@ public class SpaceView extends StackPane implements ViewObserver {
                 case WEST:
                     wallView.setFitHeight(SPACE_HEIGHT);
                     wallView.setFitWidth(15);
-                    wallView.setRotate(180); // Rotate 180 degrees for the West wall (if the image is top/bottom specific)
+                    wallView.setRotate(180); // Rotate 180 degrees for the West wall (if the image is top/bottom
+                                             // specific)
                     StackPane.setAlignment(wallView, Pos.CENTER_LEFT);
                     break;
             }
@@ -320,6 +310,3 @@ public class SpaceView extends StackPane implements ViewObserver {
     }
 
 }
-
-
-

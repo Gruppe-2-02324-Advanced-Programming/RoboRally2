@@ -32,9 +32,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * The main class for the RoboRally application. This class is responsible for the setup of the primary stage and the
- * primary scene. The primary scene contains a menu bar and a pane for the board view. The board view is created and added
- * to the pane when a new game is created or loaded. The class also contains the main method for starting the application.
+ * The main class for the RoboRally application. This class is responsible for
+ * the setup of the primary stage and the
+ * primary scene. The primary scene contains a menu bar and a pane for the board
+ * view. The board view is created and added
+ * to the pane when a new game is created or loaded. The class also contains the
+ * main method for starting the application.
+ * 
  * @see AppController
  * @see GameController
  * @see BoardView
@@ -60,18 +64,17 @@ public class RoboRally extends Application {
     private BorderPane boardRoot;
 
     /**
-     * The game controller for the application.
-     */
-    private GameController gameController;
-    /**
-     * Initializes the application. This method is called before the start method and is used to initialize the application.
+     * Initializes the application. This method is called before the start method
+     * and is used to initialize the application.
      */
     @Override
     public void init() throws Exception {
         super.init();
     }
+
     /**
-     * Starts the application. This method is called after the init method and is used to start the application.
+     * Starts the application. This method is called after the init method and is
+     * used to start the application.
      */
     @Override
     public void start(Stage primaryStage) {
@@ -93,13 +96,16 @@ public class RoboRally extends Application {
         stage.setOnCloseRequest(
                 e -> {
                     e.consume();
-                    appController.exit();} );
+                    appController.exit();
+                });
         stage.setResizable(false);
         stage.sizeToScene();
         stage.show();
     }
+
     /**
-     * Method to create a new board view for the given game controller. If a board view is already present, it is removed
+     * Method to create a new board view for the given game controller. If a board
+     * view is already present, it is removed
      * before the new board view is created and added to the pane.
      */
     public void createBoardView(GameController gameController) {
@@ -123,13 +129,14 @@ public class RoboRally extends Application {
         super.stop();
 
         // XXX just in case we need to do something here eventually;
-        //     but right now the only way for the user to exit the app
-        //     is delegated to the exit() method in the AppController,
-        //     so that the AppController can take care of that.
+        // but right now the only way for the user to exit the app
+        // is delegated to the exit() method in the AppController,
+        // so that the AppController can take care of that.
     }
 
     /**
      * Main method to start the application.
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
