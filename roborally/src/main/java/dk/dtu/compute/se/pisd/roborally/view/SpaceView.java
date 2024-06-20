@@ -27,16 +27,9 @@ import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.geometry.Pos;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import javafx.scene.image.Image;
@@ -45,14 +38,13 @@ import javafx.scene.image.ImageView;
 import java.io.InputStream;
 import java.util.Objects;
 
-import static dk.dtu.compute.se.pisd.roborally.model.Heading.*;
-
 /**
  * SpaceView is a view of a space on the board. It is responsible for drawing the spaces on the board.
  * and updating the view when the space changes. For example if there is a player on the space, the view should update
  * to show the player on the space. Also, if there is a wall on the space, the view should update to show the wall. etc
  *
  * @author Ekkart Kindler, ekki@dtu.dk
+ * @author Emily, s191174
  *
  */
 public class SpaceView extends StackPane implements ViewObserver {

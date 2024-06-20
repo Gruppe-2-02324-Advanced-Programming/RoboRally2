@@ -1,4 +1,4 @@
-package dk.dtu.compute.se.pisd.roborally.gameclient;
+package dk.dtu.compute.se.pisd.roborally.network.gameclient;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,17 +15,36 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
+
+/**
+ * This class represents a game client that can update and retrieve player cards
+ *
+ * @author Marcus s214942
+ */
 @Component
 public class GameClient extends JFrame {
 
     private final RestTemplate restTemplate;
     private String baseUrl = "http://localhost:8080/games";
 
+
+    /**
+     * Constructor for the game client
+     *
+     * @author Marcus s214942
+     */
     public GameClient() {
         this.restTemplate = new RestTemplate();
         initializeUI();
     }
 
+
+    /**
+     * Method to update the base url of the game client
+     *
+     * @param ip the ip address of the server
+     * @author Marcus s214942
+     */
     public void updateBaseUrl(String ip) {
         baseUrl = "http://" + ip + ":8080/games";
     }
@@ -40,20 +59,36 @@ public class GameClient extends JFrame {
 
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.PUT, request, Void.class);
 
+
+/*
+        //udkommenteret kode virker ikke på min (Christoffer) og er ikke nødvendig for at programmet kører
         if (response.getStatusCode().is2xxSuccessful()) {
             JOptionPane.showMessageDialog(this, "Player's cards updated successfully.");
         } else {
             JOptionPane.showMessageDialog(this,
                     "Failed to update player's cards. Status code: " + response.getStatusCode());
         }
+        }
+ */
     }
 
+    /**
+     * Method to retrieve the cards of a player in a game
+     *
+     * @author Marcus s214942
+     */
     public List<String> getPlayerCards(Long gameId, Long playerId) {
         String url = baseUrl + "/" + gameId + "/player/" + playerId + "/cards";
         ResponseEntity<String[]> response = restTemplate.getForEntity(url, String[].class);
         return response.getBody() != null ? Arrays.asList(response.getBody()) : null;
     }
 
+
+    /**
+     * Method to initialize the user interface of the game client
+     *
+     * @author Marcus s214942
+     */
     private void initializeUI() {
         setTitle("Game Client");
         setSize(300, 200);
@@ -107,6 +142,11 @@ public class GameClient extends JFrame {
 
         return response.getBody();
 
+    /**
+     * Main method to test the game client
+     *
+     * @author Marcus s214942
+     */
     }
 
     public static void main(String[] args) {

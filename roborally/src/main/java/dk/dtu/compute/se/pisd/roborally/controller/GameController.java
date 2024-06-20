@@ -1,11 +1,31 @@
+/*
+ *  This file is part of the initial project provided for the
+ *  course "Project in Software Development (02362)" held at
+ *  DTU Compute at the Technical University of Denmark.
+ *
+ *  Copyright (C) 2019, 2020: Ekkart Kindler, ekki@dtu.dk
+ *
+ *  This software is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; version 2 of the License.
+ *
+ *  This project is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this project; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import dk.dtu.compute.se.pisd.roborally.gameclient.GameClient;
+import dk.dtu.compute.se.pisd.roborally.network.gameclient.GameClient;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -97,7 +117,7 @@ public class GameController {
      * This is just some dummy controller operation to make a simple move to see
      * something
      * happening on the board. This method should eventually be deleted!
-     *
+     * 
      * @author Ekkart Kindler
      * @param space the space to which the current player should move
      */
@@ -131,7 +151,7 @@ public class GameController {
      * @author Christoffer, s205449
      */
     public void startProgrammingPhase() {
-        board.setPhase(Phase.PROGRAMMING);
+        board.setPhase(Phase.Programming);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);
 
@@ -270,14 +290,14 @@ public class GameController {
      */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
-        if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
+        if (board.getPhase() == Phase.Activation && currentPlayer != null) {
             int step = board.getStep();
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
                     Command command = card.command;
                     if (command.isInteractive()) {
-                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        board.setPhase(Phase.Player_interaction);
                         return;
                     }
                     executeCommand(currentPlayer, command);
@@ -338,6 +358,7 @@ public class GameController {
                         action.doAction(this, player.getSpace());
                     }
                 }
+
             }
             if (step < Player.NO_REGISTERS) {
                 makeProgramFieldsVisible(step);
@@ -601,7 +622,7 @@ public class GameController {
      * should eventually be removed.
      */
     public void leftOrRight(Player player, Command option) {
-        if (player != null && option != null && player.board.getPhase() == Phase.PLAYER_INTERACTION) {
+        if (player != null && option != null && player.board.getPhase() == Phase.Player_interaction) {
             switch (option) {
                 case LEFT:
                     executeCommandOptionAndContinue(Command.LEFT);

@@ -108,7 +108,7 @@ public class PlayersView extends TabPane implements ViewObserver {
      * @author Marcus s214942
      */
     private void handleTabChange(int newIndex) {
-        System.out.println("Current Tab Index: " + newIndex);
+        // System.out.println("Current Tab Index: " + newIndex);
         gameController.changeCurrentTabIndex(newIndex);
     }
 

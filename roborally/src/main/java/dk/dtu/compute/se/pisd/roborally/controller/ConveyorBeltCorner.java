@@ -12,17 +12,16 @@ import org.jetbrains.annotations.NotNull;
  * and change the player's heading based on the conveyor belt's rotation when the player lands on the conveyor belt corner
  * The class has a heading and a rotation field to store the conveyor belt's heading and rotation respectively
  * @author Christoffer s205449
- *
+ * @author Emily, s191174
  */
 
-//todo Currently also changes the heading of the robot, which it should not do
 public class ConveyorBeltCorner extends FieldAction {
     Heading heading;
     private int rotation;
 
     /**
      * Constructor for the conveyor belt corner
-     * @autor Christoffer s205449
+     * @author Christoffer s205449
      * @param heading the heading of the conveyor belt corner
      * @param rotation the rotation of the conveyor belt corner
      */
@@ -34,7 +33,8 @@ public class ConveyorBeltCorner extends FieldAction {
     /**
      * This method moves the player to the next space in the direction of the conveyor belt corner
      * and changes the player's heading based on the conveyor belt corner's rotation
-     * @autor Christoffer s205449
+     * @author Emily, s191174
+     * @author Christoffer s205449
      * @param gameController the game controller
      * @param space the space the player is on
      * @return true if the player is moved to the next space in the direction of the conveyor belt corner
@@ -75,7 +75,7 @@ public class ConveyorBeltCorner extends FieldAction {
 
     /**
      * Get the heading of the conveyor belt corner
-     * @autor Christoffer s205449
+     * @author Christoffer s205449
      * @return the heading of the conveyor belt corner
      */
     public Heading getHeading() {
@@ -84,7 +84,7 @@ public class ConveyorBeltCorner extends FieldAction {
 
     /**
      * Get the rotation of the conveyor belt corner
-     * @autor Christoffer s205449
+     * @author Christoffer s205449
      * @return the rotation of the conveyor belt corner
      */
     public int getRotation() {
