@@ -107,7 +107,6 @@ public class AppController implements Observer {
                     return;
                 }
 
-
             }
 
             gameController = new GameController(initializeBoard());
