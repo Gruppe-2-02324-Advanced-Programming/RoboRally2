@@ -39,9 +39,12 @@ import java.io.InputStream;
 import java.util.Objects;
 
 /**
- * SpaceView is a view of a space on the board. It is responsible for drawing the spaces on the board.
- * and updating the view when the space changes. For example if there is a player on the space, the view should update
- * to show the player on the space. Also, if there is a wall on the space, the view should update to show the wall. etc
+ * SpaceView is a view of a space on the board. It is responsible for drawing
+ * the spaces on the board.
+ * and updating the view when the space changes. For example if there is a
+ * player on the space, the view should update
+ * to show the player on the space. Also, if there is a wall on the space, the
+ * view should update to show the wall. etc
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Emily, s191174
@@ -66,6 +69,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     /**
      * Constructor for the SpaceView class
+     *
      * @param space the space that this view should represent
      */
     public SpaceView(@NotNull Space space) {
@@ -167,6 +171,8 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
 
         // Check if the current space has a gear action and display the corresponding image
+        // Check if the current space has a gear action and display the corresponding
+        // image
         for (FieldAction action : space.getActions()) {
             if (action instanceof Gears gears) {
                 ImageView gearImageView;
@@ -447,4 +453,5 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.getChildren().add(arrow);
         }
     }
-}
+
+

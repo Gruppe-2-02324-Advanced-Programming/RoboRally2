@@ -24,8 +24,6 @@ package dk.dtu.compute.se.pisd.roborally.view;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
@@ -35,7 +33,8 @@ import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
 
 /**
- *  The view of the board of the game. The board is displayed as a grid of spaces.
+ * The view of the board of the game. The board is displayed as a grid of
+ * spaces.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  *
@@ -72,8 +71,10 @@ public class BoardView extends VBox implements ViewObserver {
      */
 
     private SpaceEventHandler spaceEventHandler;
-/**
-     * The constructor of the board view. The view is created for the given game controller.
+
+    /**
+     * The constructor of the board view. The view is created for the given game
+     * controller.
      *
      * @param gameController the game controller for the game.
      */
@@ -105,7 +106,8 @@ public class BoardView extends VBox implements ViewObserver {
         board.attach(this);
         update(board);
     }
-/**
+
+    /**
      * Update the view of the board. This method is called when the board changes.
      *
      * @param subject the subject of the update.
@@ -113,23 +115,27 @@ public class BoardView extends VBox implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         if (subject == board) {
-            Phase phase = board.getPhase();
             statusLabel.setText(board.getStatusMessage());
         }
     }
-/**
-     * The event handler for the spaces. This handler is used to move the current player to a space
+
+    /**
+     * The event handler for the spaces. This handler is used to move the current
+     * player to a space
      * when the space is clicked - is going to be removed later.
      */
-    // XXX this handler and its uses should eventually be deleted! This is just to help test the
-    //     behaviour of the game by being able to explicitly move the players on the board!
+    // XXX this handler and its uses should eventually be deleted! This is just to
+    // help test the
+    // behaviour of the game by being able to explicitly move the players on the
+    // board!
     private class SpaceEventHandler implements EventHandler<MouseEvent> {
 
         /**
          * The game controller for the game.
          */
         final public GameController gameController;
-/**
+
+        /**
          * The constructor of the space event handler.
          *
          * @param gameController the game controller for the game.
@@ -137,7 +143,8 @@ public class BoardView extends VBox implements ViewObserver {
         public SpaceEventHandler(@NotNull GameController gameController) {
             this.gameController = gameController;
         }
-/**
+
+        /**
          * Handle the mouse event for a space.
          *
          * @param event the mouse event.

@@ -72,6 +72,8 @@ public class GameController {
     private int remainingTime;
     private ScheduledExecutorService scheduler;
 
+    public int curPlayerNo;
+
     /**
      * Constructor for the GameController.
      *

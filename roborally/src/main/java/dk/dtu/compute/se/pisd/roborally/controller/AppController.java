@@ -34,6 +34,9 @@ import dk.dtu.compute.se.pisd.roborally.view.GameDialogs;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextInputDialog;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -44,6 +47,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import java.util.ArrayList;
+
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -123,13 +131,11 @@ public class AppController implements Observer {
                 gameController.updateBaseUrl(url);
             });
 
-            /*
-             * Optional<Integer> playerNumber = GameDialogs.showPlayerSelectionDialog(no);
-             * 
-             * playerNumber.ifPresent(number -> {
-             * gameController.setPlayerNumber(number);
-             * });
-             */
+            Optional<Integer> currentPlayerNumber = GameDialogs.showPlayerSelectionDialog(no);
+
+            currentPlayerNumber.ifPresent(number -> {
+                gameController.setPlayerNumber(number);
+            });
 
             Optional<String> hostOrJoin = GameDialogs.showHostOrJoinDialog();
 
@@ -344,7 +350,7 @@ public class AppController implements Observer {
         if (result.isPresent()) {
             return LoadBoard.loadBoard(result.get());
         }
-        return null;
+        return new Board(8, 8);
     }
 
     /**
