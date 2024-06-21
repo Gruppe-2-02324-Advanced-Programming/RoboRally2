@@ -205,6 +205,48 @@
       "walls": [],
       "actions": [],
       "x": 3, "y": 6
+    },
+    {
+      "walls": [],
+      "actions": [
+        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.StartGear", "INSTANCE": {}}
+      ],
+      "x": 0, "y": 5
+    },
+    {
+      "walls": [],
+      "actions": [
+        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.StartGear", "INSTANCE": {}}
+      ],
+      "x": 0, "y": 7
+    },
+    {
+      "walls": [],
+      "actions": [
+        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.StartGear", "INSTANCE": {}}
+      ],
+      "x": 2, "y": 0
+    },
+    {
+      "walls": [],
+      "actions": [
+        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.StartGear", "INSTANCE": {}}
+      ],
+      "x": 4, "y": 2
+    },
+    {
+      "walls": [],
+      "actions": [
+        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.StartGear", "INSTANCE": {}}
+      ],
+      "x": 7, "y": 0
+    },
+    {
+      "walls": [],
+      "actions": [
+        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.StartGear", "INSTANCE": {}}
+      ],
+      "x": 5, "y": 3
     }
   ]
 }

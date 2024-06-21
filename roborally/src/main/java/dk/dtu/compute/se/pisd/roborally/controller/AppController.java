@@ -483,6 +483,7 @@ public class AppController implements Observer {
      *
      * @param board the game board
      * @param numberOfPlayers the number of players selected to play
+     * @author Emily, s191174
      */
     private void initializePlayers(Board board, int numberOfPlayers) {
         List<Space> spawnPoints = board.getGearSpawnPoints();

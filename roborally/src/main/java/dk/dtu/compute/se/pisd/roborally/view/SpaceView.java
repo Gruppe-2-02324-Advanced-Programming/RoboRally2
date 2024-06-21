@@ -128,6 +128,17 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.getChildren().add(emptyFieldView);
         }
 
+        // Handling GearSpawn
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof StartGear) {
+                Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/white_Gear.png")));
+                ImageView gearImageView = new ImageView(gearImage);
+                gearImageView.setFitWidth(SPACE_WIDTH);
+                gearImageView.setFitHeight(SPACE_HEIGHT);
+                gearImageView.setPreserveRatio(true);  // Keeping aspect ratio might be visually pleasing
+                this.getChildren().add(gearImageView);
+            }}
+
 
         // Handling GearSpawn
         for (FieldAction action : space.getActions()) {
