@@ -61,6 +61,8 @@ public class GameController {
 
     public int playerNumber;
 
+    public int curPlayerNo;
+
     /**
      * Constructor for the GameController.
      * 

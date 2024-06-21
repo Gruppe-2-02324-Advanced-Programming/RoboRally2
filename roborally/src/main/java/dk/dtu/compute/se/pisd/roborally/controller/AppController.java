@@ -134,13 +134,11 @@ public class AppController implements Observer {
                 gameController.updateBaseUrl(url);
             });
 
-            /*
-             * Optional<Integer> playerNumber = GameDialogs.showPlayerSelectionDialog(no);
-             * 
-             * playerNumber.ifPresent(number -> {
-             * gameController.setPlayerNumber(number);
-             * });
-             */
+            Optional<Integer> currentPlayerNumber = GameDialogs.showPlayerSelectionDialog(no);
+
+            currentPlayerNumber.ifPresent(number -> {
+                gameController.setPlayerNumber(number);
+            });
 
             Optional<String> hostOrJoin = GameDialogs.showHostOrJoinDialog();
 
