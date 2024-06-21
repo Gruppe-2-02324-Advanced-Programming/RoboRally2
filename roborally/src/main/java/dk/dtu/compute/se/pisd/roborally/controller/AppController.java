@@ -31,6 +31,7 @@ import dk.dtu.compute.se.pisd.roborally.model.*;
 
 import dk.dtu.compute.se.pisd.roborally.network.Network;
 import dk.dtu.compute.se.pisd.roborally.view.GameDialogs;
+import dk.dtu.compute.se.pisd.server.RoborallyApplication;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -43,12 +44,15 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.*;
 
 import java.util.ArrayList;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Arrays;
@@ -511,8 +515,21 @@ public class AppController implements Observer {
         board.setCurrentPlayer(board.getPlayer(0)); // Optionally set the first player as the current player
     }
 
+
     public void startServer() {
-    System.out.println("Start server");
+        SpringApplication.run(RoborallyApplication.class);
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Server Status");
+            alert.setHeaderText(null);
+            try {
+                String serverIP = InetAddress.getLocalHost().getHostAddress();
+                alert.setContentText("The server has started successfully at IP: " + serverIP);
+            } catch (UnknownHostException e) {
+                alert.setContentText("The server has started, but the IP could not be determined.");
+            }
+            alert.showAndWait();
+        });
     }
 
 
