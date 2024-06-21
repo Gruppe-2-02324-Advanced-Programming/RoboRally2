@@ -26,15 +26,15 @@ import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-
-import javax.swing.JComboBox;
-
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The view of a player of the game. The view shows the program of the player
@@ -97,13 +97,15 @@ public class PlayerView extends Tab implements ViewObserver {
     /**
      * The button to finish the programming phase.
      */
-
     private Button finishButton;
 
+    private Button readyButton;
     /**
      * The button to execute the program.
      */
-    private Button executeButton;
+
+
+    private Label timerLabel;
 
     /**
      * The button to push your cards to the server.
@@ -112,24 +114,23 @@ public class PlayerView extends Tab implements ViewObserver {
 
     private Label playerNo;
 
+    private Label gameID;
+
     /**
      * The button to pull opponents cards from the server.
      */
     private Button pull;
-    /**
-     * The button to execute the current register.
-     */
-    private Button stepButton;
-    /**
-     * The panel with the buttons for the player interaction phase.
-     */
+
     private VBox playerInteractionPanel;
+
 
     /**
      * The controller for the game.
      */
 
     private GameController gameController;
+
+    private Label readyStatusLabel;
 
     /**
      * Label to display the checkpoint count.
@@ -142,7 +143,6 @@ public class PlayerView extends Tab implements ViewObserver {
      * @param gameController the controller for the game
      * @param player         the player for which this view is created
      */
-
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
         super(player.getName());
         this.setStyle("-fx-text-base-color: " + player.getColor() + ";");
@@ -160,6 +160,9 @@ public class PlayerView extends Tab implements ViewObserver {
         top.getChildren().add(checkpointLabel); // Add the label to the layout
 
         programLabel = new Label("Program");
+        programLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
+        readyStatusLabel = new Label("Ready: ");
+        top.getChildren().addAll(readyStatusLabel); // Add to top layout
 
         programPane = new GridPane();
         programPane.setVgap(2.0);
@@ -179,6 +182,7 @@ public class PlayerView extends Tab implements ViewObserver {
         // refactored.
 
         playerNo = new Label("Player " + gameController.getPlayerNumber());
+        gameID = new Label("GameID: " + gameController.board.getGameID().intValue());
 
         pull = new Button("pull");
         pull.setOnAction(e -> {
@@ -190,23 +194,23 @@ public class PlayerView extends Tab implements ViewObserver {
             gameController.pushYourCards();
         });
 
+        // Ready Button klar til at blive programmeret
+
+        readyButton = new Button("Ready Up");
+
         finishButton = new Button("Finish Programming");
         finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
 
-        executeButton = new Button("Execute Program");
-        executeButton.setOnAction(e -> gameController.executePrograms());
 
-        stepButton = new Button("Execute Current Register");
-        stepButton.setOnAction(e -> gameController.executeStep());
 
-        buttonPanel = new VBox(finishButton, executeButton, stepButton, pull, push, playerNo);
+        buttonPanel = new VBox(finishButton, pull, push, gameID);
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
         buttonPanel.setSpacing(3.0);
         // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now
 
         playerInteractionPanel = new VBox();
         playerInteractionPanel.setAlignment(Pos.CENTER_LEFT);
-        playerInteractionPanel.setSpacing(3.0);
+        playerInteractionPanel.setSpacing(10.0);
 
         cardsLabel = new Label("Command Cards");
         cardsPane = new GridPane();
@@ -221,16 +225,25 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         }
 
-        top.getChildren().add(programLabel);
-        top.getChildren().add(programPane);
-        top.getChildren().add(cardsLabel);
-        top.getChildren().add(cardsPane);
-        top.getChildren().add(energyCubesLabel);
+        timerLabel = new Label("Time left: " + gameController.getRemainingTime() + "s");
+        top.getChildren().add(timerLabel);
+
+
+        // Update the timer label periodically
+        ScheduledExecutorService timerScheduler = Executors.newScheduledThreadPool(1);
+        timerScheduler.scheduleAtFixedRate(() -> {
+            javafx.application.Platform.runLater(() -> {
+                timerLabel.setText("Time left: " + gameController.getRemainingTime() + "s");
+            });
+        }, 0, 1, TimeUnit.SECONDS);
+
+        top.getChildren().addAll(programLabel, programPane, cardsLabel, cardsPane, energyCubesLabel);
 
         if (player.board != null) {
             player.board.attach(this);
-            update(player.board);
+            updateView(player.board);
         }
+
     }
 
     /**
@@ -266,7 +279,6 @@ public class PlayerView extends Tab implements ViewObserver {
                     }
                 }
             }
-
             if (player.board.getPhase() != Phase.Player_interaction) {
                 if (!programPane.getChildren().contains(buttonPanel)) {
                     programPane.getChildren().remove(playerInteractionPanel);
@@ -275,28 +287,18 @@ public class PlayerView extends Tab implements ViewObserver {
                 switch (player.board.getPhase()) {
                     case Initialisation:
                         finishButton.setDisable(true);
-                        // XXX just to make sure that there is a way for the player to get
-                        // from the initialization phase to the programming phase somehow!
-                        executeButton.setDisable(false);
-                        stepButton.setDisable(true);
                         break;
 
                     case Programming:
                         finishButton.setDisable(false);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
                         break;
 
                     case Activation:
                         finishButton.setDisable(true);
-                        executeButton.setDisable(false);
-                        stepButton.setDisable(false);
                         break;
 
                     default:
                         finishButton.setDisable(true);
-                        executeButton.setDisable(true);
-                        stepButton.setDisable(true);
                 }
 
             } else {

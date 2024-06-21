@@ -55,7 +55,7 @@ public class LoadBoard {
      */
     private static final String BOARDSFOLDER = "boards";
     private static final String DEFAULTBOARD = "defaultboard";
-    private static final String[] BOARDS = new String[] { "defaultboard", "circleJerk", "Wooooow", "dizzyHighway" };
+    private static final String[] BOARDS = new String[] { "defaultboard", "circleJerk", "Wooooow","dizzyHighway" };
     public static final String JSON_EXT = "json";
     public static final int BOARD_WIDTH = 16;
     public static final int BOARD_HEIGHT = 8;

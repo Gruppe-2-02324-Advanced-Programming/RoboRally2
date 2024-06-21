@@ -27,9 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.stream.Collectors;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Controller for managing the game logic of RoboRally. It handles player
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  * and moving players on the board based on their chosen command cards.
  * <p>
  * Usage:
- * 
+ *
  * <pre>{@code
  * Board board = new Board(8, 8);
  * GameController controller = new GameController(board);
@@ -64,9 +64,14 @@ public class GameController {
 
     public int playerNumber;
 
+    private int timer;
+    private boolean[] playersReady;
+    private int remainingTime;
+    private ScheduledExecutorService scheduler;
+
     /**
      * Constructor for the GameController.
-     * 
+     *
      * @author Ekkart Kindler
      * @param board the board to which the controller is connected
      */
@@ -75,6 +80,38 @@ public class GameController {
         gameClient = new GameClient();
         currentTabIndex = 0;
         playerNumber = 1;
+        playersReady = new boolean[board.getPlayersNumber()];
+        timer = 180; // Default value for timer
+        remainingTime = timer;
+    }
+
+    /**
+     * Getter for the timer.
+     *
+     * @return the timer value
+     */
+    public int getTimer() {
+        return timer;
+    }
+
+
+    /**
+     *
+     * @author Christoffer s205449
+     * @param timer
+     */
+    public void setTimer(int timer) {
+        this.timer = timer;
+        this.remainingTime = timer;
+    }
+
+    /**
+     * Getter for the remaining time.
+     * @author Christoffer s205449
+     * @return the remaining time value
+     */
+    public int getRemainingTime() {
+        return remainingTime;
     }
 
     /**
@@ -112,6 +149,7 @@ public class GameController {
      * phase.
      *
      * @author Ekkart Kindler
+     * @author Christoffer, s205449
      */
     public void startProgrammingPhase() {
         board.setPhase(Phase.Programming);
@@ -133,11 +171,15 @@ public class GameController {
                 }
             }
         }
+
+        remainingTime = timer;
+        scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(this::updateTimer, 0, 1, TimeUnit.SECONDS);
     }
 
     /**
      * This method generates a random command card.
-     * 
+     *
      * @author Ekkart Kindler
      * @return a random command card
      */
@@ -150,21 +192,24 @@ public class GameController {
     /**
      * This method ends the programming phase, which makes the execute button active
      * to press.
-     * 
+     *
      * @author Ekkart Kindler
+     * @author Christoffer s205449
      */
-    public void finishProgrammingPhase() {
+    public synchronized void finishProgrammingPhase() {
         makeProgramFieldsInvisible();
         makeProgramFieldsVisible(0);
         board.setPhase(Phase.Activation);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);
+        setTimer(180);
+        executePrograms();
     }
 
     /**
      * This method makes the program fields of the players visible for the given
      * register.
-     * 
+     *
      * @author Ekkart Kindler
      * @param register the register for which the program fields should be made
      *                 visible
@@ -200,7 +245,22 @@ public class GameController {
      */
     public void executePrograms() {
         board.setStepMode(false);
-        continuePrograms();
+        executeNextStepWithDelay();
+    }
+
+
+    /**
+     * This method executes the moves which the player has requested in step mode
+     * @author Christoffer, s205449
+     */
+    private void executeNextStepWithDelay() {
+        if (board.getPhase() == Phase.Activation && !board.isStepMode()) {
+            executeNextStep();
+            // Schedule the next step after a delay (e.g., 1 second)
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.schedule(() -> executeNextStepWithDelay(), 1, TimeUnit.SECONDS);
+            executor.shutdown();
+        }
     }
 
     /**
@@ -219,7 +279,8 @@ public class GameController {
      */
     private void continuePrograms() {
         do {
-            executeNextStep();
+            //executeNextStep();
+            executeNextStepWithDelay();
         } while (board.getPhase() == Phase.Activation && !board.isStepMode());
     }
 
@@ -230,7 +291,7 @@ public class GameController {
      * method does nothing.
      * If the step is the last step of the current player, the method starts the
      * programming phase.
-     * 
+     *
      * @author Emily, s191174
      */
     private void executeNextStep() {
@@ -258,14 +319,12 @@ public class GameController {
                             for (FieldAction action : actions) {
                                 action.doAction(this, player.getSpace());
                             }
-
                         }
                     }
                     if (step < Player.NO_REGISTERS) {
                         makeProgramFieldsVisible(step);
                         board.setStep(step);
                         board.setCurrentPlayer(board.getPlayer(0));
-
                     } else {
                         startProgrammingPhase();
                     }
@@ -282,7 +341,6 @@ public class GameController {
 
     /**
      * This method executes the given command for the specified player.
-     * 
      * @author Christoffer, s205449
      */
     public void executeCommandOptionAndContinue(@NotNull Command option) {
@@ -356,6 +414,7 @@ public class GameController {
                     break;
                 case BACKUP:
                     this.backUp(player);
+                    break;
                 case AGAIN:
                     this.again(player);
                     break;
@@ -374,15 +433,16 @@ public class GameController {
     /**
      * This exception is thrown when a player tries to move to a space that is not
      * possible to move to.
+     *
      */
 
-    public class moveNotPossibleException extends Exception {
+    public static class moveNotPossibleException extends Exception {
 
-        private Space space;
+        public Space space;
 
-        private Heading heading;
+        public Heading heading;
 
-        private Player player;
+        public Player player;
 
         /**
          * Here we create the Exception moveIsNotPossible, but for now, nothing happens
@@ -476,16 +536,11 @@ public class GameController {
             throws moveNotPossibleException {
         Player other = space.getPlayer();
         if (other != null) {
-            Space target = board.getNeighbour(space,
-                    heading);
+            Space target = board.getNeighbour(space, heading);
             if (target != null) {
-                movePlayerToSpace(other,
-                        target,
-                        heading);
+                movePlayerToSpace(other, target, heading);
             } else {
-                throw new moveNotPossibleException(player,
-                        space,
-                        heading);
+                throw new moveNotPossibleException(player, space, heading);
             }
         }
         /**
@@ -578,11 +633,11 @@ public class GameController {
             switch (option) {
                 case LEFT:
                     executeCommandOptionAndContinue(Command.LEFT);
-                    continuePrograms();
+                    executeNextStepWithDelay();
                     break;
                 case RIGHT:
                     executeCommandOptionAndContinue(Command.RIGHT);
-                    continuePrograms();
+                    executeNextStepWithDelay();
                     break;
                 default:
                     break;
@@ -592,7 +647,7 @@ public class GameController {
 
     /**
      * Sets the board of the controller.
-     * 
+     *
      * @param board the board to be set
      */
     public void setBoard(Board board) {
@@ -601,7 +656,7 @@ public class GameController {
 
     /**
      * Gets the board of the controller.
-     * 
+     *
      * @return the board of the controller
      */
     public Board getBoard() {
@@ -612,7 +667,7 @@ public class GameController {
      * Repeats the command card in the previous register of the player. If it is the
      * first card it does nothing,
      * if the previous card is an again card it will repeat the card before that.
-     * 
+     *
      * @author Jacob, s164958
      * @param player the player to repeat the command card for
      */
@@ -638,21 +693,22 @@ public class GameController {
         }
     }
 
-
     /**
      * Changes the current tab index to the new index
+     *
      * @author Marcus s214942
      */
     public void changeCurrentTabIndex(int newIndex) {
         currentTabIndex = newIndex;
     }
 
-
     /**
      * Pushes the cards of the player to the server and gets the cards of the other
+     *
      * @author Marcus s214942
      */
     public void getOtherPlayersCards() {
+        System.out.println("Getting cards...");
         int playersListLength = board.getPlayersNumber();
         for (int i = 0; i < playersListLength; i++) {
             Long ID = (long) (i + 1);
@@ -664,6 +720,7 @@ public class GameController {
                 Command command = Command.fromDisplayName(cards.get(j));
                 to.setCard(new CommandCard(command));
                 moveCards(from, to);
+                System.out.println("Cards gotten");
             }
 
         }
@@ -672,12 +729,16 @@ public class GameController {
 
     /**
      * Pushes the cards of the player to the server
+     *
      * @author Marcus s214942
      */
     public void pushYourCards() {
+        System.out.println("Pushing cards...");
         Long playerID = (long) playerNumber;
         List<String> cards = board.getProgramFields(playerNumber - 1);
         gameClient.updatePlayerCards(1L, playerID, cards);
+        System.out.println("Cards pushed");
+
     }
 
     public void updateBaseUrl(String ip) {
@@ -692,5 +753,20 @@ public class GameController {
         return playerNumber;
     }
 
-
+    /**
+     * Updates the remaining time and finishes the programming phase if time is up.
+     */
+    private void updateTimer() {
+        if (remainingTime > 0) {
+            if(board.getPhase() == Phase.Programming){
+                remainingTime--;
+            }
+            else {
+            }
+        } else {
+            scheduler.shutdown();
+            finishProgrammingPhase();
+            setTimer(180);
+        }
+    }
 }

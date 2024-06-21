@@ -1,3 +1,9 @@
 *.class
 *.png
 *.json
+roborally/target/classes/dk/dtu/compute/se/pisd/roborally/model/Space.class
+roborally/target/classes/dk/dtu/compute/se/pisd/roborally/controller/GameController.class
+roborally/target/classes/dk/dtu/compute/se/pisd/roborally/controller/ConveyorBeltCorner.class
+roborally/target/classes/boards/Wooooow.json
+roborally/target/classes/boards/circleJerk.json
+roborally/target/classes/dk/dtu/compute/se/pisd/roborally/controller/ConveyorBelt.class
