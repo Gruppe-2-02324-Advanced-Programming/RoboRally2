@@ -44,32 +44,29 @@ public class ConveyorBeltCorner extends FieldAction {
         if (space != null) {
             Player player = space.getPlayer();
             if (player != null) {
-                Heading newHeading = this.heading;
-                if (this.rotation == Gears.LEFT_TURN) {
-                    newHeading = this.heading.prev();
-                } else if (this.rotation == Gears.RIGHT_TURN) {
-                    newHeading = this.heading.next();
+                // Calculate the heading to move the player
+                Heading moveHeading = heading; // heading of the conveyor belt corner
+                if (rotation == Gears.LEFT_TURN) {
+                    moveHeading = heading.prev();  // move left relative to the conveyor's heading
+                } else if (rotation == Gears.RIGHT_TURN) {
+                    moveHeading = heading.next();  // move right relative to the conveyor's heading
                 }
 
-                Space nextSpace = gameController.board.getNeighbour(space, newHeading);
+                // Find the next space in the new heading direction
+                Space nextSpace = gameController.board.getNeighbour(space, moveHeading);
                 if (nextSpace != null && nextSpace.getPlayer() == null) {
                     try {
-                        player.setHeading(newHeading);
-                        gameController.movePlayerToSpace(player, nextSpace, newHeading);
-                        // Check for another conveyor action recursively
-                        FieldAction action = nextSpace.findAction(ConveyorBelt.class);
-                        if (action != null) {
-                            action.doAction(gameController, nextSpace);
-                        }
+                        gameController.movePlayerToSpace(player, nextSpace, moveHeading);
                         return true;
                     } catch (GameController.moveNotPossibleException e) {
-                        return false;
+                        return false;  // Movement failed
                     }
                 }
             }
         }
         return false;
     }
+
 
 
 
