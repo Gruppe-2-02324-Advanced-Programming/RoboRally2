@@ -16,15 +16,16 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public class ConveyorBeltCorner extends FieldAction {
-    private Heading heading;
+    Heading heading;
     private int rotation;
 
     /**
      * Constructor for the conveyor belt corner
      * @author Christoffer s205449
      * @param heading the heading of the conveyor belt corner
+     * @param rotation the rotation of the conveyor belt corner
      */
-    public ConveyorBeltCorner(Heading heading) {
+    public ConveyorBeltCorner(Heading heading, int rotation) {
         this.heading = heading;
         this.rotation = rotation;
     }
@@ -35,7 +36,7 @@ public class ConveyorBeltCorner extends FieldAction {
      * @author Emily, s191174
      * @author Christoffer s205449
      * @param gameController the game controller
-     * @param space          the space the player is on
+     * @param space the space the player is on
      * @return true if the player is moved to the next space in the direction of the conveyor belt corner
      */
     @Override
@@ -65,6 +66,8 @@ public class ConveyorBeltCorner extends FieldAction {
         }
         return false;
     }
+
+
 
 
     /**

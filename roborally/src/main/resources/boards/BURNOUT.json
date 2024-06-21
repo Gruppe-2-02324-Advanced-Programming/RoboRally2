@@ -201,7 +201,7 @@
           "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner",
           "INSTANCE": {
             "heading": "NORTH",
-            "rotation": 0
+            "rotation": 90
           }
         }
       ],
@@ -215,7 +215,7 @@
           "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner",
           "INSTANCE": {
             "heading": "WEST",
-            "rotation": 0
+            "rotation": 90
           }
         }
       ],
@@ -229,7 +229,7 @@
           "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner",
           "INSTANCE": {
             "heading": "EAST",
-            "rotation": 0
+            "rotation": 90
           }
         }
       ],
@@ -243,7 +243,7 @@
           "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner",
           "INSTANCE": {
             "heading": "SOUTH",
-            "rotation": 0
+            "rotation": 90
           }
         }
       ],
