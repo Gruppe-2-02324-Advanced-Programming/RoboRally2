@@ -74,6 +74,8 @@ public class GameController {
 
     public int curPlayerNo;
 
+    public String playerName;
+
     /**
      * Constructor for the GameController.
      *
@@ -81,6 +83,7 @@ public class GameController {
      * @author Ekkart Kindler
      */
     public GameController(@NotNull Board board) {
+        this.playerName = "NULL";
         this.board = board;
         gameClient = new GameClient();
         currentTabIndex = 0;
@@ -827,5 +830,14 @@ public class GameController {
             finishProgrammingPhase();
             setTimer(180);
         }
+    }
+
+
+    public void setPlayerName(String name) {
+        playerName = name;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 }

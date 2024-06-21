@@ -158,6 +158,7 @@ public class AppController implements Observer {
 
             String nickName = GameDialogs.showNameInputDialog("Name", "name", "Name");
 
+            gameController.setPlayerName(nickName);
             Long playerID = gameController.gameClient.addPlayer(gameID, nickName);
 
             gameController.setPlayerNumber(playerID.intValue());
