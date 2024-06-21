@@ -87,7 +87,7 @@ public class Deck {
         cards.add(new CommandCard(Command.RIGHT));
         cards.add(new CommandCard(Command.AGAIN));
         cards.add(new CommandCard(Command.POWER_UP));
-        cards.add(new CommandCard(Command.SPAM));
+        //cards.add(new CommandCard(Command.SPAM));
         deck.initializeDeck(cards);
         deck.shuffleCards();
         return deck;

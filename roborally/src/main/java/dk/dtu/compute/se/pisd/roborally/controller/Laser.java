@@ -55,7 +55,7 @@ public class Laser extends FieldAction {
         if (space != null) {
             Player player = space.getPlayer();
             if (player != null) {
-                JOptionPane.showMessageDialog(null, "You landed on a laser, this does nothing right now");
+                //JOptionPane.showMessageDialog(null, "You landed on a laser, this does nothing right now");
                 addSpam(player);
                 return true;
             }
