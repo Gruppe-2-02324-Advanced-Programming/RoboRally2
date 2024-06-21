@@ -41,6 +41,9 @@ import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
  */
 public class Player extends Subject {
 
+    private boolean ready = false; // Indicates if the player is ready
+    private long remainingProgrammingTime = 0; // Remaining time for programming phase in seconds
+
     final public static int NO_REGISTERS = 5;
     final public static int NO_CARDS = 9;
 
@@ -64,6 +67,24 @@ public class Player extends Subject {
 
     private Deck discardpile;
 
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+        notifyChange(); // Notify observers of the change
+    }
+
+    public long getRemainingProgrammingTime() {
+        return remainingProgrammingTime;
+    }
+
+    public void setRemainingProgrammingTime(long remainingProgrammingTime) {
+        this.remainingProgrammingTime = remainingProgrammingTime;
+        notifyChange(); // Notify observers of the change
+    }
     private String robotImage;
 
     public String getRobotImage() {
@@ -242,15 +263,6 @@ public class Player extends Subject {
     public void addEnergyCube() {
         this.energyCubes++;
         notifyChange(); // Notify observers of the change
-    }
-
-    /**
-     * @author Setare, s232629
-     * Method to add spam card to the player's discard pile. Not fully done yet
-     */
-    public void addSpamCard() {
-        CommandCard spamCard = new CommandCard(Command.SPAM);
-        //this.discardpile.addCard(spamCard);
     }
 
     /**

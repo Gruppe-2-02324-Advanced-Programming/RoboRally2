@@ -1,44 +1,67 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import org.jetbrains.annotations.NotNull;
+import javax.swing.JOptionPane;
 
-/**
- * This class represents the action of a laser field. The action is to shoot a laser in the direction of the player's heading.
+/** This class represents the laser field action.
+ *  When a player lands on a laser, it shows a popup message.
+ *  @author
  *
- * @author Setare, s232629
  */
+public class Laser extends FieldAction {
 
-public class Laser {
-    private GameController gameController;
+    private Heading heading;
 
-    public Laser(GameController gameController) {
-        this.gameController = gameController;
+    /**
+     * Constructor for the laser with a specified heading.
+     * @param heading the heading direction of the laser
+     */
+    public Laser(Heading heading) {
+        this.heading = heading;
     }
 
-    public void shootLaser(Player player) {
-        Heading heading = player.getHeading();
-        Space currentSpace = player.getSpace();
+    /**
+     * Default constructor for the laser.
+     */
+    public Laser() {
+        this.heading = Heading.NORTH; // Default heading
+    }
 
-        while (true) {
-            Space nextSpace = gameController.getBoard().getNeighbour(currentSpace, heading);
-            if (nextSpace == null || hasWall(currentSpace, heading) || hasWall(nextSpace, heading.prev().prev())) {
-                break;
+    /**
+     * Gets the heading direction of the laser.
+     * @return the heading direction
+     */
+    public Heading getHeading() {
+        return heading;
+    }
+
+    /**
+     * Sets the heading direction of the laser.
+     * @param heading the heading direction to set
+     */
+    public void setHeading(Heading heading) {
+        this.heading = heading;
+    }
+
+    /**
+     * This method shows a popup message when a player lands on a laser - for now.
+     * @param gameController the game controller
+     * @param space the space the player is on
+     * @return true always, as the action is simply to show a popup
+     */
+    @Override
+    public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
+        if (space != null) {
+            Player player = space.getPlayer();
+            if (player != null) {
+                JOptionPane.showMessageDialog(null, "You landed on a laser, this does nothing right now");
+                addSpam(player);
+                return true;
             }
-
-            Player targetPlayer = nextSpace.getPlayer();
-            if (targetPlayer != null) {
-                addSpam(targetPlayer);
-                break;
-            }
-
-            currentSpace = nextSpace;
         }
+        return false;
     }
-
-    private boolean hasWall(Space space, Heading heading) {
-        return space.getWalls().contains(heading);
-    }
-
     private void addSpam(Player player) {
         player.getDiscardpile().addCard(new CommandCard(Command.SPAM));
     }

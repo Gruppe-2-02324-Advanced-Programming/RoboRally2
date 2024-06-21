@@ -25,7 +25,7 @@ import java.util.List;
 public class GameClient extends JFrame {
 
     private final RestTemplate restTemplate;
-    private String baseUrl = "http://192.168.68.102:8080/games";
+    private String baseUrl = "http://localhost:8080/games";
 
 
     /**
@@ -37,6 +37,7 @@ public class GameClient extends JFrame {
         this.restTemplate = new RestTemplate();
         initializeUI();
     }
+
 
     /**
      * Method to update the base url of the game client
@@ -67,9 +68,9 @@ public class GameClient extends JFrame {
             JOptionPane.showMessageDialog(this,
                     "Failed to update player's cards. Status code: " + response.getStatusCode());
         }
+        }
  */
     }
-
 
     /**
      * Method to retrieve the cards of a player in a game
@@ -105,11 +106,6 @@ public class GameClient extends JFrame {
             }
         });
 
-
-        /**
-         * Method to retrieve the cards of a player in a game
-         * @author Marcus s214942
-         */
         getButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -127,12 +123,32 @@ public class GameClient extends JFrame {
         add(getButton);
     }
 
+    public Long createGame() {
+        String url = baseUrl + "/createGame";
+        ResponseEntity<Long> response = restTemplate.postForEntity(url, null, Long.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Failed to create game. Status code: " + response.getStatusCode());
+            return null;
+        }
+    }
+
+    public Long addPlayer(Long gameId, String playerName) {
+        String url = baseUrl + "/" + gameId + "/addPlayer?playerName=" + playerName;
+        ResponseEntity<Long> response = restTemplate.postForEntity(url, null, Long.class);
+
+        return response.getBody();
 
     /**
      * Main method to test the game client
      *
      * @author Marcus s214942
      */
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
