@@ -36,8 +36,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -157,7 +155,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         for (FieldAction action : space.getActions()) {
             if (action instanceof Pit) {
                 Pit pit = (Pit) action;
-                Image pitImage = loadImage("/assets/hole.png");
+                Image pitImage = loadImage("/assets/pit.png");
                 if (pitImage != null) {
                     ImageView pitView = new ImageView(pitImage);
                     pitView.setFitWidth(SPACE_WIDTH);
