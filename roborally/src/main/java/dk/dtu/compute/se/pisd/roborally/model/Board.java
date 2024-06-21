@@ -362,5 +362,18 @@ public class Board extends Subject {
         return spawnPoints;
     }
 
+    public Space findRebootSpace() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Space space = spaces[x][y];
+                if (space.getActions().stream().anyMatch(a -> a instanceof Reboot)) {
+                    return space; // Return the first found reboot space
+                }
+            }
+        }
+        return null; // Return null if no reboot space is found
+    }
+
+
 
 }

@@ -693,6 +693,7 @@ public class GameController {
         }
     }
 
+
     /**
      * Changes the current tab index to the new index
      *

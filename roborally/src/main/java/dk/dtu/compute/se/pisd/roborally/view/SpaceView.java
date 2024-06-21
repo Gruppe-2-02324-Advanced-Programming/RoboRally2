@@ -139,31 +139,16 @@ public class SpaceView extends StackPane implements ViewObserver {
                 this.getChildren().add(gearImageView);
             }}
 
-
-        // Handling GearSpawn
+        // Handling the Reboot action
         for (FieldAction action : space.getActions()) {
-            if (action instanceof StartGear) {
-                Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/white_Gear.png")));
-                ImageView gearImageView = new ImageView(gearImage);
-                gearImageView.setFitWidth(SPACE_WIDTH);
-                gearImageView.setFitHeight(SPACE_HEIGHT);
-                gearImageView.setPreserveRatio(true);  // Keeping aspect ratio might be visually pleasing
-                this.getChildren().add(gearImageView);
-            }}
-
-
-
-        // Check if the current space has a pit
-        for (FieldAction action : space.getActions()) {
-            if (action instanceof Pit) {
-                Pit pit = (Pit) action;
-                Image pitImage = loadImage("/assets/hole.png");
-                if (pitImage != null) {
-                    ImageView pitView = new ImageView(pitImage);
-                    pitView.setFitWidth(SPACE_WIDTH);
-                    pitView.setFitHeight(SPACE_HEIGHT);
-                    pitView.setPreserveRatio(false);
-                    this.getChildren().add(pitView);
+            if (action instanceof Reboot) {
+                Image rebootImage = loadImage("/assets/reboot.png");
+                if (rebootImage != null) {
+                    ImageView rebootView = new ImageView(rebootImage);
+                    rebootView.setFitWidth(SPACE_WIDTH);
+                    rebootView.setFitHeight(SPACE_HEIGHT);
+                    rebootView.setPreserveRatio(false);
+                    this.getChildren().add(rebootView);
                 }
             }
         }
@@ -371,7 +356,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         for (FieldAction action : space.getActions()) {
             if (action instanceof Pit) {
                 Pit pit = (Pit) action;
-                Image pitImage = loadImage("/assets/pit.png");
+                Image pitImage = loadImage("/assets/hole.png");
                 if (pitImage != null) {
                     ImageView pitView = new ImageView(pitImage);
                     pitView.setFitWidth(SPACE_WIDTH);
