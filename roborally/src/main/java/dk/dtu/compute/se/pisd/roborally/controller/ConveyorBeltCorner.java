@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
  * It extends the FieldAction class and implements the doAction method to move the player to the correct neighboring space
  * and change the player's heading based on the conveyor belt's rotation when the player lands on the conveyor belt corner
  * The class has a heading and a rotation field to store the conveyor belt's heading and rotation respectively
- *
  * @author Christoffer s205449
  * @author Emily, s191174
  */
@@ -21,8 +20,8 @@ public class ConveyorBeltCorner extends FieldAction {
     private int rotation;
 
     /**
-     * Constructor for the conveyor belt corner.
-     *
+     * Constructor for the conveyor belt corner
+     * @author Christoffer s205449
      * @param heading the heading of the conveyor belt corner
      */
     public ConveyorBeltCorner(Heading heading) {
@@ -31,11 +30,13 @@ public class ConveyorBeltCorner extends FieldAction {
     }
 
     /**
-     * Moves the player to the next space in the direction of the conveyor belt corner without changing the player's heading.
-     *
+     * This method moves the player to the next space in the direction of the conveyor belt corner
+     * and changes the player's heading based on the conveyor belt corner's rotation
+     * @author Emily, s191174
+     * @author Christoffer s205449
      * @param gameController the game controller
      * @param space          the space the player is on
-     * @return true if the player is successfully moved; false otherwise.
+     * @return true if the player is moved to the next space in the direction of the conveyor belt corner
      */
     @Override
     public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
@@ -67,8 +68,8 @@ public class ConveyorBeltCorner extends FieldAction {
 
 
     /**
-     * Get the heading of the conveyor belt corner.
-     *
+     * Get the heading of the conveyor belt corner
+     * @author Christoffer s205449
      * @return the heading of the conveyor belt corner
      */
     public Heading getHeading() {
@@ -77,9 +78,8 @@ public class ConveyorBeltCorner extends FieldAction {
 
     /**
      * Get the rotation of the conveyor belt corner
-     *
-     * @return the rotation of the conveyor belt corner
      * @author Christoffer s205449
+     * @return the rotation of the conveyor belt corner
      */
     public int getRotation() {
         return rotation;

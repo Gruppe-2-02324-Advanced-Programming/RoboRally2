@@ -60,6 +60,8 @@ public class Space extends Subject {
      */
     public final Board board;
 
+
+
     /**
      * The coordinates of this space on the board.
      */
