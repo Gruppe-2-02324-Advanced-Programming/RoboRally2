@@ -33,19 +33,15 @@ public class Pit extends FieldAction {
         if (space != null) {
             Player player = space.getPlayer();
             if (player != null) {
-                // Correctly access the findRebootSpace method on the instance of Board
-                Space rebootSpace = gameController.getBoard().findRebootSpace();
-                if (rebootSpace != null) {
-                    player.setSpace(rebootSpace); // Move the player to the reboot space
-                    // Additional logic for handling the player's orientation or other effects can be added here
-                    return true;
-                } else {
-                    return false;
-                }
+                // Use the scheduleReboot method to handle the reboot process
+                gameController.getBoard().scheduleReboot(player);
+                // Since the reboot is scheduled, we assume the action is successfully initiated
+                return true;
             }
         }
-        return false;
+        return false; // Return false if there is no player to reboot or if space is null
     }
+
 
 
 

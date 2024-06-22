@@ -28,6 +28,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.LinkedList;
+
 
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.Initialisation;
 
@@ -73,6 +76,8 @@ public class Board extends Subject {
     private int counter;
     // @Expose
     private boolean won = false;
+
+    private Queue<Player> rebootQueue = new LinkedList<>(); // Queue to manage rebooting players
 
 
 
@@ -359,6 +364,57 @@ public class Board extends Subject {
         }
         return spawnPoints;
     }
+
+    // Call this method when a player falls into a pit or needs to reboot
+    public void scheduleReboot(Player player) {
+        rebootQueue.add(player);
+        processReboots();
+    }
+
+    // Process reboots in a FIFO manner
+    private void processReboots() {
+        Space rebootSpace = findRebootSpace();
+        if (rebootSpace != null) {
+            while (!rebootQueue.isEmpty()) {
+                Player player = rebootQueue.peek(); // Look at the next player without removing
+                if (rebootSpace.getPlayer() == null) {
+                    rebootQueue.poll(); // Remove the player from the queue
+                    player.setSpace(rebootSpace); // Move the player to the reboot space
+                    System.out.println(player.getName() + " has been rebooted to " + rebootSpace.getX() + ", " + rebootSpace.getY());
+                } else {
+                    // If reboot space is occupied, decide the next step
+                    // Example: Push the current occupant to the next space in a specific direction, if free
+                    Space nextFreeSpace = findNextFreeSpace(rebootSpace);
+                    if (nextFreeSpace != null) {
+                        Player occupyingPlayer = rebootSpace.getPlayer();
+                        occupyingPlayer.setSpace(nextFreeSpace);
+                        System.out.println(occupyingPlayer.getName() + " has been pushed to " + nextFreeSpace.getX() + ", " + nextFreeSpace.getY());
+                        // Now move the rebooting player to the free reboot space
+                        player.setSpace(rebootSpace);
+                        rebootQueue.poll(); // Remove the player from the queue
+                        System.out.println(player.getName() + " has been rebooted to " + rebootSpace.getX() + ", " + rebootSpace.getY());
+                    } else {
+                        // If no space is available to push, you might delay the reboot or handle differently
+                        System.out.println("Reboot delayed for " + player.getName() + " due to occupied space.");
+                        break; // Exit the loop and try again later
+                    }
+                }
+            }
+        }
+    }
+
+    // Helper method to find the next available space around a given space
+    private Space findNextFreeSpace(Space currentSpace) {
+        // Check spaces in some order: NORTH, EAST, SOUTH, WEST
+        for (Heading heading : Heading.values()) {
+            Space nextSpace = getNeighbour(currentSpace, heading);
+            if (nextSpace != null && nextSpace.getPlayer() == null) {
+                return nextSpace;
+            }
+        }
+        return null; // No free space found around the current space
+    }
+
 
     public Space findRebootSpace() {
         for (int x = 0; x < width; x++) {
