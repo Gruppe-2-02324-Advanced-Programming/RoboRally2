@@ -1,5 +1,7 @@
-package dk.dtu.compute.se.pisd.roborally.controller;
-
+import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
+import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner;
+import dk.dtu.compute.se.pisd.roborally.controller.GameController;
+import dk.dtu.compute.se.pisd.roborally.controller.Gears;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
@@ -63,7 +65,7 @@ void ConveyorBeltCornerRightTest() {
     Player current = board.getCurrentPlayer();
 
     // Set up the conveyor belt corner action on space (0, 1) to turn right and move the player east
-    board.getSpace(0, 1).addAction(new ConveyorBeltCorner(Heading.EAST, Gears.RIGHT_TURN));
+    board.getSpace(0, 1).addAction(new ConveyorBeltCorner(Heading.EAST));
 
     // Move the player to space (0, 1)
     gameController.moveForward(current); // Assuming this moves to space (0, 1)
