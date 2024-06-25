@@ -132,7 +132,7 @@ public class GameController {
      * @author Ekkart Kindler
      * @param space the space to which the current player should move
      */
-    public void moveCurrentPlayerToSpace(@NotNull Space space) {
+    /*public void moveCurrentPlayerToSpace(@NotNull Space space) {
         Player currentPlayer = board.getCurrentPlayer();
         if (space.getPlayer() == null)
             currentPlayer.setSpace(space);
@@ -145,7 +145,7 @@ public class GameController {
 
         board.setCounter(board.getCounter() + 1);
     }
-
+*/
     /**
      * This method starts the programming phase of the game. It sets the phase to
      * PROGRAMMING,
