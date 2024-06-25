@@ -484,8 +484,8 @@ public class AppController implements Observer {
     /**
      * Starts a new game, allowing the user to select the number of players.
      * Initializes the board and players, and starts the programming phase.
-     *
      * @author Emily, s191174
+     * @author Christoffer s205449
      */
     public void newGame() {
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
@@ -539,7 +539,7 @@ public class AppController implements Observer {
     /**
      * Starts the server and displays an alert with the server status.
      * 
-     * @author Marcus Jagd Hansen, s214962
+     * @author Christoffer s205449
      */
     public void startServer() {
         SpringApplication.run(RoborallyApplication.class);
@@ -560,7 +560,7 @@ public class AppController implements Observer {
     /**
      * Displays the rules of the game in a PDF document.
      * 
-     * @author Marcus Jagd Hansen, s214962
+     * @author Christoffer s205449
      */
     public void showRules() {
         try {
