@@ -224,7 +224,7 @@ public class PlayerView extends Tab implements ViewObserver {
         if (gameController.isSinglePlayerMode) {
             buttonPanel = new VBox(finishButton);
         } else {
-            buttonPanel = new VBox(finishButton, pull, push, gameID, playerName);
+            buttonPanel = new VBox(push, pull, finishButton, gameID, playerName);
         }
 
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
