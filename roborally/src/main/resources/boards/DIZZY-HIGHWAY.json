@@ -62,14 +62,6 @@
     {
       "walls": [],
       "actions": [
-        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Reboot", "INSTANCE": {}}
-      ],
-      "x": 7, "y": 3
-    },
-
-    {
-      "walls": [],
-      "actions": [
         {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt", "INSTANCE": {"heading": "EAST"}}
       ],
       "x": 2, "y": 0
@@ -336,3 +328,4 @@
     }
   ]
 }
+

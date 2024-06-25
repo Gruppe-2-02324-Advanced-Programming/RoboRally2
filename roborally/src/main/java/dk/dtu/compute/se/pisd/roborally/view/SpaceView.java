@@ -148,13 +148,13 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
 
         // Check if the current space has a pit
-                Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/white_Gear.png")));
-                ImageView gearImageView = new ImageView(gearImage);
-                gearImageView.setFitWidth(SPACE_WIDTH);
-                gearImageView.setFitHeight(SPACE_HEIGHT);
-                gearImageView.setPreserveRatio(true);  // Keeping aspect ratio might be visually pleasing
-                this.getChildren().add(gearImageView);
-            }}
+        Image startGearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/white_Gear.png")));
+        ImageView gearImageView = new ImageView(startGearImage);
+        gearImageView.setFitWidth(SPACE_WIDTH);
+        gearImageView.setFitHeight(SPACE_HEIGHT);
+        gearImageView.setPreserveRatio(true);  // Keeping aspect ratio might be visually pleasing
+        this.getChildren().add(gearImageView);
+
 
         // Handling the Reboot action
         for (FieldAction action : space.getActions()) {
@@ -173,19 +173,19 @@ public class SpaceView extends StackPane implements ViewObserver {
         // Check if the current space has a gear action and display the corresponding image
         for (FieldAction action : space.getActions()) {
             if (action instanceof Gears gears) {
-                Image gearImage = null;
+                Image rotateGearImage = null;
                 if (gears.rotation == Gears.LEFT_TURN) {
-                    gearImage = loadImage("/assets/gearLeft.png");
+                    rotateGearImage = loadImage("/assets/gearLeft.png");
                 } else if (gears.rotation == Gears.RIGHT_TURN) {
-                    gearImage = loadImage("/assets/gearRight.png");
+                    rotateGearImage = loadImage("/assets/gearRight.png");
                 }
 
-                if (gearImage != null) {
-                    ImageView gearImageView = new ImageView(gearImage);
-                    gearImageView.setFitWidth(SPACE_WIDTH);
-                    gearImageView.setFitHeight(SPACE_HEIGHT);
-                    gearImageView.setPreserveRatio(false);
-                    this.getChildren().add(gearImageView);
+                if (rotateGearImage != null) {
+                    ImageView rotateGearImageView = new ImageView(rotateGearImage);
+                    rotateGearImageView.setFitWidth(SPACE_WIDTH);
+                    rotateGearImageView.setFitHeight(SPACE_HEIGHT);
+                    rotateGearImageView.setPreserveRatio(false);
+                    this.getChildren().add(rotateGearImageView);
                 }
             }
         }
@@ -403,3 +403,6 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 }
+
+
+
