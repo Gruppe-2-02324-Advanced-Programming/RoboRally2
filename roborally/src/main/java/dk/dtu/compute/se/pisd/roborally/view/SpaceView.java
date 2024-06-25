@@ -41,12 +41,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * SpaceView is a view of a space on the board. It is responsible for drawing
- * the spaces on the board.
- * and updating the view when the space changes. For example if there is a
- * player on the space, the view should update
- * to show the player on the space. Also, if there is a wall on the space, the
- * view should update to show the wall. etc
+ * SpaceView is a view of a space on the board. It is responsible for drawing the spaces on the board.
+ * and updating the view when the space changes. For example if there is a player on the space, the view should update
+ * to show the player on the space. Also, if there is a wall on the space, the view should update to show the wall. etc
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Emily, s191174
@@ -71,7 +68,6 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     /**
      * Constructor for the SpaceView class
-     *
      * @param space the space that this view should represent
      */
     public SpaceView(@NotNull Space space) {
@@ -99,7 +95,6 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     /**
      * Utility method to load an image from a given path
-     *
      * @param path the path to the image
      * @return the loaded image
      */
@@ -136,25 +131,13 @@ public class SpaceView extends StackPane implements ViewObserver {
         // Handling GearSpawn
         for (FieldAction action : space.getActions()) {
             if (action instanceof StartGear) {
-                Image gearImage = loadImage("/assets/white_Gear.png");
-                if (gearImage != null) {
-                    ImageView gearImageView = new ImageView(gearImage);
-                    gearImageView.setFitWidth(SPACE_WIDTH);
-                    gearImageView.setFitHeight(SPACE_HEIGHT);
-                    gearImageView.setPreserveRatio(true);
-                    this.getChildren().add(gearImageView);
-                }
-            }
-        }
-
-        // Check if the current space has a pit
-        Image startGearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/white_Gear.png")));
-        ImageView gearImageView = new ImageView(startGearImage);
-        gearImageView.setFitWidth(SPACE_WIDTH);
-        gearImageView.setFitHeight(SPACE_HEIGHT);
-        gearImageView.setPreserveRatio(true);  // Keeping aspect ratio might be visually pleasing
-        this.getChildren().add(gearImageView);
-
+                Image gearImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/white_Gear.png")));
+                ImageView gearImageView = new ImageView(gearImage);
+                gearImageView.setFitWidth(SPACE_WIDTH);
+                gearImageView.setFitHeight(SPACE_HEIGHT);
+                gearImageView.setPreserveRatio(true);  // Keeping aspect ratio might be visually pleasing
+                this.getChildren().add(gearImageView);
+            }}
 
         // Handling the Reboot action
         for (FieldAction action : space.getActions()) {
@@ -173,47 +156,66 @@ public class SpaceView extends StackPane implements ViewObserver {
         // Check if the current space has a gear action and display the corresponding image
         for (FieldAction action : space.getActions()) {
             if (action instanceof Gears gears) {
-                Image rotateGearImage = null;
+                ImageView gearImageView;
                 if (gears.rotation == Gears.LEFT_TURN) {
-                    rotateGearImage = loadImage("/assets/gearLeft.png");
+                    Image gearImage = loadImage("/assets/gearLeft.png");
+                    if (gearImage != null) {
+                        gearImageView = new ImageView(gearImage);
+                    } else {
+                        continue;
+                    }
                 } else if (gears.rotation == Gears.RIGHT_TURN) {
-                    rotateGearImage = loadImage("/assets/gearRight.png");
+                    Image gearImage = loadImage("/assets/gearRight.png");
+                    if (gearImage != null) {
+                        gearImageView = new ImageView(gearImage);
+                    } else {
+                        continue;
+                    }
+                } else {
+                    continue; // If it's not left or right, we'll skip this action
                 }
 
-                if (rotateGearImage != null) {
-                    ImageView rotateGearImageView = new ImageView(rotateGearImage);
-                    rotateGearImageView.setFitWidth(SPACE_WIDTH);
-                    rotateGearImageView.setFitHeight(SPACE_HEIGHT);
-                    rotateGearImageView.setPreserveRatio(false);
-                    this.getChildren().add(rotateGearImageView);
-                }
+                gearImageView.setFitWidth(SPACE_WIDTH);
+                gearImageView.setFitHeight(SPACE_HEIGHT);
+                gearImageView.setPreserveRatio(false);
+                this.getChildren().add(gearImageView);
+                break;
             }
         }
 
         // Check if the current space contains a ConveyorBeltCorner
         for (FieldAction action : space.getActions()) {
             if (action instanceof ConveyorBeltCorner conveyorBeltCorner) {
+                // Load the conveyor belt corner image
                 Image conveyorBeltCornerImage;
                 if (conveyorBeltCorner.getRotation() == Gears.LEFT_TURN) {
                     conveyorBeltCornerImage = loadImage("/assets/greenTurnLeft.png");
                 } else {
                     conveyorBeltCornerImage = loadImage("/assets/greenTurnRight.png");
                 }
-
                 if (conveyorBeltCornerImage != null) {
                     ImageView conveyorBeltCornerView = new ImageView(conveyorBeltCornerImage);
                     conveyorBeltCornerView.setFitWidth(SPACE_WIDTH);
                     conveyorBeltCornerView.setFitHeight(SPACE_HEIGHT);
                     conveyorBeltCornerView.setPreserveRatio(false);
-
+                    // Rotate the conveyor belt corner image based on its heading
                     switch (conveyorBeltCorner.getHeading()) {
-                        case NORTH -> conveyorBeltCornerView.setRotate(0);
-                        case EAST -> conveyorBeltCornerView.setRotate(90);
-                        case SOUTH -> conveyorBeltCornerView.setRotate(180);
-                        case WEST -> conveyorBeltCornerView.setRotate(270);
+                        case NORTH:
+                            conveyorBeltCornerView.setRotate(0);
+                            break;
+                        case EAST:
+                            conveyorBeltCornerView.setRotate(90);
+                            break;
+                        case SOUTH:
+                            conveyorBeltCornerView.setRotate(180);
+                            break;
+                        case WEST:
+                            conveyorBeltCornerView.setRotate(270);
+                            break;
                     }
 
                     this.getChildren().add(conveyorBeltCornerView);
+                    break;
                 }
             }
         }
@@ -227,22 +229,31 @@ public class SpaceView extends StackPane implements ViewObserver {
                     conveyorBeltView.setFitWidth(SPACE_WIDTH);
                     conveyorBeltView.setFitHeight(SPACE_HEIGHT);
                     conveyorBeltView.setPreserveRatio(false);
-
+                    // Rotate the conveyor belt image based on its heading
                     switch (conveyorBelt.getHeading()) {
-                        case NORTH -> conveyorBeltView.setRotate(0);
-                        case EAST -> conveyorBeltView.setRotate(90);
-                        case SOUTH -> conveyorBeltView.setRotate(180);
-                        case WEST -> conveyorBeltView.setRotate(270);
+                        case NORTH:
+                            conveyorBeltView.setRotate(0);
+                            break;
+                        case EAST:
+                            conveyorBeltView.setRotate(90);
+                            break;
+                        case SOUTH:
+                            conveyorBeltView.setRotate(180);
+                            break;
+                        case WEST:
+                            conveyorBeltView.setRotate(270);
+                            break;
                     }
 
                     this.getChildren().add(conveyorBeltView);
+                    break;
                 }
             }
         }
 
-        // Check if the current space contains a double conveyor belt
         for (FieldAction action : space.getActions()) {
-            if (action instanceof DoubleConveyorBelt doubleConveyorBelt) {
+            if (action instanceof DoubleConveyorBelt) {
+                DoubleConveyorBelt doubleConveyorBelt = (DoubleConveyorBelt) action;
                 Image doubleConveyorBeltImage = loadImage("/assets/blue.png");
                 if (doubleConveyorBeltImage != null) {
                     ImageView doubleConveyorBeltView = new ImageView(doubleConveyorBeltImage);
@@ -250,14 +261,24 @@ public class SpaceView extends StackPane implements ViewObserver {
                     doubleConveyorBeltView.setFitHeight(SPACE_HEIGHT);
                     doubleConveyorBeltView.setPreserveRatio(false);
 
+                    // Rotate the image based on its heading
                     switch (doubleConveyorBelt.getHeading()) {
-                        case NORTH -> doubleConveyorBeltView.setRotate(0);
-                        case EAST -> doubleConveyorBeltView.setRotate(90);
-                        case SOUTH -> doubleConveyorBeltView.setRotate(180);
-                        case WEST -> doubleConveyorBeltView.setRotate(270);
+                        case NORTH:
+                            doubleConveyorBeltView.setRotate(0);
+                            break;
+                        case EAST:
+                            doubleConveyorBeltView.setRotate(90);
+                            break;
+                        case SOUTH:
+                            doubleConveyorBeltView.setRotate(180);
+                            break;
+                        case WEST:
+                            doubleConveyorBeltView.setRotate(270);
+                            break;
                     }
 
                     this.getChildren().add(doubleConveyorBeltView);
+                    break;
                 }
             }
         }
@@ -270,18 +291,25 @@ public class SpaceView extends StackPane implements ViewObserver {
                 Image laserImage = loadImage("/assets/laser.png");
                 if (laserImage != null) {
                     ImageView laserView = new ImageView(laserImage);
-                    laserView.setFitWidth(SPACE_WIDTH);
-                    laserView.setFitHeight(SPACE_HEIGHT / 7);
+                    laserView.setFitWidth(SPACE_WIDTH); // Scale down
+                    laserView.setFitHeight(SPACE_HEIGHT / 7); // Scale down
                     laserView.setPreserveRatio(false);
 
+                    // Rotate the laser image based on its heading
                     switch (laser.getHeading()) {
-                        case NORTH -> laserView.setRotate(90);
-                        case EAST -> laserView.setRotate(0);
-                        case SOUTH -> laserView.setRotate(90);
-                        case WEST -> {
+                        case NORTH:
+                            laserView.setRotate(90);
+                            break;
+                        case EAST:
+                            laserView.setRotate(0);
+                            break;
+                        case SOUTH:
+                            laserView.setRotate(90);
+                            break;
+                        case WEST:
                             laserView.setRotate(0);
                             StackPane.setAlignment(laserView, Pos.CENTER_LEFT);
-                        }
+                            break;
                     }
 
                     this.getChildren().add(laserView);
@@ -295,27 +323,28 @@ public class SpaceView extends StackPane implements ViewObserver {
                 Image laserStartImage = loadImage("/assets/laserStart.png");
                 if (laserStartImage != null) {
                     ImageView laserStartView = new ImageView(laserStartImage);
-                    laserStartView.setFitWidth(SPACE_WIDTH / 2);
-                    laserStartView.setFitHeight(SPACE_HEIGHT / 2);
+                    laserStartView.setFitWidth(SPACE_WIDTH / 2); // Scale down
+                    laserStartView.setFitHeight(SPACE_HEIGHT / 2); // Scale down
                     laserStartView.setPreserveRatio(false);
 
+                    // Rotate and position the laser start image based on its heading
                     switch (laserStart.getHeading()) {
-                        case NORTH -> {
+                        case NORTH:
                             laserStartView.setRotate(90);
                             StackPane.setAlignment(laserStartView, Pos.TOP_CENTER);
-                        }
-                        case EAST -> {
-                            laserStartView.setRotate(180);
+                            break;
+                        case EAST:
+                            laserStartView.setRotate(180); // Rotate 90 degrees to the left (0 degrees clockwise)
                             StackPane.setAlignment(laserStartView, Pos.CENTER_RIGHT);
-                        }
-                        case SOUTH -> {
-                            laserStartView.setRotate(270);
+                            break;
+                        case SOUTH:
+                            laserStartView.setRotate(270); // Rotate 90 degrees to the left (90 degrees clockwise)
                             StackPane.setAlignment(laserStartView, Pos.BOTTOM_CENTER);
-                        }
-                        case WEST -> {
-                            laserStartView.setRotate(0);
+                            break;
+                        case WEST:
+                            laserStartView.setRotate(0); // Rotate 90 degrees to the left (180 degrees clockwise)
                             StackPane.setAlignment(laserStartView, Pos.CENTER_LEFT);
-                        }
+                            break;
                     }
 
                     this.getChildren().add(laserStartView);
@@ -352,36 +381,102 @@ public class SpaceView extends StackPane implements ViewObserver {
             }
         }
 
+
+// Check if the current field is a Laser
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof Laser laser) {
+                Image laserImage = loadImage("/assets/laser.png");
+                if (laserImage != null) {
+                    ImageView laserView = new ImageView(laserImage);
+                    laserView.setFitWidth(SPACE_WIDTH);
+                    laserView.setFitHeight(SPACE_HEIGHT / 7);
+                    laserView.setPreserveRatio(false);
+
+                    switch (laser.getHeading()) {
+                        case NORTH -> laserView.setRotate(90);
+                        case EAST -> laserView.setRotate(0);
+                        case SOUTH -> laserView.setRotate(90);
+                        case WEST -> {
+                            laserView.setRotate(0);
+                            StackPane.setAlignment(laserView, Pos.CENTER_LEFT);
+                        }
+                    }
+
+                    this.getChildren().add(laserView);
+                }
+            }
+        }
+
+// Check if the current field is a LaserStart
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof LaserStart laserStart) {
+                Image laserStartImage = loadImage("/assets/laserStart.png");
+                if (laserStartImage != null) {
+                    ImageView laserStartView = new ImageView(laserStartImage);
+                    laserStartView.setFitWidth(SPACE_WIDTH / 2);
+                    laserStartView.setFitHeight(SPACE_HEIGHT / 2);
+                    laserStartView.setPreserveRatio(false);
+
+                    switch (laserStart.getHeading()) {
+                        case NORTH -> {
+                            laserStartView.setRotate(90);
+                            StackPane.setAlignment(laserStartView, Pos.TOP_CENTER);
+                        }
+                        case EAST -> {
+                            laserStartView.setRotate(180);
+                            StackPane.setAlignment(laserStartView, Pos.CENTER_RIGHT);
+                        }
+                        case SOUTH -> {
+                            laserStartView.setRotate(270);
+                            StackPane.setAlignment(laserStartView, Pos.BOTTOM_CENTER);
+                        }
+                        case WEST -> {
+                            laserStartView.setRotate(0);
+                            StackPane.setAlignment(laserStartView, Pos.CENTER_LEFT);
+                        }
+                    }
+
+                    this.getChildren().add(laserStartView);
+                }
+            }
+        }
+
+
+
+
+
+
         // Draw walls
         if (wallImage != null) {
             for (Heading wall : space.getWalls()) {
                 ImageView wallView = new ImageView(wallImage);
                 switch (wall) {
-                    case NORTH -> {
+                    case NORTH:
                         wallView.setFitHeight(SPACE_HEIGHT);
-                        wallView.setFitWidth(15);
-                        wallView.setRotate(90);
+                        wallView.setFitWidth(15);  // Set the width for horizontal wall
+                        wallView.setRotate(90); // Rotate 90 degrees for North wall
                         wallView.setTranslateY(-SPACE_HEIGHT / 2.4);
                         StackPane.setAlignment(wallView, Pos.TOP_CENTER);
-                    }
-                    case EAST -> {
+                        break;
+                    case EAST:
                         wallView.setFitHeight(SPACE_HEIGHT);
                         wallView.setFitWidth(15);
+                        // No rotation needed for East wall
                         StackPane.setAlignment(wallView, Pos.CENTER_RIGHT);
-                    }
-                    case SOUTH -> {
+                        break;
+                    case SOUTH:
                         wallView.setFitHeight(SPACE_HEIGHT);
                         wallView.setFitWidth(15);
-                        wallView.setRotate(270);
+                        wallView.setRotate(270); // Rotate 270 degrees for South wall
                         wallView.setTranslateY(SPACE_HEIGHT / 2.4);
                         StackPane.setAlignment(wallView, Pos.BOTTOM_CENTER);
-                    }
-                    case WEST -> {
+                        break;
+                    case WEST:
                         wallView.setFitHeight(SPACE_HEIGHT);
                         wallView.setFitWidth(15);
-                        wallView.setRotate(180);
+                        wallView.setRotate(180); // Rotate 180 degrees for the West wall (if the image is top/bottom specific)
                         StackPane.setAlignment(wallView, Pos.CENTER_LEFT);
-                    }
+                        break;
                 }
                 wallView.setPreserveRatio(false);
                 this.getChildren().add(wallView);
@@ -391,7 +486,9 @@ public class SpaceView extends StackPane implements ViewObserver {
         // Draw player
         Player player = space.getPlayer();
         if (player != null) {
-            Polygon arrow = new Polygon(0.0, 0.0, 10.0, 20.0, 20.0, 0.0);
+            Polygon arrow = new Polygon(0.0, 0.0,
+                    10.0, 20.0,
+                    20.0, 0.0);
             try {
                 arrow.setFill(Color.valueOf(player.getColor()));
             } catch (Exception e) {
@@ -403,6 +500,3 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 }
-
-
-
