@@ -8,6 +8,15 @@
     {"walls": ["EAST"], "x": 2, "y": 4},
     {"walls": ["EAST"], "x": 2, "y": 5},
 
+    {"walls": ["NORTH"], "x": 6, "y": 3},
+    {"walls": ["SOUTH"], "x": 6, "y": 4},
+    {"walls": ["WEST"], "x": 8, "y": 3},
+    {"walls": ["EAST"], "x": 9, "y": 3},
+    {"walls": ["NORTH"], "x": 9, "y": 5},
+    {"walls": ["SOUTH"], "x": 9, "y": 6},
+    {"walls": ["WEST"], "x": 6, "y": 6},
+    {"walls": ["EAST"], "x": 7, "y": 6},
+
     {
       "walls": [],
       "actions": [
@@ -333,6 +342,178 @@
         {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.DoubleConveyorBelt", "INSTANCE": {"heading": "WEST"}}
       ],
       "x": 12, "y": 2
+    },
+
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.LaserStart",
+          "INSTANCE": {
+            "heading": "SOUTH"
+          }
+        }
+      ],
+      "x": 6,
+      "y": 4
+    },
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Laser",
+          "INSTANCE": {
+            "heading": "SOUTH"
+          }
+        }
+      ],
+      "x": 6,
+      "y": 3
+    },
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Laser",
+          "INSTANCE": {
+            "heading": "SOUTH"
+          }
+        }
+      ],
+      "x": 6,
+      "y": 4
+    },
+
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.LaserStart",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 9,
+      "y": 5
+    },
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Laser",
+          "INSTANCE": {
+            "heading": "SOUTH"
+          }
+        }
+      ],
+      "x": 9,
+      "y": 5
+    },
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Laser",
+          "INSTANCE": {
+            "heading": "SOUTH"
+          }
+        }
+      ],
+      "x": 9,
+      "y": 6
+    },
+
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.LaserStart",
+          "INSTANCE": {
+            "heading": "EAST"
+          }
+        }
+      ],
+      "x": 7,
+      "y": 6
+    },
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.LaserStart",
+          "INSTANCE": {
+            "heading": "WEST"
+          }
+        }
+      ],
+      "x": 8,
+      "y": 3
+    },
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Laser",
+          "INSTANCE": {
+            "heading": "WEST"
+          }
+        }
+      ],
+      "x": 8,
+      "y": 3
+    },
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Laser",
+          "INSTANCE": {
+            "heading": "WEST"
+          }
+        }
+      ],
+      "x": 9,
+      "y": 3
+    },
+
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Laser",
+          "INSTANCE": {
+            "heading": "WEST"
+          }
+        }
+      ],
+      "x": 6,
+      "y": 6
+    },
+    {
+      "walls": [
+      ],
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Laser",
+          "INSTANCE": {
+            "heading": "WEST"
+          }
+        }
+      ],
+      "x": 7,
+      "y": 6
     }
   ]
 }

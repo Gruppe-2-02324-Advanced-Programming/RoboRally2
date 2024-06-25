@@ -356,6 +356,14 @@
       ],
       "x": 8,
       "y": 7
+    },
+
+    {
+      "walls": [],
+      "actions": [
+        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Reboot", "INSTANCE": {}}
+      ],
+      "x": 9, "y": 2
     }
   ]
 }

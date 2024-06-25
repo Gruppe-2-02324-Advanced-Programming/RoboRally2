@@ -246,7 +246,15 @@
       "actions": [
         {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.StartGear", "INSTANCE": {}}
       ],
-      "x": 5, "y": 3
+      "x": 5, "y": 8
+    },
+
+    {
+      "walls": [],
+      "actions": [
+        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Reboot", "INSTANCE": {}}
+      ],
+      "x": 10, "y": 3
     }
   ]
 }
