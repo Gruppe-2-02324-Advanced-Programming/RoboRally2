@@ -89,6 +89,14 @@ public class Space extends Subject {
         player = null;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     /**
      * Get the player that is on this space.
      *

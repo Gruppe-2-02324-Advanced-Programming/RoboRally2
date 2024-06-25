@@ -2,6 +2,7 @@ package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.Board;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Random;
@@ -32,20 +33,17 @@ public class Pit extends FieldAction {
         if (space != null) {
             Player player = space.getPlayer();
             if (player != null) {
-                List<Space> startPoints = gameController.getBoard().getGearSpawnPoints();
-                if (!startPoints.isEmpty()) {
-                    // Choose a random start point to move the player to
-                    Random random = new Random();
-                    Space startPoint = startPoints.get(random.nextInt(startPoints.size()));
-                    player.setSpace(startPoint);  // Assuming setSpace handles the actual placement and any necessary updates
-                    return true;
-                } else {
-                    return false;
-                }
+                // Use the scheduleReboot method to handle the reboot process
+                gameController.getBoard().scheduleReboot(player);
+                // Since the reboot is scheduled, we assume the action is successfully initiated
+                return true;
             }
         }
-        return false;
+        return false; // Return false if there is no player to reboot or if space is null
     }
+
+
+
 
 
 
