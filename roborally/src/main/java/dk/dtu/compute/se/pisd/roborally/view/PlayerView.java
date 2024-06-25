@@ -207,11 +207,16 @@ public class PlayerView extends Tab implements ViewObserver {
         readyButton = new Button("Ready Up");
 
         finishButton = new Button("Finish Programming");
-        finishButton.setOnAction( e-> {
-            gameController.getOtherPlayersCards();
+        finishButton.setOnAction(e -> {
             gameController.pushYourCards();
         });
-        finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
+
+        finishButton = new Button("Execute Programming");
+
+        finishButton.setOnAction(e -> {
+            //gameController.getOtherPlayersCards();
+            gameController.finishProgrammingPhase();
+        });
 
         buttonPanel = new VBox(finishButton, gameID);
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
