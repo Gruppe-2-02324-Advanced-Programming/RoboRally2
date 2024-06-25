@@ -75,6 +75,7 @@ public class GameController {
     public int curPlayerNo;
 
     public String playerName;
+    public boolean isSinglePlayerMode;
 
     /**
      * Constructor for the GameController.
@@ -91,6 +92,7 @@ public class GameController {
         playersReady = new boolean[board.getPlayersNumber()];
         timer = 180; // Default value for timer
         remainingTime = timer;
+        isSinglePlayerMode = true;
     }
 
     /**
@@ -101,7 +103,6 @@ public class GameController {
     public int getTimer() {
         return timer;
     }
-
 
     /**
      *
@@ -115,6 +116,7 @@ public class GameController {
 
     /**
      * Getter for the remaining time.
+     * 
      * @author Christoffer s205449
      * @return the remaining time value
      */
@@ -175,7 +177,7 @@ public class GameController {
                 for (int j = 0; j < Player.NO_CARDS; j++) {
                     CommandCardField field = player.getCardField(j);
                     field.setCard(player.getDrawpile().drawCard(player.getDiscardpile()));
-                    //field.setCard(generateRandomCommandCard());
+                    // field.setCard(generateRandomCommandCard());
                     field.setVisible(true);
                 }
             }
@@ -256,9 +258,9 @@ public class GameController {
         executeNextStepWithDelay();
     }
 
-
     /**
      * This method executes the moves which the player has requested in step mode
+     * 
      * @author Christoffer, s205449
      */
     private void executeNextStepWithDelay() {
@@ -287,7 +289,7 @@ public class GameController {
      */
     private void continuePrograms() {
         do {
-            //executeNextStep();
+            // executeNextStep();
             executeNextStepWithDelay();
         } while (board.getPhase() == Phase.Activation && !board.isStepMode());
     }
@@ -352,6 +354,7 @@ public class GameController {
 
     /**
      * This method executes the given command for the specified player.
+     * 
      * @author Christoffer, s205449
      */
     public void executeCommandOptionAndContinue(@NotNull Command option) {
@@ -482,17 +485,16 @@ public class GameController {
     /**
      * @param player the player to move forward
      * @author Christoffer, s205449
-     * <p>
-     * <p>
-     * The moveForward has been slightly modified with a catch statement at
-     * the bottom, however it has been set to be ignored since it doesn't do
-     * anything
-     * Moves a player one space forward in the direction they are currently
-     * facing.
-     * If the movement is not possible (e.g., due to a wall), the action is
-     * ignored.
+     *         <p>
+     *         <p>
+     *         The moveForward has been slightly modified with a catch statement at
+     *         the bottom, however it has been set to be ignored since it doesn't do
+     *         anything
+     *         Moves a player one space forward in the direction they are currently
+     *         facing.
+     *         If the movement is not possible (e.g., due to a wall), the action is
+     *         ignored.
      */
-
 
     public void moveForward(Player player) {
         if (board != null && player != null && player.board == board) {
@@ -510,8 +512,8 @@ public class GameController {
 
     /**
      * @author Christoffer, s205449
-     * Same function as moveForward, however the method is set two times to
-     * get the fastForward function
+     *         Same function as moveForward, however the method is set two times to
+     *         get the fastForward function
      */
     public void fastForward(@NotNull Player player) {
         moveForward(player);
@@ -538,11 +540,11 @@ public class GameController {
      * @param heading
      * @throws moveNotPossibleException
      * @author Christoffer, s205449
-     * <p>
-     * The movePlayerToSpace which relocates the pushed player to the next
-     * space which the pushing player is heading.
-     * If none of the criteria met the moveNotPossibleException will be
-     * thrown.
+     *         <p>
+     *         The movePlayerToSpace which relocates the pushed player to the next
+     *         space which the pushing player is heading.
+     *         If none of the criteria met the moveNotPossibleException will be
+     *         thrown.
      */
     public void movePlayerToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading)
             throws moveNotPossibleException {
@@ -557,7 +559,7 @@ public class GameController {
         }
         /**
          * @author Christoffer Fink 205449
-         * Does so the player can't wall through the walls
+         *         Does so the player can't wall through the walls
          */
         if (player.getSpace() != null) {
             if (player.getSpace().getWalls() != null) {
@@ -708,16 +710,17 @@ public class GameController {
     /**
      * @author Setare, s232629
      * @author Jacob, s164958
-     * We've created spam method, not fully done yet
+     *         We've created spam method, not fully done yet
      */
     public void spam(Player player) {
         player.getProgramField(board.getStep()).setCard(player.getDrawpile().drawCard(player.getDiscardpile()));
     }
-/**
- * @author Jacob, s164958
- * @author Setare, s232629
- * This method is used to clean up the program fields of the players
- */
+
+    /**
+     * @author Jacob, s164958
+     * @author Setare, s232629
+     *         This method is used to clean up the program fields of the players
+     */
     public void cleanup() {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
             Player player = board.getPlayer(i);
@@ -742,17 +745,12 @@ public class GameController {
         }
     }
 
-
-
-
-
-
     /**
      * @author Jacob, s164958
      * @author Setare, s232629
      * @param player
      *
-     * This method is used to shoot the laser at the player
+     *               This method is used to shoot the laser at the player
      */
     public void shootLaser(Player player) {
         // player.getSpace();
@@ -760,6 +758,7 @@ public class GameController {
 
     /**
      * Changes the current tab index to the new index
+     * 
      * @author Marcus s214942
      */
     public void changeCurrentTabIndex(int newIndex) {
@@ -768,6 +767,7 @@ public class GameController {
 
     /**
      * Pushes the cards of the player to the server and gets the cards of the other
+     * 
      * @author Marcus s214942
      */
     public void getOtherPlayersCards() {
@@ -792,6 +792,7 @@ public class GameController {
 
     /**
      * Pushes the cards of the player to the server
+     * 
      * @author Marcus s214942
      */
     public void pushYourCards() {
@@ -820,10 +821,9 @@ public class GameController {
      */
     private void updateTimer() {
         if (remainingTime > 0) {
-            if(board.getPhase() == Phase.Programming){
+            if (board.getPhase() == Phase.Programming) {
                 remainingTime--;
-            }
-            else {
+            } else {
             }
         } else {
             scheduler.shutdown();
@@ -831,7 +831,6 @@ public class GameController {
             setTimer(180);
         }
     }
-
 
     public void setPlayerName(String name) {
         playerName = name;

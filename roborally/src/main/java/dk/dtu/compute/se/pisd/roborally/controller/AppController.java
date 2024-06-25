@@ -77,7 +77,6 @@ public class AppController implements Observer {
 
     final private RoboRally roboRally;
 
-
     private GameController gameController;
 
     /**
@@ -112,11 +111,6 @@ public class AppController implements Observer {
                 }
 
             }
-
-
-
-
-
 
             gameController = new GameController(initializeBoard());
             int no = result.get();
@@ -156,6 +150,7 @@ public class AppController implements Observer {
                 }
             }
 
+            gameController.isSinglePlayerMode = false;
             String nickName = GameDialogs.showNameInputDialog("Name", "name", "Name");
 
             gameController.setPlayerName(nickName);
@@ -180,10 +175,6 @@ public class AppController implements Observer {
      * @author Christoffer s205449
      */
 
-
-
-
-
     public void saveGame() {
         if (gameController != null && gameController.board != null) {
             TextInputDialog dialog = new TextInputDialog();
@@ -200,10 +191,6 @@ public class AppController implements Observer {
             System.out.println("No game is currently active.");
         }
     }
-
-
-
-
 
     private List<String> getFilesInDirectory(String directoryPath) {
         File directory = new File(directoryPath);
@@ -338,8 +325,6 @@ public class AppController implements Observer {
         });
     }
 
-
-
     /**
      * @return the board that the user has selected
      * @author Christoffer s205449
@@ -396,6 +381,7 @@ public class AppController implements Observer {
         }
         return true;
     }
+
     /**
      * Exit the application, giving the user the option to save the game
      * before exiting. If the user cancels the exit operation, the method
@@ -491,10 +477,11 @@ public class AppController implements Observer {
             roboRally.createBoardView(gameController);
         }
     }
+
     /**
      * Initializes players and assigns them to starting positions.
      *
-     * @param board the game board
+     * @param board           the game board
      * @param numberOfPlayers the number of players selected to play
      * @author Emily, s191174
      */
@@ -516,7 +503,6 @@ public class AppController implements Observer {
         board.setCurrentPlayer(board.getPlayer(0)); // Optionally set the first player as the current player
     }
 
-
     public void startServer() {
         SpringApplication.run(RoborallyApplication.class);
         Platform.runLater(() -> {
@@ -533,12 +519,10 @@ public class AppController implements Observer {
         });
     }
 
-
-
-
     public void showRules() {
         try {
-            URI rulesUri = new URI("https://renegadegamestudios.com/content/File%20Storage%20for%20site/Rulebooks/Robo%20Rally/RoboRally_Rulebook_WEB.pdf");
+            URI rulesUri = new URI(
+                    "https://renegadegamestudios.com/content/File%20Storage%20for%20site/Rulebooks/Robo%20Rally/RoboRally_Rulebook_WEB.pdf");
             Desktop.getDesktop().browse(rulesUri);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
