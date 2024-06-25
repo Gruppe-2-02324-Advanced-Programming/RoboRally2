@@ -32,9 +32,9 @@ public class GameDialogs {
             choices.add(i);
         }
         ChoiceDialog<Integer> playerNo = new ChoiceDialog<>(choices.get(0), choices);
-        playerNo.setTitle("Select Number");
-        playerNo.setHeaderText("Choose a number between 1 and " + maxPlayers);
-        playerNo.setContentText("Number:");
+        playerNo.setTitle("Select Player Number");
+        playerNo.setHeaderText("Which player do you want to play as 1-" + maxPlayers);
+        playerNo.setContentText("Player Number:");
         return playerNo.showAndWait();
     }
 

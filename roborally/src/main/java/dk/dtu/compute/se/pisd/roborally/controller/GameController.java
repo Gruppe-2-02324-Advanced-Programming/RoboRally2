@@ -600,10 +600,10 @@ public class GameController {
     }
 
     /**
-     * Turns the player around
+     * Turns the player around, making a U-turn.
      *
-     * @param player
-     * @author Marcus, s214962
+     * @param player the player to turn around
+     * @author Marcus Jagd Hansen, s214962
      */
     public void uTurn(@NotNull Player player) {
         if (player != null && player.board == board) {
@@ -707,7 +707,6 @@ public class GameController {
         }
     }
 
-
     /**
      * @author Setare, s232629
      * @author Jacob, s164958
@@ -758,9 +757,10 @@ public class GameController {
     }
 
     /**
-     * Changes the current tab index to the new index
-     * 
-     * @author Marcus s214942
+     * Changes the current tab index to the new index.
+     *
+     * @param newIndex the new tab index to set
+     * @author Marcus Jagd Hansen, s214962
      */
     public void changeCurrentTabIndex(int newIndex) {
         currentTabIndex = newIndex;
@@ -768,8 +768,9 @@ public class GameController {
 
     /**
      * Pushes the cards of the player to the server and gets the cards of the other
+     * players.
      * 
-     * @author Marcus s214942
+     * @author Marcus Jagd Hansen, s214962
      */
     public void getOtherPlayersCards() {
         System.out.println("Getting cards...");
@@ -786,15 +787,13 @@ public class GameController {
                 moveCards(from, to);
                 System.out.println("Cards gotten");
             }
-
         }
-
     }
 
     /**
-     * Pushes the cards of the player to the server
+     * Pushes the cards of the player to the server.
      * 
-     * @author Marcus s214942
+     * @author Marcus Jagd Hansen, s214962
      */
     public void pushYourCards() {
         System.out.println("Pushing cards...");
@@ -802,17 +801,34 @@ public class GameController {
         List<String> cards = board.getProgramFields(playerNumber - 1);
         gameClient.updatePlayerCards(1L, playerID, cards);
         System.out.println("Cards pushed");
-
     }
 
+    /**
+     * Updates the base URL of the game client.
+     *
+     * @param ip the IP address of the server
+     * @author Marcus Jagd Hansen, s214962
+     */
     public void updateBaseUrl(String ip) {
         gameClient.updateBaseUrl(ip);
     }
 
+    /**
+     * Sets the player number.
+     *
+     * @param number the player number to set
+     * @author Marcus Jagd Hansen, s214962
+     */
     public void setPlayerNumber(int number) {
         playerNumber = number;
     }
 
+    /**
+     * Gets the player number.
+     *
+     * @return the player number as an integer
+     * @author Marcus Jagd Hansen, s214962
+     */
     public int getPlayerNumber() {
         return playerNumber;
     }
@@ -833,11 +849,24 @@ public class GameController {
         }
     }
 
+    /**
+     * Sets the name of the player.
+     *
+     * @param name the name of the player
+     * @author Marcus Jagd Hansen, s214962
+     */
     public void setPlayerName(String name) {
         playerName = name;
     }
 
+    /**
+     * Gets the name of the player.
+     *
+     * @return the name of the player as a String
+     * @author Marcus Jagd Hansen, s214962
+     */
     public String getPlayerName() {
         return playerName;
     }
+
 }

@@ -15,11 +15,11 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
-
 /**
- * This class represents a game client that can update and retrieve player cards
- *
- * @author Marcus s214942
+ * This class represents a game client that can update and retrieve player
+ * cards.
+ * 
+ * @author Marcus Jagd Hansen, s214942
  */
 @Component
 public class GameClient extends JFrame {
@@ -27,28 +27,35 @@ public class GameClient extends JFrame {
     private final RestTemplate restTemplate;
     private String baseUrl = "http://localhost:8080/games";
 
-
     /**
-     * Constructor for the game client
-     *
-     * @author Marcus s214942
+     * Constructor for the game client.
+     * Initializes the RestTemplate and user interface.
+     * 
+     * @author Marcus Jagd Hansen, s214942
      */
     public GameClient() {
         this.restTemplate = new RestTemplate();
         initializeUI();
     }
 
-
     /**
-     * Method to update the base url of the game client
-     *
-     * @param ip the ip address of the server
-     * @author Marcus s214942
+     * Method to update the base URL of the game client.
+     * 
+     * @param ip the IP address of the server
+     * @author Marcus Jagd Hansen, s214942
      */
     public void updateBaseUrl(String ip) {
         baseUrl = "http://" + ip + ":8080/games";
     }
 
+    /**
+     * Method to update the cards of a player in a specific game.
+     * 
+     * @param gameId   The ID of the game
+     * @param playerId The ID of the player
+     * @param newCards A list of new cards to assign to the player
+     * @author Marcus Jagd Hansen, s214942
+     */
     public void updatePlayerCards(Long gameId, Long playerId, List<String> newCards) {
         String url = baseUrl + "/" + gameId + "/player/" + playerId + "/cards";
 
@@ -59,23 +66,24 @@ public class GameClient extends JFrame {
 
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.PUT, request, Void.class);
 
-
-/*
-        //udkommenteret kode virker ikke på min (Christoffer) og er ikke nødvendig for at programmet kører
-        if (response.getStatusCode().is2xxSuccessful()) {
-            JOptionPane.showMessageDialog(this, "Player's cards updated successfully.");
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "Failed to update player's cards. Status code: " + response.getStatusCode());
-        }
-        }
- */
+        // Uncomment if you want to show messages in the UI based on the response
+        /*
+         * if (response.getStatusCode().is2xxSuccessful()) {
+         * JOptionPane.showMessageDialog(this, "Player's cards updated successfully.");
+         * } else {
+         * JOptionPane.showMessageDialog(this,
+         * "Failed to update player's cards. Status code: " + response.getStatusCode());
+         * }
+         */
     }
 
     /**
-     * Method to retrieve the cards of a player in a game
-     *
-     * @author Marcus s214942
+     * Method to retrieve the cards of a player in a game.
+     * 
+     * @param gameId   The ID of the game
+     * @param playerId The ID of the player
+     * @return A list of card names if found, or null if not found
+     * @author Marcus Jagd Hansen, s214942
      */
     public List<String> getPlayerCards(Long gameId, Long playerId) {
         String url = baseUrl + "/" + gameId + "/player/" + playerId + "/cards";
@@ -83,11 +91,10 @@ public class GameClient extends JFrame {
         return response.getBody() != null ? Arrays.asList(response.getBody()) : null;
     }
 
-
     /**
-     * Method to initialize the user interface of the game client
-     *
-     * @author Marcus s214942
+     * Method to initialize the user interface of the game client.
+     * 
+     * @author Marcus Jagd Hansen, s214942
      */
     private void initializeUI() {
         setTitle("Game Client");
@@ -123,6 +130,12 @@ public class GameClient extends JFrame {
         add(getButton);
     }
 
+    /**
+     * Method to create a new game.
+     * 
+     * @return The ID of the created game, or null if the creation fails
+     * @author Marcus Jagd Hansen, s214942
+     */
     public Long createGame() {
         String url = baseUrl + "/createGame";
         ResponseEntity<Long> response = restTemplate.postForEntity(url, null, Long.class);
@@ -136,19 +149,26 @@ public class GameClient extends JFrame {
         }
     }
 
+    /**
+     * Method to add a player to a specific game.
+     * 
+     * @param gameId     The ID of the game
+     * @param playerName The name of the player to add
+     * @return The ID of the added player
+     * @author Marcus Jagd Hansen, s214942
+     */
     public Long addPlayer(Long gameId, String playerName) {
         String url = baseUrl + "/" + gameId + "/addPlayer?playerName=" + playerName;
         ResponseEntity<Long> response = restTemplate.postForEntity(url, null, Long.class);
-
         return response.getBody();
-
-    /**
-     * Main method to test the game client
-     *
-     * @author Marcus s214942
-     */
     }
 
+    /**
+     * Main method to test the game client.
+     * 
+     * @param args Command line arguments
+     * @author Marcus Jagd Hansen, s214942
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override

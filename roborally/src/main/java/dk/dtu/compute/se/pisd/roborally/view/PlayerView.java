@@ -24,11 +24,13 @@ package dk.dtu.compute.se.pisd.roborally.view;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import org.jetbrains.annotations.NotNull;
@@ -115,6 +117,7 @@ public class PlayerView extends Tab implements ViewObserver {
      * The button to execute the program.
      */
 
+    private HBox infHBox;
 
     private Label timerLabel;
 
@@ -125,7 +128,6 @@ public class PlayerView extends Tab implements ViewObserver {
 
     private Label playerName;
 
-
     private Label gameID;
 
     /**
@@ -135,14 +137,11 @@ public class PlayerView extends Tab implements ViewObserver {
 
     private VBox playerInteractionPanel;
 
-
     /**
      * The controller for the game.
      */
 
     private GameController gameController;
-
-    private Label readyStatusLabel;
 
     /**
      * Label to display the checkpoint count.
@@ -154,6 +153,7 @@ public class PlayerView extends Tab implements ViewObserver {
      *
      * @param gameController the controller for the game
      * @param player         the player for which this view is created
+     * @author Marcus Jagd Hansen, s214962
      */
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
         super(player.getName());
@@ -175,13 +175,14 @@ public class PlayerView extends Tab implements ViewObserver {
         discardpileLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
 
         checkpointLabel = new Label("Checkpoints: " + player.getCheckpoints());
-        top.getChildren().add(checkpointLabel); // Add the label to the layout
-
 
         programLabel = new Label("Program");
-        programLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
-        readyStatusLabel = new Label("Ready: ");
-        top.getChildren().addAll(readyStatusLabel); // Add to top layout
+        programLabel.setStyle("-fx-font-size: 10px; -fx-padding: 2px;");
+
+        infHBox = new HBox();
+        infHBox.getChildren().addAll(checkpointLabel);
+        infHBox.setSpacing(10);
+        top.getChildren().add(infHBox);
 
         programPane = new GridPane();
         programPane.setVgap(2.0);
@@ -203,12 +204,12 @@ public class PlayerView extends Tab implements ViewObserver {
         playerName = new Label(gameController.getPlayerName());
         gameID = new Label("GameID: " + gameController.board.getGameID().intValue());
 
-        pull = new Button("pull");
+        pull = new Button("Get Other Players Cards");
         pull.setOnAction(e -> {
             gameController.getOtherPlayersCards();
         });
 
-        push = new Button("push");
+        push = new Button("Send Your Cards to Server");
         push.setOnAction(e -> {
             gameController.pushYourCards();
         });
@@ -220,9 +221,12 @@ public class PlayerView extends Tab implements ViewObserver {
         finishButton = new Button("Finish Programming");
         finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
 
+        if (gameController.isSinglePlayerMode) {
+            buttonPanel = new VBox(finishButton);
+        } else {
+            buttonPanel = new VBox(finishButton, pull, push, gameID, playerName);
+        }
 
-
-        buttonPanel = new VBox(finishButton, pull, push, gameID, playerName);
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
         buttonPanel.setSpacing(3.0);
         // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now
@@ -245,8 +249,7 @@ public class PlayerView extends Tab implements ViewObserver {
         }
 
         timerLabel = new Label("Time left: " + gameController.getRemainingTime() + "s");
-        top.getChildren().add(timerLabel);
-
+        infHBox.getChildren().add(timerLabel);
 
         // Update the timer label periodically
         ScheduledExecutorService timerScheduler = Executors.newScheduledThreadPool(1);
@@ -256,7 +259,8 @@ public class PlayerView extends Tab implements ViewObserver {
             });
         }, 0, 1, TimeUnit.SECONDS);
 
-        top.getChildren().addAll(programLabel, programPane, cardsLabel, cardsPane, drawpileLabel, discardpileLabel, energyCubesLabel);
+        top.getChildren().addAll(programLabel, programPane, cardsLabel, cardsPane, drawpileLabel, discardpileLabel,
+                energyCubesLabel);
 
         if (player.board != null) {
             player.board.attach(this);

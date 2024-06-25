@@ -76,11 +76,13 @@ public enum Command {
         return options;
     }
 
-
-
     /**
-     * Method to get the command from the display name
-     * @author Marcus s214942
+     * Method to get the command from the display name.
+     *
+     * @param displayName the display name of the command
+     * @return the Command corresponding to the display name, or FORWARD if no match
+     *         is found
+     * @author Marcus Jagd Hansen, s214962
      */
     public static Command fromDisplayName(String displayName) {
         for (Command command : Command.values()) {
@@ -88,7 +90,7 @@ public enum Command {
                 return command;
             }
         }
-        return FORWARD; // skal måske ændres..burde ikke komme her til return forward
+        return FORWARD; // This should rarely be reached; consider handling this case appropriately
     }
 
 }

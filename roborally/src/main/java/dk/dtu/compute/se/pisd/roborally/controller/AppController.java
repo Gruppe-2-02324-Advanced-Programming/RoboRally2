@@ -82,8 +82,8 @@ public class AppController implements Observer {
     /**
      * The constructor of the AppController.
      *
-     * @author Ekkart Kindler, ekki@dtu.dk
      * @param roboRally the RoboRally application object
+     * @author Ekkart Kindler, ekki@dtu.dk
      */
     public AppController(@NotNull RoboRally roboRally) {
         this.roboRally = roboRally;
@@ -92,12 +92,11 @@ public class AppController implements Observer {
     /**
      * Start a new game. The user is asked to select the number of players
      * for the game and gameboard. The board is initialized with the selected number
-     * of
-     * players, and the game is started with the programming phase.
+     * of players, and the game is started with the programming phase.
      *
      * @author Ekkart Kindler, ekki@dtu.dk
      * @author Christoffer s205449
-     * @author Marcus s214962
+     * @author Marcus Jagd Hansen, s214962
      */
     public void multiplayer() {
         Optional<Integer> result = GameDialogs.showPlayerNumberDialog(PLAYER_NUMBER_OPTIONS);
@@ -167,14 +166,13 @@ public class AppController implements Observer {
     }
 
     /**
-     * this method loads the games from the json file and asks the user which of the
+     * This method loads the games from the json file and asks the user which of the
      * gameID's they wish to load.
      * The system then finds the game which has the same gameID as the one
      * requested.
      *
      * @author Christoffer s205449
      */
-
     public void saveGame() {
         if (gameController != null && gameController.board != null) {
             TextInputDialog dialog = new TextInputDialog();
@@ -192,6 +190,13 @@ public class AppController implements Observer {
         }
     }
 
+    /**
+     * Get a list of files in a directory with a specific extension.
+     *
+     * @param directoryPath the path to the directory
+     * @return a list of file names in the directory
+     * @author Marcus Jagd Hansen, s214962
+     */
     private List<String> getFilesInDirectory(String directoryPath) {
         File directory = new File(directoryPath);
         List<String> fileList = new ArrayList<>();
@@ -209,10 +214,25 @@ public class AppController implements Observer {
         return fileList;
     }
 
+    /**
+     * Remove the .json extension from a file name.
+     *
+     * @param fileName the file name
+     * @return the file name without the .json extension
+     * @author Marcus Jagd Hansen, s214962
+     */
     public static String removeJsonExtension(String fileName) {
         return fileName.replaceFirst("[.][jJ][sS][oO][nN]$", "");
     }
 
+    /**
+     * Extract the first number found in a string.
+     *
+     * @param input the input string
+     * @return the extracted number
+     * @throws IllegalArgumentException if no number is found in the input string
+     * @author Marcus Jagd Hansen, s214962
+     */
     public static int extractNumberFromString(String input) {
         // Define the regular expression pattern to find the number
         Pattern pattern = Pattern.compile("\\d+");
@@ -233,7 +253,7 @@ public class AppController implements Observer {
      * This method loads the game from the json file and the user can select which
      * game they want to load.
      *
-     * @author Marcus s214962
+     * @author Marcus Jagd Hansen, s214962
      * @author Christoffer s205449
      */
     public void loadGame() {
@@ -327,9 +347,9 @@ public class AppController implements Observer {
 
     /**
      * @return the board that the user has selected
+     *         This method checks which boards are available.
+     * 
      * @author Christoffer s205449
-     *         <p>
-     *         This method checks which boards are available
      */
     private Board initializeBoard() {
         List<String> boards = LoadBoard.getBoards();
@@ -409,18 +429,20 @@ public class AppController implements Observer {
     /**
      * Returns true if a game is currently running, false otherwise.
      *
-     * @return
+     * @return true if a game is running, false otherwise
      */
     public boolean isGameRunning() {
         return gameController != null;
     }
 
     /**
-     * Does so player can win
+     * Handles updates when the subject changes.
+     * If a player wins, the game is stopped and the user is given options
+     * to play again or close the game.
      *
      * @param subject the subject which changed
      * @author Christoffer Fink s205449
-     * @author Marcus s214962
+     * @author Marcus Jagd Hansen, s214962
      * @author Setare s232629
      */
     @Override
@@ -454,6 +476,12 @@ public class AppController implements Observer {
         }
     }
 
+    /**
+     * Starts a new game, allowing the user to select the number of players.
+     * Initializes the board and players, and starts the programming phase.
+     *
+     * @author Emily, s191174
+     */
     public void newGame() {
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
         dialog.setTitle("Player number");
@@ -503,6 +531,11 @@ public class AppController implements Observer {
         board.setCurrentPlayer(board.getPlayer(0)); // Optionally set the first player as the current player
     }
 
+    /**
+     * Starts the server and displays an alert with the server status.
+     * 
+     * @author Marcus Jagd Hansen, s214962
+     */
     public void startServer() {
         SpringApplication.run(RoborallyApplication.class);
         Platform.runLater(() -> {
@@ -519,6 +552,11 @@ public class AppController implements Observer {
         });
     }
 
+    /**
+     * Displays the rules of the game in a PDF document.
+     * 
+     * @author Marcus Jagd Hansen, s214962
+     */
     public void showRules() {
         try {
             URI rulesUri = new URI(
