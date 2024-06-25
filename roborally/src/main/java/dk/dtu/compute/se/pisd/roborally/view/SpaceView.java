@@ -356,7 +356,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         for (FieldAction action : space.getActions()) {
             if (action instanceof Pit) {
                 Pit pit = (Pit) action;
-                Image pitImage = loadImage("/assets/hole.png");
+                Image pitImage = loadImage("/assets/pit.png");
                 if (pitImage != null) {
                     ImageView pitView = new ImageView(pitImage);
                     pitView.setFitWidth(SPACE_WIDTH);
