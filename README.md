@@ -15,7 +15,7 @@ Welcome to the RoboRally Game! This guide will help you install and run the game
    Clone the master branch of the repository using your preferred method:
 
    ```bash
-   git clone https://github.com/your-username/roborally.git
+   git clone (https://github.com/Gruppe-2-02324-Advanced-Programming/RoboRally2.git)
 
 ## Open the Project
 
