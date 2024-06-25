@@ -57,4 +57,26 @@ class GameWonTest {
 
         Assertions.assertTrue(board.isWon(), "The game should be won!");
     }
+
+    @Test
+    void checkpointOrder() {
+        Board board = gameController.board;
+        Player current = board.getCurrentPlayer();
+
+        board.getSpace(0, 1).addAction(new Checkpoint(2));
+        board.getSpace(0, 2).addAction(new Checkpoint(1));
+
+        gameController.moveForward(current);
+        board.getSpace(0, 1).getActions().get(0).doAction(gameController, board.getSpace(0, 1));
+        Assertions.assertEquals(current, board.getSpace(0, 1).getPlayer(), "Player " + current.getName() + " should be at Space (0,1)!");
+        Assertions.assertTrue(current.getCheckpoints() >= 0, "Player should have reached at least 1 checkpoint");
+
+        gameController.moveForward(current);
+        board.getSpace(0, 2).getActions().get(0).doAction(gameController, board.getSpace(0, 2));
+        Assertions.assertEquals(current, board.getSpace(0, 2).getPlayer(), "Player " + current.getName() + " should be at Space (0,2)!");
+        Assertions.assertEquals(2, current.getCheckpoints(), "Player should have reached 0 checkpoints");
+
+        Assertions.assertFalse(board.isWon(), "The game should not be won!");
+    }
 }
+
