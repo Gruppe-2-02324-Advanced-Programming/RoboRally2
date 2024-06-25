@@ -83,7 +83,7 @@
       "actions": [
         {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner", "INSTANCE": {"heading": "EAST", "rotation": 90}}
       ],
-      "x": 6, "y": 6
+      "x": 6, "y": 1
     },
 
     {
@@ -295,6 +295,14 @@
         {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Checkpoint", "INSTANCE": {"checkpointNumber": 2}}
       ],
       "x": 10, "y": 4
+    },
+
+    {
+      "walls": [],
+      "actions": [
+        {"CLASSNAME": "dk.dtu.compute.se.pisd.roborally.controller.Reboot", "INSTANCE": {}}
+      ],
+      "x": 5, "y": 7
     }
   ]
 }
