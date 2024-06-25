@@ -35,14 +35,6 @@ If configurations are not already set up, follow these steps:
 1. Go to `File` > `Project Structure` > `Modules`.
 2. Select `RoboRally` as the module.
 
-### Set the Main Class
-
-1. Go to `Run` > `Edit Configurations`.
-2. Click the `+` button and select `Application`.
-3. Name the configuration `RoboRally`.
-4. Set the `Main class` to `StartRoboRally`.
-5. Apply the changes and close the window.
-
 ## Run the Game
 
 Launch the game by running the `StartRoboRally` class:
@@ -67,7 +59,7 @@ public class StartRoboRally {
 
 ### Choose Game Board
 
-- Select the game board you want to play on.
+- Select the game board you want to play on (we reccomend DIZZY-HIGHWAY & BURNOUT)
 
 ### Load- & save game
 - Whenever you are playing a game you can save the game at any time press file -> save game, and choose a name for your saved game.
