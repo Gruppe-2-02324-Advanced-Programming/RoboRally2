@@ -23,31 +23,31 @@ package dk.dtu.compute.se.pisd.roborally.model;
 
 import com.google.gson.annotations.Expose;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.*;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.LinkedList;
 
-import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
+
+import static dk.dtu.compute.se.pisd.roborally.model.Phase.Initialisation;
 
 /**
- *
  * The class of the game board. The board is a rectangular grid of spaces. The
  * board
  * keeps track of the players on the board and the current player. It also keeps
  * track of the phase of the game.
- * 
- * @Expose is used to serialize the field for saving the board.
+ *
  * @author Ekkart Kindler, ekki@dtu.dk
+ * @Expose is used to serialize the field for saving the board.
  * @auhtor Christoffer, s205449
  * @auhtor Setare, s232629
  * @auhtor Phillip, s224278
  * @auhtor Emily, s191174
  * @auhtor Jacob, s164958
- *
  */
-
 
 public class Board extends Subject {
     // @Expose
@@ -65,7 +65,7 @@ public class Board extends Subject {
     @Expose
     private Player current;
     @Expose
-    private Phase phase = INITIALISATION;
+    private Phase phase = Initialisation;
     @Expose
     private int step = 0;
     // @Expose
@@ -76,6 +76,28 @@ public class Board extends Subject {
     private int counter;
     // @Expose
     private boolean won = false;
+
+    private Queue<Player> rebootQueue = new LinkedList<>(); // Queue to manage rebooting players
+
+
+
+
+    /**
+     * Returns the program fields of the given player on the board.
+     *
+     * @param playerNumber the number of the player
+     * @author Marcus s214942
+     */
+    private Long gameID;
+
+    public List<String> getProgramFields(int playerNumber) {
+        Player player = players.get(playerNumber);
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            list.add(player.getProgramField(i).getCard().getName());
+        }
+        return list;
+    }
 
     public int getCounter() {
         return counter;
@@ -106,13 +128,13 @@ public class Board extends Subject {
 
     /**
      * Creates a new board with the given width and height and the given name.
-     *
      */
 
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
         this.width = width;
         this.height = height;
+        this.gameID = 1L;
         spaces = new Space[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -126,6 +148,14 @@ public class Board extends Subject {
 
     public Board(int width, int height) {
         this(width, height, "defaultboard");
+    }
+
+    public void setGameID(Long gameID) {
+        this.gameID = gameID;
+    }
+
+    public Long getGameID() {
+        return this.gameID;
     }
 
     public Integer getGameId() {
@@ -144,7 +174,6 @@ public class Board extends Subject {
 
     /**
      * Returns the space at the given position on the board.
-     *
      */
     public Space getSpace(int x, int y) {
         if (x >= 0 && x < width &&
@@ -161,7 +190,6 @@ public class Board extends Subject {
 
     /**
      * Returns the number of players on the board.
-     *
      */
     public int getPlayersNumber() {
         return players.size();
@@ -176,7 +204,6 @@ public class Board extends Subject {
 
     /**
      * Returns the player with the given index on the board.
-     *
      */
     public Player getPlayer(int i) {
         if (i >= 0 && i < players.size()) {
@@ -188,7 +215,6 @@ public class Board extends Subject {
 
     /**
      * Returns the current player on the board.
-     *
      */
     public Player getCurrentPlayer() {
         return current;
@@ -201,13 +227,8 @@ public class Board extends Subject {
         }
     }
 
-    public int getNumPlayers() {
-        return players.size();
-    }
-
     /**
      * Returns the phase of the game. Setters and getters for phase and step
-     *
      */
     public Phase getPhase() {
         return phase;
@@ -233,7 +254,6 @@ public class Board extends Subject {
 
     /**
      * Returns whether the board is in step mode.
-     *
      */
     public boolean isStepMode() {
         return stepMode;
@@ -248,7 +268,6 @@ public class Board extends Subject {
 
     /**
      * Returns the number of the given player on the board. If the player is not
-     *
      */
     public int getPlayerNumber(@NotNull Player player) {
         if (player.board == this) {
@@ -267,7 +286,7 @@ public class Board extends Subject {
      * @param space   the space for which the neighbour should be computed
      * @param heading the heading of the neighbour
      * @return the space in the given direction; null if there is no (reachable)
-     *         neighbour
+     * neighbour
      */
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
         int x = space.x;
@@ -293,7 +312,6 @@ public class Board extends Subject {
     /**
      * Returns the number of checkpoints on the board. Getters and setters for
      * totalCheckpoints and won
-     *
      */
     public int getTotalCheckpoints() {
         return totalCheckpoints;
@@ -309,12 +327,11 @@ public class Board extends Subject {
 
     /**
      * Returns whether the game is won. The game is won, if one of the players
-     *
      */
     public boolean isWon() {
         for (Player p : players) {
             // System.out.println(p.getCheckpoints() + ":" + totalCheckpoints);
-            if (p.getCheckpoints() == totalCheckpoints) {
+            if (p.getCheckpoints() == totalCheckpoints && totalCheckpoints > 0) {
                 won = true;
                 break;
             }
@@ -329,12 +346,88 @@ public class Board extends Subject {
 
     /**
      * Returns the status message of the board. The status message contains
-     *
      */
     public String getStatusMessage() {
-        return "Phase: " + getPhase().name() +
-                ", Player = " + getCurrentPlayer().getName() +
-                ", Counter " + counter;
+        return getPhase().name() + " Phase, " +
+                getCurrentPlayer().getName() +
+                ", Turn Counter " + counter;
     }
+    public List<Space> getGearSpawnPoints() {
+        List<Space> spawnPoints = new ArrayList<>();
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Space space = spaces[x][y];
+                if (space.getActions().stream().anyMatch(action -> action instanceof StartGear)) {
+                    spawnPoints.add(space);
+                }
+            }
+        }
+        return spawnPoints;
+    }
+
+    // Call this method when a player falls into a pit or needs to reboot
+    public void scheduleReboot(Player player) {
+        rebootQueue.add(player);
+        processReboots();
+    }
+
+    // Process reboots in a FIFO manner
+    private void processReboots() {
+        Space rebootSpace = findRebootSpace();
+        if (rebootSpace != null) {
+            while (!rebootQueue.isEmpty()) {
+                Player player = rebootQueue.peek(); // Look at the next player without removing
+                if (rebootSpace.getPlayer() == null) {
+                    rebootQueue.poll(); // Remove the player from the queue
+                    player.setSpace(rebootSpace); // Move the player to the reboot space
+                    System.out.println(player.getName() + " has been rebooted to " + rebootSpace.getX() + ", " + rebootSpace.getY());
+                } else {
+                    // If reboot space is occupied, decide the next step
+                    // Example: Push the current occupant to the next space in a specific direction, if free
+                    Space nextFreeSpace = findNextFreeSpace(rebootSpace);
+                    if (nextFreeSpace != null) {
+                        Player occupyingPlayer = rebootSpace.getPlayer();
+                        occupyingPlayer.setSpace(nextFreeSpace);
+                        System.out.println(occupyingPlayer.getName() + " has been pushed to " + nextFreeSpace.getX() + ", " + nextFreeSpace.getY());
+                        // Now move the rebooting player to the free reboot space
+                        player.setSpace(rebootSpace);
+                        rebootQueue.poll(); // Remove the player from the queue
+                        System.out.println(player.getName() + " has been rebooted to " + rebootSpace.getX() + ", " + rebootSpace.getY());
+                    } else {
+                        // If no space is available to push, you might delay the reboot or handle differently
+                        System.out.println("Reboot delayed for " + player.getName() + " due to occupied space.");
+                        break; // Exit the loop and try again later
+                    }
+                }
+            }
+        }
+    }
+
+    // Helper method to find the next available space around a given space
+    private Space findNextFreeSpace(Space currentSpace) {
+        // Check spaces in some order: NORTH, EAST, SOUTH, WEST
+        for (Heading heading : Heading.values()) {
+            Space nextSpace = getNeighbour(currentSpace, heading);
+            if (nextSpace != null && nextSpace.getPlayer() == null) {
+                return nextSpace;
+            }
+        }
+        return null; // No free space found around the current space
+    }
+
+
+    public Space findRebootSpace() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Space space = spaces[x][y];
+                if (space.getActions().stream().anyMatch(a -> a instanceof Reboot)) {
+                    return space; // Return the first found reboot space
+                }
+            }
+        }
+        return null; // Return null if no reboot space is found
+    }
+
+
 
 }

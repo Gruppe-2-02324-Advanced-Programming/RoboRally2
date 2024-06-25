@@ -23,8 +23,6 @@ package dk.dtu.compute.se.pisd.roborally.model;
 
 import javafx.scene.image.Image;
 
-import com.google.gson.annotations.Expose;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +48,8 @@ public enum Command {
     UTURN("U-Turn", new Image("assets/cardsUTurn.png", 65, 100, true, true)),
     AGAIN("Again", new Image("assets/cardsAgain.png", 65, 100, true, true)),
     OPTION_LEFT_RIGHT("Left OR Right", new Image("assets/cardLeftRight.png", 65, 100, true, true), LEFT, RIGHT),
-    POWER_UP("Power Up", new Image("assets/powerupcard.png", 65, 100, true, true));
+    POWER_UP("Power Up", new Image("assets/powerupcard.png", 65, 100, true, true)),
+    SPAM("Spam", new Image("assets/cardsSpam.png", 65, 100, true, true));
 
     // @Expose
     final public String displayName;
@@ -75,6 +74,23 @@ public enum Command {
 
     public List<Command> getOptions() {
         return options;
+    }
+
+    /**
+     * Method to get the command from the display name.
+     *
+     * @param displayName the display name of the command
+     * @return the Command corresponding to the display name, or FORWARD if no match
+     *         is found
+     * @author Marcus Jagd Hansen, s214962
+     */
+    public static Command fromDisplayName(String displayName) {
+        for (Command command : Command.values()) {
+            if (command.displayName.equalsIgnoreCase(displayName)) {
+                return command;
+            }
+        }
+        return FORWARD; // This should rarely be reached; consider handling this case appropriately
     }
 
 }

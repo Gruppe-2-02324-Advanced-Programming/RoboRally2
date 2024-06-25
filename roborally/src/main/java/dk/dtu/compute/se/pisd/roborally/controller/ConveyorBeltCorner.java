@@ -12,17 +12,16 @@ import org.jetbrains.annotations.NotNull;
  * and change the player's heading based on the conveyor belt's rotation when the player lands on the conveyor belt corner
  * The class has a heading and a rotation field to store the conveyor belt's heading and rotation respectively
  * @author Christoffer s205449
- *
+ * @author Emily, s191174
  */
 
-//todo Currently also changes the heading of the robot, which it should not do
 public class ConveyorBeltCorner extends FieldAction {
     Heading heading;
     private int rotation;
 
     /**
      * Constructor for the conveyor belt corner
-     * @autor Christoffer s205449
+     * @author Christoffer s205449
      * @param heading the heading of the conveyor belt corner
      * @param rotation the rotation of the conveyor belt corner
      */
@@ -34,7 +33,8 @@ public class ConveyorBeltCorner extends FieldAction {
     /**
      * This method moves the player to the next space in the direction of the conveyor belt corner
      * and changes the player's heading based on the conveyor belt corner's rotation
-     * @autor Christoffer s205449
+     * @author Emily, s191174
+     * @author Christoffer s205449
      * @param gameController the game controller
      * @param space the space the player is on
      * @return true if the player is moved to the next space in the direction of the conveyor belt corner
@@ -44,26 +44,22 @@ public class ConveyorBeltCorner extends FieldAction {
         if (space != null) {
             Player player = space.getPlayer();
             if (player != null) {
-                Heading newHeading = this.heading;
-                if (this.rotation == Gears.LEFT_TURN) {
-                    newHeading = this.heading.prev();
-                } else if (this.rotation == Gears.RIGHT_TURN) {
-                    newHeading = this.heading.next();
+                // Calculate the heading to move the player
+                Heading moveHeading = heading; // heading of the conveyor belt corner
+                if (rotation == Gears.LEFT_TURN) {
+                    moveHeading = heading.prev();  // move left relative to the conveyor's heading
+                } else if (rotation == Gears.RIGHT_TURN) {
+                    moveHeading = heading.next();  // move right relative to the conveyor's heading
                 }
 
-                Space nextSpace = gameController.board.getNeighbour(space, newHeading);
+                // Find the next space in the new heading direction
+                Space nextSpace = gameController.board.getNeighbour(space, moveHeading);
                 if (nextSpace != null && nextSpace.getPlayer() == null) {
                     try {
-                        player.setHeading(newHeading);
-                        gameController.movePlayerToSpace(player, nextSpace, newHeading);
-                        // Check for another conveyor action recursively
-                        FieldAction action = nextSpace.findAction(ConveyorBelt.class);
-                        if (action != null) {
-                            action.doAction(gameController, nextSpace);
-                        }
+                        gameController.movePlayerToSpace(player, nextSpace, moveHeading);
                         return true;
                     } catch (GameController.moveNotPossibleException e) {
-                        return false;
+                        return false;  // Movement failed
                     }
                 }
             }
@@ -73,9 +69,10 @@ public class ConveyorBeltCorner extends FieldAction {
 
 
 
+
     /**
      * Get the heading of the conveyor belt corner
-     * @autor Christoffer s205449
+     * @author Christoffer s205449
      * @return the heading of the conveyor belt corner
      */
     public Heading getHeading() {
@@ -84,7 +81,7 @@ public class ConveyorBeltCorner extends FieldAction {
 
     /**
      * Get the rotation of the conveyor belt corner
-     * @autor Christoffer s205449
+     * @author Christoffer s205449
      * @return the rotation of the conveyor belt corner
      */
     public int getRotation() {

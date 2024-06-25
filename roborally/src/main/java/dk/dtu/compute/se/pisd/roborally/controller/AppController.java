@@ -21,51 +21,44 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import com.google.gson.Gson;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Command;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.network.Network;
+import dk.dtu.compute.se.pisd.roborally.view.GameDialogs;
+import dk.dtu.compute.se.pisd.server.RoborallyApplication;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
-import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
+import java.util.*;
+
 import java.util.ArrayList;
 
-
+import org.springframework.boot.SpringApplication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 /**
  *
@@ -84,19 +77,13 @@ public class AppController implements Observer {
 
     final private RoboRally roboRally;
 
-    @GetMapping("/test")
-    public String testEndpoint() {
-        return "Hello, this is a test endpoint from AppController!";
-    }
-
-
     private GameController gameController;
 
     /**
      * The constructor of the AppController.
      *
-     * @author Ekkart Kindler, ekki@dtu.dk
      * @param roboRally the RoboRally application object
+     * @author Ekkart Kindler, ekki@dtu.dk
      */
     public AppController(@NotNull RoboRally roboRally) {
         this.roboRally = roboRally;
@@ -105,17 +92,14 @@ public class AppController implements Observer {
     /**
      * Start a new game. The user is asked to select the number of players
      * for the game and gameboard. The board is initialized with the selected number
-     * of
-     * players, and the game is started with the programming phase.
+     * of players, and the game is started with the programming phase.
      *
      * @author Ekkart Kindler, ekki@dtu.dk
      * @author Christoffer s205449
+     * @author Marcus Jagd Hansen, s214962
      */
-    public void newGame() {
-        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
-        dialog.setTitle("Player number");
-        dialog.setHeaderText("Select number of players");
-        Optional<Integer> result = dialog.showAndWait();
+    public void multiplayer() {
+        Optional<Integer> result = GameDialogs.showPlayerNumberDialog(PLAYER_NUMBER_OPTIONS);
 
         if (result.isPresent()) {
             if (gameController != null) {
@@ -124,11 +108,8 @@ public class AppController implements Observer {
                 if (!stopGame()) {
                     return;
                 }
-            }
 
-            // XXX the board should eventually be created programmatically or loaded from a
-            // file
-            // here we just create an empty board with the required number of players.
+            }
 
             gameController = new GameController(initializeBoard());
             int no = result.get();
@@ -141,25 +122,59 @@ public class AppController implements Observer {
             }
             board.setCurrentPlayer(board.getPlayer(0));
 
+            Optional<String> ip = GameDialogs.showIpInputDialog(Network.getIPv4Address());
+
+            ip.ifPresent(url -> {
+                gameController.updateBaseUrl(url);
+            });
+
+            Optional<Integer> currentPlayerNumber = GameDialogs.showPlayerSelectionDialog(no);
+
+            currentPlayerNumber.ifPresent(number -> {
+                gameController.setPlayerNumber(number);
+            });
+
+            Optional<String> hostOrJoin = GameDialogs.showHostOrJoinDialog();
+
+            Long gameID;
+            if (hostOrJoin.isPresent() && hostOrJoin.get().equals("Host Game")) {
+                gameID = gameController.gameClient.createGame();
+            } else {
+                Optional<Integer> joingameID = GameDialogs.showIntegerInputDialog("Join game with ID",
+                        "Join game with ID", "Join game with ID:");
+                if (joingameID.isPresent()) {
+                    gameID = (long) joingameID.get();
+                } else {
+                    gameID = 1L;
+                }
+            }
+
+            gameController.isSinglePlayerMode = false;
+            String nickName = GameDialogs.showNameInputDialog("Name", "name", "Name");
+
+            gameController.setPlayerName(nickName);
+            Long playerID = gameController.gameClient.addPlayer(gameID, nickName);
+
+            gameController.setPlayerNumber(playerID.intValue());
+
+            gameController.board.setGameID(gameID);
+
             gameController.startProgrammingPhase();
 
             roboRally.createBoardView(gameController);
-
         }
     }
 
     /**
-     * this method loads the games from the json file and asks the user which of the
+     * This method loads the games from the json file and asks the user which of the
      * gameID's they wish to load.
      * The system then finds the game which has the same gameID as the one
      * requested.
      *
      * @author Christoffer s205449
      */
-
     public void saveGame() {
         if (gameController != null && gameController.board != null) {
-            // Prompt the user to enter the name of the game they want to save
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Save Game");
             dialog.setHeaderText("Enter the name of the game you want to save:");
@@ -174,8 +189,14 @@ public class AppController implements Observer {
             System.out.println("No game is currently active.");
         }
     }
-    // todo doesnt work
 
+    /**
+     * Get a list of files in a directory with a specific extension.
+     *
+     * @param directoryPath the path to the directory
+     * @return a list of file names in the directory
+     * @author Marcus Jagd Hansen, s214962
+     */
     private List<String> getFilesInDirectory(String directoryPath) {
         File directory = new File(directoryPath);
         List<String> fileList = new ArrayList<>();
@@ -193,10 +214,25 @@ public class AppController implements Observer {
         return fileList;
     }
 
+    /**
+     * Remove the .json extension from a file name.
+     *
+     * @param fileName the file name
+     * @return the file name without the .json extension
+     * @author Marcus Jagd Hansen, s214962
+     */
     public static String removeJsonExtension(String fileName) {
         return fileName.replaceFirst("[.][jJ][sS][oO][nN]$", "");
     }
 
+    /**
+     * Extract the first number found in a string.
+     *
+     * @param input the input string
+     * @return the extracted number
+     * @throws IllegalArgumentException if no number is found in the input string
+     * @author Marcus Jagd Hansen, s214962
+     */
     public static int extractNumberFromString(String input) {
         // Define the regular expression pattern to find the number
         Pattern pattern = Pattern.compile("\\d+");
@@ -217,7 +253,7 @@ public class AppController implements Observer {
      * This method loads the game from the json file and the user can select which
      * game they want to load.
      *
-     * @author Marcus s214962
+     * @author Marcus Jagd Hansen, s214962
      * @author Christoffer s205449
      */
     public void loadGame() {
@@ -311,9 +347,9 @@ public class AppController implements Observer {
 
     /**
      * @return the board that the user has selected
+     *         This method checks which boards are available.
+     * 
      * @author Christoffer s205449
-     *         <p>
-     *         This method checks which boards are available
      */
     private Board initializeBoard() {
         List<String> boards = LoadBoard.getBoards();
@@ -338,14 +374,32 @@ public class AppController implements Observer {
      */
     public boolean stopGame() {
         if (gameController != null) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Save Game");
+            alert.setHeaderText("Do you want to save the current game?");
+            alert.setContentText("Choose your option.");
 
-            // here we save the game (without asking the user).
-            saveGame();
-            gameController = null;
-            roboRally.createBoardView(null);
-            return true;
+            ButtonType buttonTypeSave = new ButtonType("Save");
+            ButtonType buttonTypeDontSave = new ButtonType("Don't Save");
+            ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            alert.getButtonTypes().setAll(buttonTypeSave, buttonTypeDontSave, buttonTypeCancel);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == buttonTypeSave) {
+                saveGame();
+                gameController = null;
+                return true;
+            } else if (result.isPresent() && result.get() == buttonTypeDontSave) {
+                gameController = null;
+                // Return to main menu
+                roboRally.createMainMenuView();
+                return true;
+            } else {
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -375,18 +429,20 @@ public class AppController implements Observer {
     /**
      * Returns true if a game is currently running, false otherwise.
      *
-     * @return
+     * @return true if a game is running, false otherwise
      */
     public boolean isGameRunning() {
         return gameController != null;
     }
 
     /**
-     * Does so player can win
+     * Handles updates when the subject changes.
+     * If a player wins, the game is stopped and the user is given options
+     * to play again or close the game.
      *
      * @param subject the subject which changed
      * @author Christoffer Fink s205449
-     * @author Marcus s214962
+     * @author Marcus Jagd Hansen, s214962
      * @author Setare s232629
      */
     @Override
@@ -396,25 +452,123 @@ public class AppController implements Observer {
             if (board.isWon()) {
                 for (Player player : board.getPlayers()) {
                     if (player.getCheckpoints() == board.getTotalCheckpoints()) {
-                        ButtonType playAgainButton = new ButtonType("Play Again");
-                        ButtonType closeButton = new ButtonType("Close Game");
-                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by " + player.getName(),
-                                ButtonType.OK, playAgainButton, closeButton);
-                        Optional<ButtonType> result = alert.showAndWait();
-
-                        if (result.isPresent() && result.get() == playAgainButton) {
-                            newGame();
-                        } else if (result.isPresent() && result.get() == closeButton) {
-                            exit();
-                        } else {
-                            stopGame();
+                        for (Player p : board.getPlayers()) {
+                            p.setCheckpoints(0);
                         }
+
+                        // Run the alert code on the JavaFX Application Thread
+                        Platform.runLater(() -> {
+                            ButtonType playAgainButton = new ButtonType("Play Again");
+                            ButtonType closeButton = new ButtonType("Close Game");
+                            Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by " + player.getName(),
+                                    ButtonType.OK, playAgainButton, closeButton);
+                            Optional<ButtonType> result = alert.showAndWait();
+
+                            if (result.isPresent() && result.get() == playAgainButton) {
+                                multiplayer();
+                            } else if (result.isPresent() && result.get() == closeButton) {
+                                exit();
+                            } else {
+                                stopGame();
+                            }
+                        });
 
                         board.setWon(false);
                         return;
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Starts a new game, allowing the user to select the number of players.
+     * Initializes the board and players, and starts the programming phase.
+     *
+     * @author Emily, s191174
+     */
+    public void newGame() {
+        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
+        dialog.setTitle("Player number");
+        dialog.setHeaderText("Select number of players");
+        Optional<Integer> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            if (gameController != null) {
+                if (!stopGame()) {
+                    return; // User decided not to stop the current game
+                }
+            }
+
+            gameController = new GameController(initializeBoard());
+            Board board = gameController.board;
+            board.attach(this);
+
+            initializePlayers(board, result.get()); // Initializing players with the selected number of players
+
+            gameController.startProgrammingPhase();
+            roboRally.createBoardView(gameController);
+        }
+    }
+
+    /**
+     * Initializes players and assigns them to starting positions.
+     *
+     * @param board           the game board
+     * @param numberOfPlayers the number of players selected to play
+     * @author Emily, s191174
+     */
+    private void initializePlayers(Board board, int numberOfPlayers) {
+        List<Space> spawnPoints = board.getGearSpawnPoints();
+        if (spawnPoints.size() < numberOfPlayers) {
+            throw new IllegalStateException("Not enough start points for the number of players.");
+        }
+
+        Collections.shuffle(spawnPoints); // Shuffle to assign starting positions randomly
+
+        for (int i = 0; i < numberOfPlayers; i++) {
+            String playerName = "Player " + (i + 1);
+            String color = PLAYER_COLORS.get(i % PLAYER_COLORS.size());
+            Player player = new Player(board, color, playerName);
+            board.addPlayer(player);
+            player.setSpace(spawnPoints.get(i)); // Assign each player to a start point
+        }
+        board.setCurrentPlayer(board.getPlayer(0)); // Optionally set the first player as the current player
+    }
+
+    /**
+     * Starts the server and displays an alert with the server status.
+     * 
+     * @author Marcus Jagd Hansen, s214962
+     */
+    public void startServer() {
+        SpringApplication.run(RoborallyApplication.class);
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Server Status");
+            alert.setHeaderText(null);
+            try {
+                String serverIP = InetAddress.getLocalHost().getHostAddress();
+                alert.setContentText("The server has started successfully at IP: " + serverIP);
+            } catch (UnknownHostException e) {
+                alert.setContentText("The server has started, but the IP could not be determined.");
+            }
+            alert.showAndWait();
+        });
+    }
+
+    /**
+     * Displays the rules of the game in a PDF document.
+     * 
+     * @author Marcus Jagd Hansen, s214962
+     */
+    public void showRules() {
+        try {
+            URI rulesUri = new URI(
+                    "https://renegadegamestudios.com/content/File%20Storage%20for%20site/Rulebooks/Robo%20Rally/RoboRally_Rulebook_WEB.pdf");
+            Desktop.getDesktop().browse(rulesUri);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 }

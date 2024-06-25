@@ -22,19 +22,17 @@
 package dk.dtu.compute.se.pisd.roborally.fileaccess;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
-import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
-import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
+import dk.dtu.compute.se.pisd.roborally.fileaccess.templates.BoardTemplate;
+import dk.dtu.compute.se.pisd.roborally.fileaccess.templates.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.Deck;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +57,7 @@ public class LoadBoard {
      */
     private static final String BOARDSFOLDER = "boards";
     private static final String DEFAULTBOARD = "defaultboard";
-    private static final String[] BOARDS = new String[] { "defaultboard", "circleJerk", "Wooooow" };
+    private static final String[] BOARDS = new String[] { "defaultboard", "circleJerk", "Wooooow","DIZZY-HIGHWAY", "BURNOUT" };
     public static final String JSON_EXT = "json";
     public static final int BOARD_WIDTH = 16;
     public static final int BOARD_HEIGHT = 8;
@@ -196,5 +194,4 @@ public class LoadBoard {
             return null;
         }
     }
-
 }

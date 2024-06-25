@@ -232,7 +232,7 @@ public class CardFieldView extends GridPane implements ViewObserver {
                         cardField.getCard() != null &&
                         cardField.player != null &&
                         cardField.player.board != null &&
-                        cardField.player.board.getPhase().equals(Phase.PROGRAMMING)) {
+                        cardField.player.board.getPhase().equals(Phase.Programming)) {
                     Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
                     Image image = source.getImage();
                     db.setDragView(image);

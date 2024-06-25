@@ -36,13 +36,16 @@ import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
  * @author Christoffer, s205449
  * @author Jacob, s164958
  * @author Emily, s191174
- * @auhtor Phillip, s224278
+ * @author Phillip, s224278
  *
  */
 public class Player extends Subject {
 
+    private boolean ready = false; // Indicates if the player is ready
+    private long remainingProgrammingTime = 0; // Remaining time for programming phase in seconds
+
     final public static int NO_REGISTERS = 5;
-    final public static int NO_CARDS = 8;
+    final public static int NO_CARDS = 9;
 
     final public Board board;
     @Expose
@@ -60,6 +63,28 @@ public class Player extends Subject {
     @Expose
     private CommandCardField[] cards;
 
+    private Deck drawpile;
+
+    private Deck discardpile;
+
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+        notifyChange(); // Notify observers of the change
+    }
+
+    public long getRemainingProgrammingTime() {
+        return remainingProgrammingTime;
+    }
+
+    public void setRemainingProgrammingTime(long remainingProgrammingTime) {
+        this.remainingProgrammingTime = remainingProgrammingTime;
+        notifyChange(); // Notify observers of the change
+    }
     private String robotImage;
 
     public String getRobotImage() {
@@ -86,6 +111,9 @@ public class Player extends Subject {
         for (int i = 0; i < cards.length; i++) {
             cards[i] = new CommandCardField(this);
         }
+
+        this.drawpile = Deck.createDefaultDeck();
+        this.discardpile = new Deck();
     }
 
     /**
@@ -244,5 +272,22 @@ public class Player extends Subject {
     public int getEnergyCubes() {
         return energyCubes;
     }
+
+    public Deck getDrawpile() {
+        return drawpile;
+    }
+
+    public void setDrawpile(Deck drawpile) {
+        this.drawpile = drawpile;
+    }
+
+    public Deck getDiscardpile() {
+        return discardpile;
+    }
+
+    public void setDiscardpile(Deck discardpile) {
+        this.discardpile = discardpile;
+    }
+
 
 }
