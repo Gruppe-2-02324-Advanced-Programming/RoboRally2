@@ -53,7 +53,6 @@ import java.util.concurrent.TimeUnit;
  * @author Emily, s191174
  * @author Jacob, s164958
  * @author Setare, s232629
- * @author Phillip, s224278
  */
 
 @RestController
@@ -399,7 +398,6 @@ public class GameController {
      * @author Emily, s191174
      * @author Jacob, s164958
      * @author Setare, s232629
-     * @author Phillip, s224278
      */
     // XXX: V2
     private void executeCommand(@NotNull Player player, Command command) {
@@ -583,6 +581,7 @@ public class GameController {
 
     /**
      * Here the player's direction is set to turn right
+     * @author Christoffer, s205449
      */
     public void turnRight(@NotNull Player player) {
         if (player != null && player.board == board) {
@@ -592,6 +591,7 @@ public class GameController {
 
     /**
      * Here the player's direction is set to turn left
+     *  @author Christoffer, s205449
      */
     public void turnLeft(@NotNull Player player) {
         if (player != null && player.board == board) {
@@ -625,6 +625,9 @@ public class GameController {
         }
     }
 
+    /**
+        * This method is used to move a card from one field to another.
+     */
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
         CommandCard sourceCard = source.getCard();
         CommandCard targetCard = target.getCard();
@@ -641,7 +644,7 @@ public class GameController {
      * A method called when no corresponding controller operation is implemented
      * yet. This
      * should eventually be removed.
-     * @author Phillip, s224278
+     * @author Phillip s224278
      */
     public void leftOrRight(Player player, Command option) {
         if (player != null && option != null && player.board.getPhase() == Phase.Player_interaction) {
@@ -827,7 +830,6 @@ public class GameController {
 
     /**
      * Updates the remaining time and finishes the programming phase if time is up.
-     * @author Phillip, s224278
      */
     private void updateTimer() {
         if (remainingTime > 0) {
