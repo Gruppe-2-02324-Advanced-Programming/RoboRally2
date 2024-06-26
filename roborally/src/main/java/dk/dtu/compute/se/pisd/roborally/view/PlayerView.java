@@ -273,6 +273,7 @@ public class PlayerView extends Tab implements ViewObserver {
      * This method is called when the observed subject changes.
      *
      * @param subject the subject that has changed.
+     * @author Phillip, s224278
      */
     @Override
     public void updateView(Subject subject) {
