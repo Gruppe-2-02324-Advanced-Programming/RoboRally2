@@ -830,6 +830,7 @@ public class GameController {
 
     /**
      * Updates the remaining time and finishes the programming phase if time is up.
+     * @author Christoffer s205449
      */
     private void updateTimer() {
         if (remainingTime > 0) {
