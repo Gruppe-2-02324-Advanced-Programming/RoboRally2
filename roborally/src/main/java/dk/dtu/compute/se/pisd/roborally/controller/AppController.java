@@ -444,6 +444,7 @@ public class AppController implements Observer {
      * @author Christoffer Fink s205449
      * @author Marcus Jagd Hansen, s214962
      * @author Setare s232629
+     * @author Phillip s224278
      */
     @Override
     public void update(Subject subject) {
@@ -559,7 +560,6 @@ public class AppController implements Observer {
 
     /**
      * Displays the rules of the game in a PDF document.
-     * 
      * @author Christoffer s205449
      */
     public void showRules() {

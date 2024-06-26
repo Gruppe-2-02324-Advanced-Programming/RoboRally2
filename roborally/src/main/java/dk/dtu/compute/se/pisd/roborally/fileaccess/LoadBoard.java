@@ -52,8 +52,7 @@ public class LoadBoard {
      *         <p>
      *         This class is used to load a board from a file. The board is stored
      *         in a JSON file.
-     *         The class also contains methods to save the current game and load a
-     *         saved game still in todo.
+     *         The class also contains methods to save the current game and load
      */
     private static final String BOARDSFOLDER = "boards";
     private static final String DEFAULTBOARD = "defaultboard";
@@ -63,6 +62,12 @@ public class LoadBoard {
     public static final int BOARD_HEIGHT = 8;
     public static final String SAVED_GAMES_FOLDER = "roborally/src/main/resources/savedGames";
 
+
+    /**
+     *
+     * @return a list of the available boards
+     * @author Christoffer s205449
+     */
     public static List<String> getBoards() {
         List<String> boards = new ArrayList<>();
         Collections.addAll(boards, BOARDS);
@@ -70,7 +75,10 @@ public class LoadBoard {
     }
 
     /**
-     * Loads a board from a file. The board is stored in a JSON file.
+     * Saves the current game to a file. The game is stored in a JSON file.
+     * @param board the board to save
+     * @param name the name of the file to save the game to
+     *  @author Christoffer s205449
      *
      */
     public static void saveCurrentGame(Board board, String name) {
@@ -90,7 +98,9 @@ public class LoadBoard {
 
     /**
      * Loads a board from a file. The board is stored in a JSON file.
-     *
+     * @param boardname the name of the board to load
+     * @return the loaded board
+     * @author Christoffer s205449
      */
     public static Board loadBoard(String boardname) {
         if (boardname == null) {
@@ -164,6 +174,14 @@ public class LoadBoard {
         }
     }
 */
+
+    /**
+        * Loads a JSON file and returns a JSONObject
+     * @param gameName the name of the game to load
+     *                 @return the JSONObject of the loaded game
+     * @author Christoffer s205449
+     * @author Marcus s214962
+     */
     public static JSONObject loadJSON(String gameName) {
         String filePath = SAVED_GAMES_FOLDER + File.separator + gameName + "." + JSON_EXT;
         File file = new File(filePath);

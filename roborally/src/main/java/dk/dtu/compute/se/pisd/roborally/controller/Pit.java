@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 /** This class represents the pit field action.
  *  When a player lands on a pit, it shows a popup message.
- *  @author
+ *  @author Christoffer s205449
  *
  */
 public class Pit extends FieldAction {

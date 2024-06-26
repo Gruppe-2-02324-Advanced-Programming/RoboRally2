@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.ToDoubleBiFunction;
 
 /**
  * Controller for managing the game logic of RoboRally. It handles player
@@ -86,7 +85,6 @@ public class GameController {
     public GameController(@NotNull Board board) {
         this.playerName = "NULL";
         this.board = board;
-        gameClient = new GameClient();
         currentTabIndex = 0;
         playerNumber = 1;
         playersReady = new boolean[board.getPlayersNumber()];
@@ -402,7 +400,7 @@ public class GameController {
      * @author Setare, s232629
      */
     // XXX: V2
-    private void executeCommand(@NotNull Player player, Command command) {
+    public void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
             // their execution. This should eventually be done in a more elegant way
@@ -583,6 +581,7 @@ public class GameController {
 
     /**
      * Here the player's direction is set to turn right
+     * @author Christoffer, s205449
      */
     public void turnRight(@NotNull Player player) {
         if (player != null && player.board == board) {
@@ -592,6 +591,7 @@ public class GameController {
 
     /**
      * Here the player's direction is set to turn left
+     *  @author Christoffer, s205449
      */
     public void turnLeft(@NotNull Player player) {
         if (player != null && player.board == board) {
@@ -625,6 +625,9 @@ public class GameController {
         }
     }
 
+    /**
+        * This method is used to move a card from one field to another.
+     */
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
         CommandCard sourceCard = source.getCard();
         CommandCard targetCard = target.getCard();
@@ -641,6 +644,7 @@ public class GameController {
      * A method called when no corresponding controller operation is implemented
      * yet. This
      * should eventually be removed.
+     * @author Phillip s224278
      */
     public void leftOrRight(Player player, Command option) {
         if (player != null && option != null && player.board.getPhase() == Phase.Player_interaction) {
@@ -826,6 +830,7 @@ public class GameController {
 
     /**
      * Updates the remaining time and finishes the programming phase if time is up.
+     * @author Christoffer s205449
      */
     private void updateTimer() {
         if (remainingTime > 0) {

@@ -157,6 +157,7 @@ public class Space extends Subject {
      * This method adds walls as field action
      * 
      * @param wall the wall to be added to this space.
+     * @author Christoffer Fink s205449
      */
 
     public void addWall(Heading wall) {

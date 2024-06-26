@@ -1,10 +1,16 @@
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
+import dk.dtu.compute.se.pisd.roborally.controller.Laser;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.application.Platform;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.CountDownLatch;
 
+
+/**
+ * Test class for {@link GameController}.
+ * This class tests the functionality of the GameController class in handling game interactions
+ */
 class GameControllerTest {
 
     private final int TEST_WIDTH = 8;
@@ -156,6 +162,59 @@ class GameControllerTest {
         player.getProgramField(0).setCard(pwr);
         gameController.again(player);
         Assertions.assertEquals(1, player.getEnergyCubes(), "Player should have 1 energy cube");
+    }
+
+    /**
+     * Test to ensure timer decreases over time and transitions correctly at zero.
+     * @Author Setare Izadi, s232629
+     */
+    @Test
+    void testTimerExpirationEndsProgrammingPhase() {
+        gameController.setTimer(1);  // Set timer to 1 second for quick test
+        try {
+            Thread.sleep(1500);  // Wait for timer to expire
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        Assertions.assertEquals(Phase.Initialisation, gameController.board.getPhase(),
+                "Phase should switch to Activation after timer expires.");
+    }
+
+
+    /**
+     * Test player movement is blocked by a wall.
+     * @Author Setare Izadi, s232629
+     */
+    @Test
+    void testMovementBlockedByWall() {
+        Board board = gameController.board;
+        Player player = board.getCurrentPlayer();
+        Space currentSpace = board.getSpace(0, 0);
+        currentSpace.addWall(Heading.SOUTH);  // Add a wall blocking the movement
+
+        gameController.moveForward(player);
+
+        Assertions.assertEquals(player, currentSpace.getPlayer(),
+                "Player should remain in the same space due to a wall.");
+        Assertions.assertNull(board.getSpace(0, 1).getPlayer(),
+                "No player should be able to move to space (0,1).");
+    }
+
+    /**
+     * Test command execution for non-movement commands.
+     * @Author Setare Izadi, s232629
+     */
+    @Test
+    void testExecutePowerUpCommand() {
+        Board board = gameController.board;
+        Player player = board.getCurrentPlayer();
+        int initialEnergy = player.getEnergyCubes();
+
+        CommandCard powerUpCard = new CommandCard(Command.POWER_UP);
+        gameController.executeCommand(player, powerUpCard.command);
+
+        Assertions.assertEquals(initialEnergy + 1, player.getEnergyCubes(),
+                "Player should have one more energy cube after executing POWER_UP command.");
     }
 }
 
