@@ -2,10 +2,10 @@ import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import javafx.application.Platform;
+import org.junit.jupiter.api.*;
+
+import java.util.concurrent.CountDownLatch;
 
 
 class WallTest{
@@ -15,6 +15,13 @@ class WallTest{
 
     private GameController gameController;
 
+
+    @BeforeAll
+    static void initJavaFX() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+        Platform.startup(latch::countDown);
+        latch.await();
+    }
     @BeforeEach
     void setUp() {
         Board board = new Board(TEST_WIDTH, TEST_HEIGHT);

@@ -1,14 +1,13 @@
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
-import dk.dtu.compute.se.pisd.roborally.controller.Gears;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import javafx.application.Platform;
+import org.junit.jupiter.api.*;
+
+import java.util.concurrent.CountDownLatch;
 
 public class ConveyorBeltTest {
 
@@ -16,6 +15,13 @@ public class ConveyorBeltTest {
     private final int TEST_HEIGHT = 8;
 
     private GameController gameController;
+
+    @BeforeAll
+    static void initJavaFX() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+        Platform.startup(latch::countDown);
+        latch.await();
+    }
 
     @BeforeEach
     void setUp() {
@@ -58,26 +64,27 @@ public class ConveyorBeltTest {
         Assertions.assertEquals(current, board.getSpace(0, 2).getPlayer(), "Player " + current.getName() + " should be at Space (0, 2)!");
     }
 
+    /**
+     * Test to check if the conveyor belt corner moves the player and changes its heading
+     *
+     * @autor Christoffer Fink s205499
+     */
+    @Test
+    void ConveyorBeltCornerRightTest() {
+        Board board = gameController.board;
+        Player current = board.getCurrentPlayer();
 
-@Test
-void ConveyorBeltCornerRightTest() {
-    Board board = gameController.board;
-    Player current = board.getCurrentPlayer();
+        // Set up the conveyor belt corner action on space (0, 1) to turn right and move the player east
+        board.getSpace(0, 1).addAction(new ConveyorBeltCorner(Heading.EAST));
 
-    // Set up the conveyor belt corner action on space (0, 1) to turn right and move the player east
-    board.getSpace(0, 1).addAction(new ConveyorBeltCorner(Heading.EAST));
+        // Move the player to space (0, 1)
+        gameController.moveForward(current); // Assuming this moves to space (0, 1)
 
-    // Move the player to space (0, 1)
-    gameController.moveForward(current); // Assuming this moves to space (0, 1)
+        // Execute the conveyor belt corner action
+        board.getSpace(0, 1).getActions().get(0).doAction(gameController, board.getSpace(0, 1));
 
-    // Execute the conveyor belt corner action
-    board.getSpace(0, 1).getActions().get(0).doAction(gameController, board.getSpace(0, 1));
-
-
-
-    Assertions.assertEquals(Heading.SOUTH, current.getHeading(), "Player should be heading South!");
-    Assertions.assertEquals(current, board.getSpace(1, 1).getPlayer(), "Player should be at Space (1, 1)!");
+        // Check that the player has turned to face south and moved to space (1, 1)
+        Assertions.assertEquals(Heading.SOUTH, current.getHeading(), "Player should be heading South!");
+        Assertions.assertEquals(current, board.getSpace(1, 1).getPlayer(), "Player should be at Space (1, 1)!");
     }
 }
-
-
