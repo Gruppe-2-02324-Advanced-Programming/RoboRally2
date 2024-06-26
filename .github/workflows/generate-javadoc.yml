@@ -24,10 +24,13 @@ jobs:
         distribution: 'adopt'
     
     - name: Build with Maven
-      run: mvn clean install -DskipTests
+      run: |
+        cd roborally
+        mvn clean install -DskipTests
 
     - name: Generer Javadoc
       run: |
+        cd roborally
         mkdir -p docs/javadoc
         mvn javadoc:javadoc
         mvn javadoc:aggregate
@@ -37,4 +40,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/javadoc
+        publish_dir: ./roborally/docs/javadoc
