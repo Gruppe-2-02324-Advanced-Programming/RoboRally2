@@ -21,11 +21,11 @@ public class ConveyorBeltCorner extends FieldAction {
 
     /**
      * Constructor for the conveyor belt corner
-     * @author Christoffer s205449
+     *
      * @param heading the heading of the conveyor belt corner
-     * @param rotation the rotation of the conveyor belt corner
+     * @author Christoffer s205449
      */
-    public ConveyorBeltCorner(Heading heading, int rotation) {
+    public ConveyorBeltCorner(Heading heading) {
         this.heading = heading;
         this.rotation = rotation;
     }

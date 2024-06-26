@@ -2,10 +2,13 @@ import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
+import javafx.application.Platform;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.concurrent.CountDownLatch;
 
 class CollisionTest {
 
@@ -13,6 +16,13 @@ class CollisionTest {
     private final int TEST_HEIGHT = 8;
 
     private GameController gameController;
+
+    @BeforeAll
+    static void initJavaFX() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+        Platform.startup(latch::countDown);
+        latch.await();
+    }
 
     @BeforeEach
     void setUp() {
@@ -27,17 +37,10 @@ class CollisionTest {
         board.setCurrentPlayer(board.getPlayer(0));
     }
 
-
     @AfterEach
     void tearDown() {
         gameController = null;
     }
-
-    /**
-     * Check if players move each other when bumping into each other
-     * @author Christoffer Fink s205449
-     *
-     */
 
     @Test
     void collision() {
@@ -47,10 +50,7 @@ class CollisionTest {
         board.getSpace(0, 0).setPlayer(player1);
         board.getSpace(0, 1).setPlayer(player2);
         gameController.moveForward(player1);
-        Assertions.assertEquals(player1, board.getSpace(0, 1).getPlayer(), "Player " + player1.getName() + " should beSpace (0,1)!");
-        Assertions.assertEquals(player2, board.getSpace(0, 2).getPlayer(), "Player " + player2.getName() + " should beSpace (0,2)!");
-
+        Assertions.assertEquals(player1, board.getSpace(0, 1).getPlayer(), "Player " + player1.getName() + " should be in space (0,1)!");
+        Assertions.assertEquals(player2, board.getSpace(0, 2).getPlayer(), "Player " + player2.getName() + " should be in space (0,2)!");
     }
 }
-
-
