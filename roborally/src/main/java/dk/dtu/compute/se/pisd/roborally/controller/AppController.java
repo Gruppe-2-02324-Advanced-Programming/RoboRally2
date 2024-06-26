@@ -560,7 +560,6 @@ public class AppController implements Observer {
 
     /**
      * Displays the rules of the game in a PDF document.
-     * 
      * @author Christoffer s205449
      */
     public void showRules() {
