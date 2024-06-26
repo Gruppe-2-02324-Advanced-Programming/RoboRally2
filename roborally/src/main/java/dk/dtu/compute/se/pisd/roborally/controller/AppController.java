@@ -68,6 +68,7 @@ import java.util.regex.Pattern;
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Christoffer s205449
+ * @author Marcus Jagd Hansen, s214962
  *
  */
 public class AppController implements Observer {

@@ -8,8 +8,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
-public class MainMenuView extends StackPane {
 
+/**
+ * This class represents the main menu view of the game. It contains buttons for starting a new game, loading a game,
+ * starting a server, and showing the rules. The view is styled with a background image and a top image.
+ * @author Christoffer Fink s205499
+ */
+public class MainMenuView extends StackPane {
+    /**
+     * Constructor for the main menu view. It creates buttons for starting a new game, loading a game, starting a server,
+     * @param appController The controller for the application.
+     */
     public MainMenuView(AppController appController) {
 
         // Create a VBox to hold the buttons
@@ -84,6 +93,11 @@ public class MainMenuView extends StackPane {
         }
     }
 
+
+    /**
+     * Apply styling to a button. The button will have a red gradient background, white text, yellow border, and a warning
+     * @param button The button to style.
+     */
     private void styleButton(Button button) {
         button.setStyle(
                 "-fx-background-color: linear-gradient(#FF0000, #8B0000); " + // Red gradient background
