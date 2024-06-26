@@ -1,7 +1,6 @@
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
 import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBeltCorner;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
-import dk.dtu.compute.se.pisd.roborally.controller.Gears;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
@@ -65,11 +64,16 @@ public class ConveyorBeltTest {
         Assertions.assertEquals(current, board.getSpace(0, 0).getPlayer(), "Player " + current.getName() + " should be at Space (0, 0)!");
     }
 
-
-@Test
-void ConveyorBeltCornerRightTest() {
-    Board board = gameController.board;
-    Player current = board.getCurrentPlayer();
+    /**
+     * Test to check if the conveyor belt corner moves the player and changes its heading
+     *
+     * @author Christoffer Fink s205499
+     * @author Jacob, s164958
+     */
+    @Test
+    void ConveyorBeltCornerRightTest() {
+        Board board = gameController.board;
+        Player current = board.getCurrentPlayer();
 
     // Set up the conveyor belt corner action on space (0, 1) to turn right and move the player east
     board.getSpace(1, 1).addAction(new ConveyorBeltCorner(Heading.EAST));
@@ -89,5 +93,3 @@ void ConveyorBeltCornerRightTest() {
     Assertions.assertEquals(current, board.getSpace(2, 1).getPlayer(), "Player should be at Space (2, 1)!");
     }
 }
-
-

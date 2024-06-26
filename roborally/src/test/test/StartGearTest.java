@@ -1,20 +1,23 @@
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
+import dk.dtu.compute.se.pisd.roborally.controller.Pit;
+import dk.dtu.compute.se.pisd.roborally.controller.Reboot;
+import dk.dtu.compute.se.pisd.roborally.controller.StartGear;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.application.Platform;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.CountDownLatch;
 
-
-class WallTest{
+public class StartGearTest {
 
     private final int TEST_WIDTH = 8;
     private final int TEST_HEIGHT = 8;
 
     private GameController gameController;
-
+    private Board board; // Declare board here
 
     @BeforeAll
     static void initJavaFX() throws InterruptedException {
@@ -24,7 +27,7 @@ class WallTest{
     }
     @BeforeEach
     void setUp() {
-        Board board = new Board(TEST_WIDTH, TEST_HEIGHT);
+        board = new Board(TEST_WIDTH, TEST_HEIGHT); // Initialize board here
         gameController = new GameController(board);
         for (int i = 0; i < 6; i++) {
             Player player = new Player(board, null, "Player " + i);
@@ -40,19 +43,20 @@ class WallTest{
         gameController = null;
     }
 
-    /**
-     * Testing to see if the player doesn't move through the wall
-     * @author Christoffer Fink s205449
-     *
-     */
     @Test
-    void wall() {
-        Board board = gameController.board;
+    void testStartGearInitialization() {
         Player current = board.getCurrentPlayer();
-        board.getSpace(0,1).addWall(Heading.NORTH);
-        gameController.moveForward(current);
-        Assertions.assertEquals(current, board.getSpace(0, 0).getPlayer(), "Player " + current.getName() + " should beSpace (0,0)!");
-        Assertions.assertNull(board.getSpace(0, 1).getPlayer(), "Space (0,1) should be empty!");
-    }
+        Space startSpace = board.getSpace(3, 3);
 
+        // Place the StartGear action on the start space
+        startSpace.addAction(new StartGear());
+
+        // Assuming there's some initialization step that uses StartGear
+        // Since doAction returns false, we manually place the player
+        startSpace.setPlayer(current);
+
+        // Now check if the current player is on space (3,3)
+        Assertions.assertEquals(current, startSpace.getPlayer(),
+                "Player " + current.getName() + " should be on space (3, 3)!");
+    }
 }

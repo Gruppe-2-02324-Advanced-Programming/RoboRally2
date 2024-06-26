@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
  * @author Emily, s191174
  */
 public class Reboot extends FieldAction {
-    private final Space rebootTile;
+    private Space rebootTile = null;
 
-    public Reboot(Space rebootTile) {
+    public Reboot() {
         this.rebootTile = rebootTile;
     }
 
