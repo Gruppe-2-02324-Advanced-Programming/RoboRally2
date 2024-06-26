@@ -76,6 +76,12 @@ class GameWonTest {
         assertTrue(board.isWon(), "The game should be won!");
     }
 
+
+    /**
+     * Test to check if the player cant win
+     * by reaching the checkpoints in the wrong order
+     * @author Christoffer s205449
+     */
     @Test
     void GameWinCheckpointOrder() {
         Board board = gameController.board;
