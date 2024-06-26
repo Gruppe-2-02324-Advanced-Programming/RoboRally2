@@ -41,6 +41,11 @@ public class RebootAndPitTest {
         void tearDown() {
             gameController = null;
         }
+
+    /**
+     * Testing to see if the player moves to the pit it is moved to the reboot space
+     * @author Christoffer Fink s205499
+     */
         @Test
         void PitAndReboot() {
             Board board = gameController.board;
