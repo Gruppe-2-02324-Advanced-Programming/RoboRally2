@@ -41,12 +41,12 @@ import static dk.dtu.compute.se.pisd.roborally.model.Phase.Initialisation;
  * track of the phase of the game.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- * @Expose is used to serialize the field for saving the board.
- * @auhtor Christoffer, s205449
- * @auhtor Setare, s232629
- * @auhtor Phillip, s224278
- * @auhtor Emily, s191174
- * @auhtor Jacob, s164958
+ *
+ * @author Christoffer, s205449
+ * @author Setare, s232629
+ * @author Phillip, s224278
+ * @author Emily, s191174
+ * @author Jacob, s164958
  */
 
 public class Board extends Subject {
@@ -328,7 +328,7 @@ public class Board extends Subject {
     /**
      * Returns whether the game is won. The game is won, if one of the players
      * @author Marcus s214942
-     * @auhtor Christoffer, s205449
+     * @author Christoffer, s205449
      */
     public boolean isWon() {
         for (Player p : players) {
@@ -345,7 +345,7 @@ public class Board extends Subject {
  * @param won the new status of the game
  *
     * @author Marcus s214942
-     * @auhtor Christoffer, s205449
+     * @author Christoffer, s205449
  **/
     public void setWon(boolean won) {
         this.won = won;

@@ -33,10 +33,10 @@ import java.util.List;
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * @author Setare Izadi, s232629@dtu.dk
- * @auhtor Christoffer, s205449
+ * @author Christoffer, s205449
  * @author Phillip, s224278
  * @author Marcus, s214962
- * @auther Jacob, s164958
+ * @author Jacob, s164958
  */
 public enum Command {
 

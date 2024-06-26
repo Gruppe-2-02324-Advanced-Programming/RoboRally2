@@ -157,7 +157,7 @@ public class GameController {
      *
      * @author Ekkart Kindler
      * @author Christoffer, s205449
-     * @auhtor Jacob, s164958
+     * @author Jacob, s164958
      */
     public void startProgrammingPhase() {
         board.setPhase(Phase.Programming);

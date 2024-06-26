@@ -7,8 +7,8 @@ import javax.swing.JOptionPane;
 /** This class represents the laser field action.
  *  When a player lands on a laser, it shows a popup message.
  *  @author Christoffer, s205449
- *  @auhtor Setare, s232629
- *  @auhtor Jacob, s164958
+ *  @author Setare, s232629
+ *  @author Jacob, s164958
  */
 public class Laser extends FieldAction {
 
@@ -47,9 +47,9 @@ public class Laser extends FieldAction {
 
     /**
      * This method gives the player a spam card when they land on a space with a laser.
-     * @auhtor Christoffer, s205449
-     * @auhtor Setare, s232629
-     * @auhtor Jacob, s164958
+     * @author Christoffer, s205449
+     * @author Setare, s232629
+     * @author Jacob, s164958
      * @param gameController the game controller
      * @param space the space the player is on
      * @return true always, as the action is simply to show a popup
@@ -69,7 +69,7 @@ public class Laser extends FieldAction {
     /**
      * This method adds a spam card to the player's discard pile.
      * @author Setare, s232629
-     * @auhtor Jacob, s164958
+     * @author Jacob, s164958
      * @param player the player to add the spam card to
      */
     private void addSpam(Player player) {

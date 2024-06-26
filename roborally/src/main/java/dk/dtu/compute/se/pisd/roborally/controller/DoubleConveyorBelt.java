@@ -13,14 +13,14 @@ import org.jetbrains.annotations.NotNull;
  * when the player lands on the double conveyor belt.
  * The class has a heading field to store the conveyor belt's heading.
  * The player is moved twice in the same direction if both moves are valid.
- * @autor Emily s191174
+ * @author Emily s191174
  */
 public class DoubleConveyorBelt extends FieldAction {
     private final Heading heading;
 
     /**
      * Constructor for the double conveyor belt.
-     * @autor Emily s191174
+     * @author Emily s191174
      * @param heading the heading of the conveyor belt
      */
     public DoubleConveyorBelt(Heading heading) {
@@ -58,7 +58,7 @@ public class DoubleConveyorBelt extends FieldAction {
 
     /**
      * Get the heading of the conveyor belt.
-     * @autor Emily s191174
+     * @author Emily s191174
      * @return the heading of the conveyor belt
      */
     public Heading getHeading() {

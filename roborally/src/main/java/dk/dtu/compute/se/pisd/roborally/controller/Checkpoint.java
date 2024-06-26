@@ -22,8 +22,8 @@ public class Checkpoint extends FieldAction {
 
 
     /**
-     * @autor Marcus s214962
-     * @autor Setare s232629
+     * @author Marcus s214962
+     * @author Setare s232629
      * @param gameController the game controller
      * @param space the space the player is on
 
@@ -49,8 +49,8 @@ public class Checkpoint extends FieldAction {
 
     /**
      * Get the checkpoint number.
-     * @autor Marcus s214962
-     * @autor Setare s232629
+     * @author Marcus s214962
+     * @author Setare s232629
      * @return the checkpoint number
      */
     public int getCheckpointNumber() {
@@ -60,8 +60,8 @@ public class Checkpoint extends FieldAction {
 
     /**
      * Set the checkpoint number.
-     * @autor Marcus s214962
-     * @autor Setare s232629
+     * @author Marcus s214962
+     * @author Setare s232629
      * @param checkpointNumber the checkpoint number
      */
     public void setCheckpointNumber(int checkpointNumber) {

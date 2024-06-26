@@ -14,7 +14,7 @@ public class ConveyorBelt extends FieldAction {
 
     /**
      * Constructor for the conveyor belt.
-     * @autor Christoffer s205449
+     * @author Christoffer s205449
      * @param heading the heading of the conveyor belt
      */
     public ConveyorBelt(Heading heading) {
@@ -23,7 +23,7 @@ public class ConveyorBelt extends FieldAction {
 
     /**
      * This method moves the player to the next space in the direction of the conveyor belt.
-     * @autor Christoffer s205449
+     * @author Christoffer s205449
      * @param gameController the game controller
      * @param space the space the player is on
      * @return true if the player is moved to the next space in the direction of the conveyor belt
@@ -55,7 +55,7 @@ public class ConveyorBelt extends FieldAction {
 
     /**
      * Get the heading of the conveyor belt.
-     * @autor Christoffer s205449
+     * @author Christoffer s205449
      * @return the heading of the conveyor belt
      */
     public Heading getHeading() {
