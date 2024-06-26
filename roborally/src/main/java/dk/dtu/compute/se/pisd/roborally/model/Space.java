@@ -164,6 +164,11 @@ public class Space extends Subject {
             walls.add(wall);
     }
 
+    /**
+     * This method adds lasers as field action
+     * @author Satare, s232629
+     * @param laser the laser to be added to this space.
+     */
     public void addLaser(Heading laser) {
         if (!lasers.contains(laser) && walls.contains(laser))
             lasers.add(laser);

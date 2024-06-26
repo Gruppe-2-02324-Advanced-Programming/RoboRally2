@@ -31,7 +31,8 @@ import org.jetbrains.annotations.NotNull;
  * This class is responsible for the command card's name and image.
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Christoffer, s205449
+ * @author Philip, s224278
  */
 public class CommandCard extends Subject {
 

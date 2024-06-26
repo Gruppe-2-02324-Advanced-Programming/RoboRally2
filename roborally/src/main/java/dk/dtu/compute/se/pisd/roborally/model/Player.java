@@ -231,8 +231,8 @@ public class Player extends Subject {
     }
 
     /**
-     * Getters and setters for the program and cards of the player. Also the
-     * checkpoints.
+     * Getters and setters for the program and cards of the player.
+     * Also for the checkpoints.
      *
      */
     public CommandCardField getProgramField(int i) {
@@ -266,13 +266,17 @@ public class Player extends Subject {
     }
 
     /**
-     * Getters for the energy cubes.
+     * Getter for the energy cubes.
      *
      */
     public int getEnergyCubes() {
         return energyCubes;
     }
 
+    /**
+     * Getters and setters for the drawpile and discardpile.
+     * @author Jacob, s164958
+     */
     public Deck getDrawpile() {
         return drawpile;
     }

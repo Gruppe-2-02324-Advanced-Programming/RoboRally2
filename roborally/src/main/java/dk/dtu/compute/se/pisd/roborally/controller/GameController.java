@@ -151,15 +151,15 @@ public class GameController {
      * PROGRAMMING,
      * sets the current player to the first player, and sets the step to 0.
      * <p>
-     * It also sets the program fields of each player to be empty and the card
-     * fields to contain
-     * random command cards.
+     * It also sets the program fields of each player to be empty and fills the hand of the players
+     * with command cards from their decks.
      * <p>
      * The method is called at the beginning of the game and after each activation
      * phase.
      *
      * @author Ekkart Kindler
      * @author Christoffer, s205449
+     * @auhtor Jacob, s164958
      */
     public void startProgrammingPhase() {
         board.setPhase(Phase.Programming);
@@ -708,18 +708,19 @@ public class GameController {
     }
 
     /**
+     * This method draws a card from the drawpile and replace the current card with it.
      * @author Setare, s232629
      * @author Jacob, s164958
-     *         We've created spam method, not fully done yet
+     * @param player the player to draw a card for
      */
     public void spam(Player player) {
         player.getProgramField(board.getStep()).setCard(player.getDrawpile().drawCard(player.getDiscardpile()));
     }
 
     /**
+     * This method cleans up the program fields of the players and moves the cards to the discard pile.
      * @author Jacob, s164958
      * @author Setare, s232629
-     *         This method is used to clean up the program fields of the players
      */
     public void cleanup() {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
@@ -745,16 +746,6 @@ public class GameController {
         }
     }
 
-    /**
-     * @author Jacob, s164958
-     * @author Setare, s232629
-     * @param player
-     *
-     *               This method is used to shoot the laser at the player
-     */
-    public void shootLaser(Player player) {
-        // player.getSpace();
-    }
 
     /**
      * Changes the current tab index to the new index.
