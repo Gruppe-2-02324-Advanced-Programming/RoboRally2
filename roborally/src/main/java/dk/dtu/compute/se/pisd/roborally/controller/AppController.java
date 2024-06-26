@@ -447,19 +447,24 @@ public class AppController implements Observer {
                         for (Player p : board.getPlayers()) {
                             p.setCheckpoints(0);
                         }
-                        ButtonType playAgainButton = new ButtonType("Play Again");
-                        ButtonType closeButton = new ButtonType("Close Game");
-                        Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by " + player.getName(),
-                                ButtonType.OK, playAgainButton, closeButton);
-                        Optional<ButtonType> result = alert.showAndWait();
 
-                        if (result.isPresent() && result.get() == playAgainButton) {
-                            multiplayer();
-                        } else if (result.isPresent() && result.get() == closeButton) {
-                            exit();
-                        } else {
-                            stopGame();
-                        }
+                        // Run the alert code on the JavaFX Application Thread
+                        Platform.runLater(() -> {
+                            ButtonType playAgainButton = new ButtonType("Play Again");
+                            ButtonType closeButton = new ButtonType("Close Game");
+                            Alert alert = new Alert(AlertType.CONFIRMATION, "Game won by " + player.getName(),
+                                    ButtonType.OK, playAgainButton, closeButton);
+                            Optional<ButtonType> result = alert.showAndWait();
+
+                            if (result.isPresent() && result.get() == playAgainButton) {
+                                multiplayer();
+                            } else if (result.isPresent() && result.get() == closeButton) {
+                                exit();
+                            } else {
+                                stopGame();
+                            }
+                        });
+
                         board.setWon(false);
                         return;
                     }
@@ -467,6 +472,7 @@ public class AppController implements Observer {
             }
         }
     }
+
 
     public void newGame() {
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);

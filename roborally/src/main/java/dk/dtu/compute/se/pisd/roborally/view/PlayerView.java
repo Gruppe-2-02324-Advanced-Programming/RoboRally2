@@ -123,8 +123,7 @@ public class PlayerView extends Tab implements ViewObserver {
      */
     private Button push;
 
-    private Label playerName;
-
+    private Label playerNo;
 
     private Label gameID;
 
@@ -200,29 +199,26 @@ public class PlayerView extends Tab implements ViewObserver {
         // players, but on the PlayersView (view for all players). This should be
         // refactored.
 
-        playerName = new Label(gameController.getPlayerName());
+        playerNo = new Label("Player " + gameController.getPlayerNumber());
         gameID = new Label("GameID: " + gameController.board.getGameID().intValue());
-
-        pull = new Button("pull");
-        pull.setOnAction(e -> {
-            gameController.getOtherPlayersCards();
-        });
-
-        push = new Button("push");
-        push.setOnAction(e -> {
-            gameController.pushYourCards();
-        });
 
         // Ready Button klar til at blive programmeret
 
         readyButton = new Button("Ready Up");
 
         finishButton = new Button("Finish Programming");
-        finishButton.setOnAction(e -> gameController.finishProgrammingPhase());
+        finishButton.setOnAction(e -> {
+            gameController.pushYourCards();
+        });
 
+        finishButton = new Button("Execute Programming");
 
+        finishButton.setOnAction(e -> {
+            //gameController.getOtherPlayersCards();
+            gameController.finishProgrammingPhase();
+        });
 
-        buttonPanel = new VBox(finishButton, pull, push, gameID, playerName);
+        buttonPanel = new VBox(finishButton, gameID);
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
         buttonPanel.setSpacing(3.0);
         // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now
