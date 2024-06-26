@@ -23,10 +23,20 @@ jobs:
         java-version: '16'
         distribution: 'adopt'
     
+    - name: Opsæt Maven
+      uses: actions/setup-java@v2
+      with:
+        java-version: '16'
+    
+    - name: Build with Maven
+      run: mvn clean install -DskipTests
+
     - name: Generer Javadoc
       run: |
         mkdir -p docs/javadoc
-        javadoc -d docs/javadoc -sourcepath roborally/src/main/java -subpackages dk.dtu.compute.se.pisd.roborally
+        mvn javadoc:javadoc
+        mvn javadoc:aggregate
+        cp -r target/site/apidocs/* docs/javadoc/
 
     - name: Upload Javadoc til GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
