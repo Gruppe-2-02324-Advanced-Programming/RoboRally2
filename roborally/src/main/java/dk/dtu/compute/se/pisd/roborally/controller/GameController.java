@@ -53,6 +53,7 @@ import java.util.concurrent.TimeUnit;
  * @author Emily, s191174
  * @author Jacob, s164958
  * @author Setare, s232629
+ * @author Phillip, s224278
  */
 
 @RestController
@@ -398,6 +399,7 @@ public class GameController {
      * @author Emily, s191174
      * @author Jacob, s164958
      * @author Setare, s232629
+     * @author Phillip, s224278
      */
     // XXX: V2
     private void executeCommand(@NotNull Player player, Command command) {
@@ -639,6 +641,7 @@ public class GameController {
      * A method called when no corresponding controller operation is implemented
      * yet. This
      * should eventually be removed.
+     * @author Phillip, s224278
      */
     public void leftOrRight(Player player, Command option) {
         if (player != null && option != null && player.board.getPhase() == Phase.Player_interaction) {
@@ -824,6 +827,7 @@ public class GameController {
 
     /**
      * Updates the remaining time and finishes the programming phase if time is up.
+     * @author Phillip, s224278
      */
     private void updateTimer() {
         if (remainingTime > 0) {
