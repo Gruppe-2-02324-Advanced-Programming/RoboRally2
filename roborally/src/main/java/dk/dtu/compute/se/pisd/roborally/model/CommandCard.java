@@ -39,14 +39,27 @@ public class CommandCard extends Subject {
     @Expose
     final public Command command;
 
+    /**
+     * Constructor for the CommandCard class.
+     * @param command the command to be used.
+     */
     public CommandCard(@NotNull Command command) {
         this.command = command;
     }
 
+    /**
+     * Method to get the name of the command card.
+     * @return the name of the command card.
+     */
     public String getName() {
         return command.displayName;
     }
 
+    /**
+     * Method to get the image of the command card.
+     * @return the image of the command card.
+     * @author Phillip s224278
+     */
     public Image getImage() {
         return command.cardImage;
     }

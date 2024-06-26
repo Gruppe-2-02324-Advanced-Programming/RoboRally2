@@ -327,6 +327,8 @@ public class Board extends Subject {
 
     /**
      * Returns whether the game is won. The game is won, if one of the players
+     * @author Marcus s214942
+     * @auhtor Christoffer, s205449
      */
     public boolean isWon() {
         for (Player p : players) {
@@ -338,7 +340,13 @@ public class Board extends Subject {
         }
         return won;
     }
-
+/**
+ * Set the won status of the game
+ * @param won the new status of the game
+ *
+    * @author Marcus s214942
+     * @auhtor Christoffer, s205449
+ **/
     public void setWon(boolean won) {
         this.won = won;
         notifyChange();
@@ -352,6 +360,13 @@ public class Board extends Subject {
                 getCurrentPlayer().getName() +
                 ", Turn Counter " + counter;
     }
+
+    /**
+     * Returns the status message of the board. The status message contains
+     * @return the status message
+     * @author Emily s191174
+     */
+
     public List<Space> getGearSpawnPoints() {
         List<Space> spawnPoints = new ArrayList<>();
         for (int x = 0; x < width; x++) {
@@ -365,13 +380,20 @@ public class Board extends Subject {
         return spawnPoints;
     }
 
-    // Call this method when a player falls into a pit or needs to reboot
+    /**
+     * Returns the status message of the board. The status message contains
+     * @param player the player to be rebooted
+     * @author Emily s191174
+     */
     public void scheduleReboot(Player player) {
         rebootQueue.add(player);
         processReboots();
     }
 
-    // Process reboots in a FIFO manner
+    /**
+        * Returns the status message of the board. The status message contains
+        * @author Emily, s191174
+     */
     private void processReboots() {
         Space rebootSpace = findRebootSpace();
         if (rebootSpace != null) {
@@ -403,7 +425,13 @@ public class Board extends Subject {
         }
     }
 
-    // Helper method to find the next available space around a given space
+
+    /**
+     * Returns the status message of the board. The status message contains
+     * @param currentSpace the space to find the next free space around
+     * @return the next free space around the current space, if any
+     * @author Emily, s191174
+     */
     private Space findNextFreeSpace(Space currentSpace) {
         // Check spaces in some order: NORTH, EAST, SOUTH, WEST
         for (Heading heading : Heading.values()) {
@@ -415,7 +443,11 @@ public class Board extends Subject {
         return null; // No free space found around the current space
     }
 
-
+    /**
+     * Returns the status message of the board. The status message contains
+     * @return the reboot space, if any, otherwise null
+        * @author Emily, s191174
+     */
     public Space findRebootSpace() {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -427,7 +459,4 @@ public class Board extends Subject {
         }
         return null; // Return null if no reboot space is found
     }
-
-
-
 }
