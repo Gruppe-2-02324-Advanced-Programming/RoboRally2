@@ -201,6 +201,7 @@ public class CardFieldView extends GridPane implements ViewObserver {
 
 /**
      * This method updates the view of the card field.
+     * @author Phillip, s224278
      */
     @Override
     public void updateView(Subject subject) {

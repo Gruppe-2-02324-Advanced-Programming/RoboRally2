@@ -154,6 +154,7 @@ public class PlayerView extends Tab implements ViewObserver {
      * @param gameController the controller for the game
      * @param player         the player for which this view is created
      * @author Marcus Jagd Hansen, s214962
+     * @author Phillip, s224278
      */
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
         super(player.getName());
