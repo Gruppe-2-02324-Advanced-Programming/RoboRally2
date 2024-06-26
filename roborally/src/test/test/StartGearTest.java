@@ -43,7 +43,6 @@ public class StartGearTest {
         gameController = null;
     }
 
-
     /**
      * Test to check if the player is placed on the start space
      * @author Christoffer Fink s205449

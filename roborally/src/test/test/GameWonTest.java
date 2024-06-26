@@ -6,7 +6,12 @@ import dk.dtu.compute.se.pisd.roborally.controller.Checkpoint;
 import javafx.application.Platform;
 import org.junit.jupiter.api.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GameWonTest {
     private final int TEST_WIDTH = 4;
@@ -45,15 +50,58 @@ class GameWonTest {
      * @author Christoffer Fink s205499
      * @author Phillip  s224278
      */
+
     @Test
-    void gameWon() {
+    void GameWin() {
         Board board = gameController.board;
         Player player1 = board.getPlayer(0);
         board.getSpace(0, 0).setPlayer(player1);
-        board.setTotalCheckpoints(1);
+        board.setTotalCheckpoints(2);
 
-        board.getCurrentPlayer().setCheckpoints(1);
+        Checkpoint checkpoint1 = new Checkpoint(1);
+        Checkpoint checkpoint2 = new Checkpoint(2);
 
-        Assertions.assertTrue(board.isWon(), "The game should be won!");
+        // Add checkpoints to a list
+        List<Checkpoint> checkpoints = new ArrayList<>();
+        checkpoints.add(checkpoint1);
+        checkpoints.add(checkpoint2);
+
+        // Loop through the checkpoints
+        for (Checkpoint checkpoint : checkpoints) {
+            // Player lands on the checkpoint
+            assertTrue(checkpoint.doAction(gameController, board.getSpace(0, 0)));
+        }
+
+        // Check if the game is won
+        assertTrue(board.isWon(), "The game should be won!");
     }
+
+    @Test
+    void GameWinCheckpointOrder() {
+        Board board = gameController.board;
+        Player player1 = board.getPlayer(0);
+        board.getSpace(0, 0).setPlayer(player1);
+        board.setTotalCheckpoints(2);
+
+
+        //we just swap the order of the checkpoints to test if the checkpoints need to be reached in order
+        Checkpoint checkpoint1 = new Checkpoint(2);
+        Checkpoint checkpoint2 = new Checkpoint(1);
+
+
+        // Add checkpoints to a list
+        List<Checkpoint> checkpoints = new ArrayList<>();
+        checkpoints.add(checkpoint1);
+        checkpoints.add(checkpoint2);
+
+        // Loop through the checkpoints
+        for (Checkpoint checkpoint : checkpoints) {
+            // Player lands on the checkpoint
+            assertTrue(checkpoint.doAction(gameController, board.getSpace(0, 0)));
+        }
+
+        // Check if the game is won
+        assertFalse(board.isWon(), "The game not should be won!");
+    }
+
 }

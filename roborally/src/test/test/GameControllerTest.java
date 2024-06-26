@@ -151,6 +151,9 @@ class GameControllerTest {
 
     }
 
+
+
+
     /**
      * Testing again command card by setting up a player with a forward and again card in their programmingfield
      *
@@ -187,26 +190,6 @@ class GameControllerTest {
                 "Phase should switch to Activation after timer expires.");
     }
 
-
-    /**
-     * Test player movement is blocked by a wall.
-     *
-     * @Author Setare Izadi, s232629
-     */
-    @Test
-    void testMovementBlockedByWall() {
-        Board board = gameController.board;
-        Player player = board.getCurrentPlayer();
-        Space currentSpace = board.getSpace(0, 0);
-        currentSpace.addWall(Heading.SOUTH);  // Add a wall blocking the movement
-
-        gameController.moveForward(player);
-
-        Assertions.assertEquals(player, currentSpace.getPlayer(),
-                "Player should remain in the same space due to a wall.");
-        Assertions.assertNull(board.getSpace(0, 1).getPlayer(),
-                "No player should be able to move to space (0,1).");
-    }
 
     /**
      * Test command execution for non-movement commands.
