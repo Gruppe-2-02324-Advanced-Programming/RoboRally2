@@ -1,0 +1,16 @@
+dk.dtu.compute.se.pisd.designpatterns.observer
+dk.dtu.compute.se.pisd.roborally
+dk.dtu.compute.se.pisd.roborally.controller
+dk.dtu.compute.se.pisd.roborally.fileaccess
+dk.dtu.compute.se.pisd.roborally.fileaccess.templates
+dk.dtu.compute.se.pisd.roborally.model
+dk.dtu.compute.se.pisd.roborally.network
+dk.dtu.compute.se.pisd.roborally.network.gameclient
+dk.dtu.compute.se.pisd.roborally.view
+dk.dtu.compute.se.pisd.server
+dk.dtu.compute.se.pisd.server.controller
+dk.dtu.compute.se.pisd.server.model
+dk.dtu.compute.se.pisd.server.network
+dk.dtu.compute.se.pisd.server.repo
+dk.dtu.compute.se.pisd.server.service
+dk.dtu.compute.se.pisd.server.view
