@@ -1,5 +1,4 @@
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
-import dk.dtu.compute.se.pisd.roborally.controller.Laser;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.application.Platform;
 import org.junit.jupiter.api.*;
@@ -163,15 +162,12 @@ class GameControllerTest {
     void testAgain() {
         Board board = gameController.board;
         Player player = board.getCurrentPlayer();
-        CommandCard fwd = new CommandCard(Command.FORWARD);
-        CommandCard again = new CommandCard(Command.AGAIN);
-        board.setStep(0);
-        player.getProgramField(0).setCard(fwd);
-        player.getProgramField(1).setCard(again);
-        gameController.finishProgrammingPhase();
-        gameController.executePrograms();
-        Assertions.assertEquals(player, board.getSpace(0, 2).getPlayer(),
-                "Player " + player.getName() + "space should be (0,2)");
+        System.out.println(player.getName());
+        CommandCard pwr = new CommandCard(Command.POWER_UP);
+        board.setStep(1);
+        player.getProgramField(0).setCard(pwr);
+        gameController.again(player);
+        Assertions.assertEquals(1, player.getEnergyCubes(), "Player should have 1 energy cube");
     }
 
     /**
