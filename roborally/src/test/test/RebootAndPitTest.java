@@ -50,7 +50,7 @@ public class RebootAndPitTest {
             gameController.moveForward(current);
             board.getSpace(0,1).getActions().get(0).doAction(gameController, board.getSpace(0,1));
             Assertions.assertEquals(current, board.getSpace(0, 6).getPlayer(), "Player " + current.getName() + " should beSpace (0,6)!");
-            Assertions.assertNull(board.getSpace(0, 0).getPlayer(), "Space (0,0) should be empty!");
+            Assertions.assertNull(board.getSpace(0, 1).getPlayer(), "Space (0,0) should be empty!");
         }
 
 
