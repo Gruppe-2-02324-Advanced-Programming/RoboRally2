@@ -581,6 +581,7 @@ public class GameController {
 
     /**
      * Here the player's direction is set to turn right
+     * @author Christoffer, s205449
      */
     public void turnRight(@NotNull Player player) {
         if (player != null && player.board == board) {
@@ -590,6 +591,7 @@ public class GameController {
 
     /**
      * Here the player's direction is set to turn left
+     *  @author Christoffer, s205449
      */
     public void turnLeft(@NotNull Player player) {
         if (player != null && player.board == board) {
