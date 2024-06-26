@@ -1,4 +1,3 @@
-
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.controller.Laser;
 import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
@@ -25,6 +24,10 @@ class LaserTest {
     private Player player;
     private Laser laser;
 
+    /**
+     * Sets up the environment for each test.
+     * This method initializes the necessary mock objects and the object under test.
+     */
     @BeforeEach
     void setUp() {
         gameController = mock(GameController.class);
@@ -33,6 +36,10 @@ class LaserTest {
         laser = new Laser(Heading.NORTH);
     }
 
+    /**
+     * Tests the doAction method to ensure it correctly handles the absence of a player on the space.
+     * The test checks that the method returns false when no player is present.
+     */
     @Test
     void testDoActionPlayerNull() {
         when(space.getPlayer()).thenReturn(null);
@@ -42,6 +49,10 @@ class LaserTest {
         assertFalse(result, "Action should return false when no player is on the space");
     }
 
+    /**
+     * Tests the setter and getter for the heading property of the laser.
+     * This test verifies that the heading is set correctly and retrieved accurately.
+     */
     @Test
     void testSetAndGetHeading() {
         laser.setHeading(Heading.EAST);

@@ -60,31 +60,36 @@ public class ConveyorBeltTest {
         // Execute the conveyor belt action
         board.getSpace(0, 1).getActions().get(0).doAction(gameController, board.getSpace(0, 1));
 
-        // Check that the player has moved to space (0, 2)
-        Assertions.assertEquals(current, board.getSpace(0, 2).getPlayer(), "Player " + current.getName() + " should be at Space (0, 2)!");
+        // Check that the player has moved to space (0, 0)
+        Assertions.assertEquals(current, board.getSpace(0, 0).getPlayer(), "Player " + current.getName() + " should be at Space (0, 0)!");
     }
 
     /**
      * Test to check if the conveyor belt corner moves the player and changes its heading
      *
-     * @autor Christoffer Fink s205499
+     * @author Christoffer Fink s205499
+     * @author Jacob, s164958
      */
     @Test
     void ConveyorBeltCornerRightTest() {
         Board board = gameController.board;
         Player current = board.getCurrentPlayer();
 
-        // Set up the conveyor belt corner action on space (0, 1) to turn right and move the player east
-        board.getSpace(0, 1).addAction(new ConveyorBeltCorner(Heading.EAST));
+    // Set up the conveyor belt corner action on space (0, 1) to turn right and move the player east
+    board.getSpace(1, 1).addAction(new ConveyorBeltCorner(Heading.EAST));
+    // Turn the player heading to EAST
+    current.setHeading(Heading.EAST);
+    // Move the player to space (1, 0)
+    gameController.moveForward(current); // Assuming this moves to space (1, 0)
+    // Turn the player heading to SOUTH
+    current.setHeading(Heading.SOUTH);
+    // Move the player to space (1, 1)
+    gameController.moveForward(current); // Assuming this moves to space (0, 1)
+    // Execute the conveyor belt corner action
+    board.getSpace(1, 1).getActions().get(0).doAction(gameController, board.getSpace(1, 1));
 
-        // Move the player to space (0, 1)
-        gameController.moveForward(current); // Assuming this moves to space (0, 1)
 
-        // Execute the conveyor belt corner action
-        board.getSpace(0, 1).getActions().get(0).doAction(gameController, board.getSpace(0, 1));
-
-        // Check that the player has turned to face south and moved to space (1, 1)
-        Assertions.assertEquals(Heading.SOUTH, current.getHeading(), "Player should be heading South!");
-        Assertions.assertEquals(current, board.getSpace(1, 1).getPlayer(), "Player should be at Space (1, 1)!");
+    Assertions.assertEquals(Heading.SOUTH, current.getHeading(), "Player should be heading South!");
+    Assertions.assertEquals(current, board.getSpace(2, 1).getPlayer(), "Player should be at Space (2, 1)!");
     }
 }
