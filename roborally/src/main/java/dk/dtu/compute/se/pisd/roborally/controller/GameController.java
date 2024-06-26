@@ -398,6 +398,7 @@ public class GameController {
      * @author Emily, s191174
      * @author Jacob, s164958
      * @author Setare, s232629
+     * @author Phillip, s224278
      */
     // XXX: V2
     public void executeCommand(@NotNull Player player, Command command) {
