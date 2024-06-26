@@ -35,6 +35,9 @@ If configurations are not already set up, follow these steps:
 1. Go to `File` > `Project Structure` > `Modules`.
 2. Select `RoboRally` as the module.
 
+### Reload maven (if something doesn't work properly)
+1. Go to `Maven` > `Reload All Maven Projects`
+
 ## Run the Game
 
 Launch the game by running the `StartRoboRally` class:
