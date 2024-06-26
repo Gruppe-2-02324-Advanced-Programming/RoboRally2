@@ -33,7 +33,7 @@ public class GameClient extends JFrame {
      * 
      * @author Marcus Jagd Hansen, s214942
      */
-    public GameClient() {
+    public GameClient(RestTemplate restTemplateMock) {
         this.restTemplate = new RestTemplate();
         initializeUI();
     }
@@ -163,19 +163,5 @@ public class GameClient extends JFrame {
         return response.getBody();
     }
 
-    /**
-     * Main method to test the game client.
-     * 
-     * @param args Command line arguments
-     * @author Marcus Jagd Hansen, s214942
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                GameClient client = new GameClient();
-                client.setVisible(true);
-            }
-        });
-    }
+
 }

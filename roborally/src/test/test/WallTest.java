@@ -7,7 +7,9 @@ import org.junit.jupiter.api.*;
 
 import java.util.concurrent.CountDownLatch;
 
-
+/**
+ * Test to see if the player doesn't move through the wall
+ */
 class WallTest{
 
     private final int TEST_WIDTH = 8;

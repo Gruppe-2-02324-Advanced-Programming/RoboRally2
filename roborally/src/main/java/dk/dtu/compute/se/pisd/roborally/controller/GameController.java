@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.ToDoubleBiFunction;
 
 /**
  * Controller for managing the game logic of RoboRally. It handles player
@@ -86,7 +85,6 @@ public class GameController {
     public GameController(@NotNull Board board) {
         this.playerName = "NULL";
         this.board = board;
-        gameClient = new GameClient();
         currentTabIndex = 0;
         playerNumber = 1;
         playersReady = new boolean[board.getPlayersNumber()];

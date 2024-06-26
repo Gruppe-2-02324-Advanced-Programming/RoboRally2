@@ -58,7 +58,6 @@ public class RoboRally extends Application {
     private static final int MIN_APP_WIDTH = 600;
     private Stage stage;
     private BorderPane boardRoot;
-    private GameController gameController;
 
 
     /**

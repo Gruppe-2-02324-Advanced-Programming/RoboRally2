@@ -10,6 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.concurrent.CountDownLatch;
 
+
+/**
+ * Test to
+ * Check if players move each other when bumping into each other
+ */
 class CollisionTest {
 
     private final int TEST_WIDTH = 8;
@@ -17,6 +22,11 @@ class CollisionTest {
 
     private GameController gameController;
 
+
+    /**
+     * Initialize JavaFX
+     * @throws InterruptedException if the countdown latch is interrupted
+     */
     @BeforeAll
     static void initJavaFX() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
@@ -41,6 +51,11 @@ class CollisionTest {
     void tearDown() {
         gameController = null;
     }
+
+    /**
+     * Check if players move each other when bumping into each other
+     * @author Christoffer Fink s205449
+     */
 
     @Test
     void collision() {
